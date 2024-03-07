@@ -4,6 +4,10 @@ import pandas as pd
 
 
 def generate_transplant(id):
+
+    """
+    Generate synthetic data for a transplant patient and donor. See comments for details on the data generation process. !!!!! Every feature is generated independently !!!!!!!!
+    """
     age = random.randint(20, 80)  # Age between 20 and 80
     sex = random.choice(["male", "female"])  # Sex, 0 for Male and 1 for Female
     blood_type = random.choice(["A", "B", "AB", "0"])  # Blood Type, 1 for 'A', 2 for 'B', 3 for 'AB', 4 for 'O'
