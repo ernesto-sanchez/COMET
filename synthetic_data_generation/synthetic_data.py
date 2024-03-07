@@ -43,25 +43,36 @@ def generate_organ(org_id: int) -> array:
 
 
 
-def generate_outcomes(features: array):
+def generate_outcomes(id_match:int, features_pat: array, features_org: array) -> array:
     """
     Generate (factual and counterfactual) outcomes for a transplant patient. See comments for details on the data generation process. 
     """
-    outcomes = np.empty((2, 1), dtype=object)
-    return [id, outcome]
+    
+
+    # TODO: implement logic to generate the outcomes
+
+    
+    return [id_match, e_gfr_1, e_gfr_2, e_gfr_3, e_grf_4, rej_1, rej_2, rej_3, rej_4]
 
 
 def main():
     n = 100  # number of patients
-    patients = [generate_patient(i) for i in range(n)]
-    organs = [generate_organ(i) for i in range(n)]
+    m = 100  # number of organs
 
-    df = pd.DataFrame(data, columns=["id", "age", "sex", "blood_type", "rh", "weight", "hla_a", "hla_b", "hla_c", "cold_ischemia_time", "dsa", "blood_type_don", "rh_don", "age_don", "sex_don", "hla_a_don", "hla_b_don", "hla_c_don"])
+    patients = [generate_patient(i) for i in range(n)]
+    organs = [generate_organ(i) for i in range(m)]
+
+
+    # Create a dataframe with the synthetic data
+    df_patients = pd.DataFrame(patients, columns=["pat_id", "age", "sex", "blood_type", "rh", "weight", "hla_a", "hla_b", "hla_c"])
+    df_organs = pd.DataFrame(organs, columns=["org_id", "cold_ischemia_time", "dsa", "blood_type_don", "rh_don", "age_don", "hla_a_don", "hla_b_don", "hla_c_don"])
+
 
     # Save the data as a csv file
-    df.to_csv('patients.csv', index=False)
+    df_patients.to_csv('patients.csv', index=False)
+    df_organs.to_csv('organs.csv', index=False)
 
-    print(df)
+    #print(df)
 
 
 
