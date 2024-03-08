@@ -1,4 +1,5 @@
-# ![logo comet hd](https://github.com/ernesto-sanchez/COMET/assets/30667851/4e15fd4f-b6bd-47b1-a50b-2647bb2698b9)
+# ![Comet Logo (1)](https://github.com/ernesto-sanchez/COMET/assets/30667851/325028b2-5108-4a42-9a96-a6d3bae05a9a)
+
 
 **C**ounterfactual **O**utcome **M**odels for **E**nhanced **T**ransplants
 ## Project description
