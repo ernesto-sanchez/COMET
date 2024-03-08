@@ -1,4 +1,5 @@
-# ![Comet Logo (1)](https://github.com/ernesto-sanchez/COMET/assets/30667851/325028b2-5108-4a42-9a96-a6d3bae05a9a)
+# ![Comet Logo (1) (1)](https://github.com/ernesto-sanchez/COMET/assets/30667851/27ae9827-2eea-41a0-abf5-0377193a5f96)
+
 
 
 ## Project description
