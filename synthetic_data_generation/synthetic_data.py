@@ -152,7 +152,7 @@ def generate_outcomes(features_pat: dict, features_org: dict) -> dict:
 def main():
     n = 100  # number of patients
     m = 100  # number of organs
-    p = 10 #number of outcomes
+    #p = 10 #number of outcomes
 
     patients = [generate_patient(i) for i in range(n)]
     organs = [generate_organ(i) for i in range(m)]
