@@ -1,5 +1,7 @@
-# COMET
-**C**ounterfactual **O**utcome **M**odels for **E**nhanced **T**ransplants
+# ![Comet Logo (1) (1)](https://github.com/ernesto-sanchez/COMET/assets/30667851/27ae9827-2eea-41a0-abf5-0377193a5f96)
+
+
+
 ## Project description
 This project aims to provide a platform to benchmark different counterfactual treatment outcome estimation algorithms in the setting of Organ Transplants. Moreover, It will serve as a tool that supports clinitians in the choice of an optimal patient/donor pair.
 ## Data
