@@ -111,8 +111,9 @@ def generate_outcomes(features_pat: dict, features_org: dict) -> dict:
     else: 
         slopes = slopes_2
 
-    # Generate eGFR
-    eGFR = [piecewise_linear_continuous(i, slopes, [0, 1, 2, 3, 4]) for i in range(1, 6)]
+    # Generate eGFR   TODOÖ add noise to the eGFR to see if model gets worse
+    noise = np.random.normal(0,5,5)
+    eGFR = [piecewise_linear_continuous(i, slopes, [0, 1, 2, 3, 4]) + noise[i-1] for i in range(1, 6)]
 
     # Generate rejection
 

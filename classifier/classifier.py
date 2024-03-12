@@ -71,6 +71,7 @@ def main():
     patients = pd.read_csv('./synthetic_data_generation/patients.csv')
     organs = pd.read_csv('./synthetic_data_generation/organs.csv')
     outcomes = pd.read_csv('./synthetic_data_generation/outcomes.csv')
+    outcomes = outcomes.dropna()
 
     outcomes = outcomes.applymap(ast.literal_eval)
 
@@ -162,22 +163,22 @@ def main():
     train_dataloader = DataLoader(TensorDataset(X_train, y_train), batch_size=10, shuffle=True)
     test_dataloader = DataLoader(TensorDataset(X_test, y_test), batch_size=10)
 
-    # Train the model
-    loss_history = train_model(model, criterion, optimizer, train_dataloader)
+    # # Train the model
+    # loss_history = train_model(model, criterion, optimizer, train_dataloader)
 
 
-    # Print the final loss
-    print('train loss:', loss_history[-1])
+    # # Print the final loss
+    # print('train loss:', loss_history[-1])
 
-    # Plot the loss history
-    plt.plot(loss_history)
-    plt.xlabel('Epoch')
-    plt.ylabel('Loss')
-    #plt.show()
-    plt.savefig('./classifier/loss_history.png')
+    # # Plot the loss history
+    # plt.plot(loss_history)
+    # plt.xlabel('Epoch')
+    # plt.ylabel('Loss')
+    # #plt.show()
+    # plt.savefig('./classifier/loss_history.png')
 
-    #sSave the model
-    torch.save(model.state_dict(), './classifier/model.pth')
+    # #sSave the model
+    # torch.save(model.state_dict(), './classifier/model.pth')
 
 
 
