@@ -8,6 +8,8 @@ import ast
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
+from sklearn.model_selection import KFold
+
 
 
 
@@ -20,7 +22,7 @@ We will explain here the hyperparams of the model (n layers/architecture, learni
 
 """
 
-class MLP(nn.Module):
+class MLP_class(nn.Module):
     def __init__(self, input_size):
         super(MLP, self).__init__()
         self.layers = nn.Sequential(
@@ -34,16 +36,35 @@ class MLP(nn.Module):
     def forward(self, x):
         logits = self.layers(x)
         return logits
+    
+class MLP_reg(nn.Module):
+    def __init__(self, input_size):
+        super(MLP, self).__init__()
+        self.layers = nn.Sequential(
+            nn.Linear(input_size, 64),
+            nn.ReLU(),
+            nn.Linear(64, 64),
+            nn.ReLU(),
+            nn.Linear(64, 11), 
+            nn.ReLU(),
+            nn.Linear(11, 1)
+        )
+
+    def forward(self, x):
+        output = self.layers(x)
+        return output
 
 
-def train_model(model, criterion, optimizer, dataloader, epochs=20):
+
+def train_model(model, criterion, optimizer, dataloader, epochs=30, l1_lambda=0.000):
+    l1_lambda = l1_lambda
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  
     model = model.to(device) 
     loss_history = []
     for epoch in range(epochs):
         print(f"Epoch {epoch+1}/{epochs}")
         progress_bar = tqdm(dataloader)
-        for inputs, labels in dataloader:
+        for inputs, labels in progress_bar:
             inputs, labels = inputs.to(device), labels.to(device)
 
             optimizer.zero_grad()
@@ -52,6 +73,11 @@ def train_model(model, criterion, optimizer, dataloader, epochs=20):
             labels = labels.long()
             labels = labels.view(-1)
             loss = criterion(outputs, labels)
+
+            # Add L1 regularization
+            l1_norm = sum(p.abs().sum() for p in model.parameters())
+            loss += l1_lambda * l1_norm
+
             loss.backward()
             optimizer.step()
 
@@ -62,6 +88,22 @@ def train_model(model, criterion, optimizer, dataloader, epochs=20):
         print("epoch done")
 
     return loss_history
+
+
+def calculate_test_loss(model, criterion, testloader):
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.eval()  # Set the model to evaluation mode
+    total_loss = 0
+    with torch.no_grad():  # Disable gradient calculation
+        for inputs, labels in testloader:
+            inputs, labels = inputs.to(device), labels.to(device)
+            outputs = model(inputs)
+            labels = labels.long()
+            labels = labels.view(-1)
+            loss = criterion(outputs, labels)
+            total_loss += loss.item()
+    return total_loss / len(testloader)  # Return the average loss
+
 
 
 def main():
@@ -76,7 +118,7 @@ def main():
     outcomes = outcomes.applymap(ast.literal_eval)
 
     
-
+    
     #Delete the other outcomes. TODO: all outcomes
     outcomes = outcomes.applymap(lambda x: x['eGFR'][3] if x and 'eGFR' in x else None)
 
@@ -160,11 +202,48 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(merged_tensor, outcomes_tensor, test_size=0.2, random_state=42)
 
     # Create DataLoaders for the training set and the test set
-    train_dataloader = DataLoader(TensorDataset(X_train, y_train), batch_size=10, shuffle=True)
-    test_dataloader = DataLoader(TensorDataset(X_test, y_test), batch_size=10)
+    train_dataloader = DataLoader(TensorDataset(X_train, y_train), batch_size=32, shuffle=True)
+    test_dataloader = DataLoader(TensorDataset(X_test, y_test), batch_size=1)
 
-    # # Train the model
-    # loss_history = train_model(model, criterion, optimizer, train_dataloader)
+    # Train the model
+    #loss_history = train_model(model, criterion, optimizer, train_dataloader, l1_lambda=0.0005)
+
+    # ## K-Fold Cross Validation
+    # k_folds = 5
+    # kfold = KFold(n_splits=k_folds, shuffle=True, random_state=42)
+
+    # for fold, (train_ids, test_ids) in enumerate(kfold.split(merged_tensor)):
+    #     # Print
+    #     print(f'FOLD {fold}')
+    #     print('--------------------------------')
+        
+    #     # Sample elements randomly from a given list of ids, no replacement.
+    #     train_subsampler = torch.utils.data.SubsetRandomSampler(train_ids)
+    #     test_subsampler = torch.utils.data.SubsetRandomSampler(test_ids)
+        
+    #     # Define data loaders for training and testing data in this fold
+    #     trainloader = torch.utils.data.DataLoader(
+    #                     TensorDataset(merged_tensor, outcomes_tensor), 
+    #                     batch_size=10, sampler=train_subsampler)
+    #     testloader = torch.utils.data.DataLoader(
+    #                     TensorDataset(merged_tensor, outcomes_tensor),
+    #                     batch_size=1, sampler=test_subsampler)
+
+    #     # Init the neural network
+    #     model = MLP(input_size)
+    #     criterion = nn.CrossEntropyLoss()
+    #     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
+    #     # Train the model
+    #     loss_history = train_model(model, criterion, optimizer, trainloader)
+        
+
+    #     # Print the final loss
+    #     print('train loss:', loss_history[-1])
+
+    #     test_loss = calculate_test_loss(model, criterion, testloader)
+    #     print(f'Test loss: {test_loss}')
+    
 
 
     # # Print the final loss
@@ -191,6 +270,7 @@ def main():
 
      # Evaluate the model on the test set
     model.eval()
+    correct_predictions = 0
     with torch.no_grad():
         test_loss = 0
         for inputs, labels in test_dataloader:
@@ -198,11 +278,19 @@ def main():
             outputs = model(inputs)
             labels = labels.long()
             labels = labels.view(-1)
+            _, predicted = torch.max(outputs, 1)  # Get the index of the max log-probability
+            correct_predictions += (predicted == labels).sum().item()
+
+
             loss = criterion(outputs, labels)
             test_loss += loss.item()
     test_loss /= len(test_dataloader)
 
+    
+
     print('Test loss:', test_loss)
+    accuracy = correct_predictions / len(test_dataloader.dataset)
+    print('Test accuracy:', accuracy)
 
 
 if __name__ == '__main__':
