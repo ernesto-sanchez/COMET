@@ -18,6 +18,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.svm import SVR
 
 
 import matplotlib.pyplot as plt
@@ -36,6 +37,7 @@ class DataHandler:
         self.y_train = None
         self.X_test = None
         self.y_test = None
+        self.y_train_noiseless = None
         self.y_test_noiseless = None
 
 
@@ -50,7 +52,7 @@ class DataHandler:
 
         return self.X_train, self.y_train, self.X_test, self.y_test, self.y_test_noiseless
 
-    def load_data(self, factual:bool = True, outcome:str = 'eGFR_3', traintest_split:bool = True, scale:bool = True):
+    def load_data(self, factual:bool = True, outcome:str = 'eGFR_3', traintest_split:bool = True):
         # if self.remote:
         #     patients = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/patients.csv')
         #     organs = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/organs.csv')
@@ -136,31 +138,21 @@ class DataHandler:
     #    'rh_don_-', 'sex_don_female', 'sex_don_male'],
     #  
 
-        if scale:
-            X, y = self.scale_data(X, y)
-            X, y_noiseless = self.scale_data(X, y_noiseless)
+
 
         if traintest_split:
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-            X_train_2, _, _,  y_test_noiseless = train_test_split(X, y_noiseless, test_size=0.2, random_state=42)
-            return X_train, y_train, X_test, y_test, y_test_noiseless
+            X_train_2, _, y_train_noiseless,  y_test_noiseless = train_test_split(X, y_noiseless, test_size=0.2, random_state=42)
+            return X_train, y_train, X_test, y_test, y_train_noiseless, y_test_noiseless
         else:
-            X_train, y_train, X_test, y_test, y_test_noiseless = X, y, X, y, y_noiseless
+            X_train, y_train, X_test, y_test, y_train_noiseless, y_test_noiseless = X, y, X, y, y_noiseless, y_noiseless
 
 
  
-        return X_train, y_train, X_test, y_test, y_test_noiseless
+        return X_train, y_train, X_test, y_test, y_train_noiseless, y_test_noiseless
     
 
 
-    def scale_data(self, X, y):
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
-        if y.ndim == 1:
-            y_scaled = scaler.fit_transform(y.reshape(-1, 1))
-        else:
-            y_scaled = scaler.fit_transform(y)
-        return X_scaled, y_scaled
     
 
     
@@ -170,9 +162,10 @@ class DataHandler:
 
 class RegressionModel:
     def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, remote:bool = False, split:bool = True, scale:bool = True):
-        
+        self.split = split
+        self.scale = scale
         self.data_handler = DataHandler(patients, organs, outcomes, outcomes_noiseless, remote=False)
-        self.X_train, self.y_train, self.X_test, self.y_test, self.y_test_noiseless = self.data_handler.load_data(factual=True, outcome='eGFR_3', traintest_split=split, scale=scale)
+        self.X_train, self.y_train, self.X_test, self.y_test, self.y_train_noiseless, self.y_test_noiseless = self.data_handler.load_data(factual=True, outcome='eGFR_3', traintest_split=split)
 
     def train_model(self, model):
         """
@@ -193,7 +186,7 @@ class RegressionModel:
         """
         return model.predict(X)
 
-    def evaluate_model(self, model):
+    def evaluate_model_test(self, model, scalery = None):
         """
         Evaluate the performance of a regression model.
 
@@ -203,6 +196,9 @@ class RegressionModel:
         # Predictions
         y_pred = model.predict(self.X_test)
 
+        if self.scale:
+            y_pred = scalery.inverse_transform(y_pred.reshape(-1, 1))
+
         # Evaluate
         rmse = np.sqrt(mean_squared_error(self.y_test, y_pred))
         rmse_noiseless = np.sqrt(mean_squared_error(self.y_test_noiseless, y_pred))
@@ -210,30 +206,96 @@ class RegressionModel:
         r2_noiseless = r2_score(self.y_test_noiseless, y_pred)
 
         return rmse, r2, rmse_noiseless, r2_noiseless
+    
+    def evaluate_model_train(self, model, scalery = None):
+        """
+        Evaluate the performance of a regression model.
+
+        :param model: The regression model to evaluate
+        :return: Model performance metrics
+        """
+        # Predictions
+        y_pred = model.predict(self.X_train)
+        y_train = self.y_train
+
+
+        if self.scale:
+            y_pred = scalery.inverse_transform(y_pred.reshape(-1, 1))
+            y_train = scalery.inverse_transform(self.y_train.reshape(-1, 1))
+
+    
+
+        # Evaluate
+        rmse = np.sqrt(mean_squared_error(y_train, y_pred))
+        rmse_noiseless = np.sqrt(mean_squared_error(y_train, y_pred))
+        r2 = r2_score(y_train, y_pred)
+        r2_noiseless = r2_score(y_train, y_pred)
+
+        return rmse, r2, rmse_noiseless, r2_noiseless
 
     def run_regression(self):
+
+        if self.scale:
+            scalerx = StandardScaler()
+            scalery = StandardScaler()
+            self.X_train = scalerx.fit_transform(self.X_train)
+            self.y_train = scalery.fit_transform(self.y_train.reshape(-1, 1))
+    
         # Linear Regression
         linear_model = LinearRegression()
         self.train_model(linear_model)
-        mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model(linear_model)
+        if self.scale:
+            mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(linear_model, scalery = scalery)
+            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model, scalery = scalery)
+        else:
+            mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(linear_model)
+            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model)
 
         # Ridge Regression
         ridge_model = Ridge(alpha=1.0)
         self.train_model(ridge_model)
-        mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model(ridge_model)
+        if self.scale:
+            mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model, scalery = scalery)
+            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model, scalery = scalery)
+        else:
+            mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model)
+            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model)
+
 
         # Random Forest Regression
         rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
         self.train_model(rf_model)
-        mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model(rf_model)
+        if self.scale:
+            mse_rf_train, r2_rf_train, mse_noiseless_rf_train, r2_noiseless_rf_train = self.evaluate_model_train(rf_model, scalery = scalery)
+            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model, scalery = scalery)
 
-        # Create a table
+        else:
+            mse_rf_train, r2_rf_train, mse_noiseless_rf_train, r2_noiseless_rf_train = self.evaluate_model_train(rf_model)
+            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model)
+
+
+        # SVM Regression
+        svm_model = SVR(kernel= 'rbf')
+        self.train_model(svm_model)
+        if self.scale:
+            mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, scalery= scalery)
+            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, scalery= scalery)
+        else:
+            mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model)
+            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model)
+
+        # Create a table, 
         results = pd.DataFrame({
-            'Model': ['Linear Regression', 'Ridge Regression', 'Random Forest Regression'],
-            'root MSE': [mse_lr, mse_rr, mse_rf],
-            'R2': [r2_lr, r2_rr, r2_rf],
-            'root MSE Noiseless': [mse_noiseless_lr, mse_noiseless_rr, mse_noiseless_rf],
-            'R2 Noiseless': [r2_noiseless_lr, r2_noiseless_rr, r2_noiseless_rf]
+            'Model': ['Linear Regression', 'Ridge Regression', 'Random Forest Regression', 'SVM Regression'],
+            'root MSE': [mse_lr, mse_rr, mse_rf, mse_svm],
+            'R2': [r2_lr, r2_rr, r2_rf, r2_svm],
+            'root MSE Noiseless': [mse_noiseless_lr, mse_noiseless_rr, mse_noiseless_rf, mse_noiseless_svm],
+            'R2 Noiseless': [r2_noiseless_lr, r2_noiseless_rr, r2_noiseless_rf, r2_noiseless_svm], 
+            'root MSE Train': [mse_ls_train, mse_rr_train, mse_rf_train, mse_svm_train],
+            'R2 Train': [r2_ls_train, r2_rr_train, r2_rf_train, r2_svm_train],
+            'root MSE Noiseless Train': [mse_noiseless_ls_train, mse_noiseless_rr_train, mse_noiseless_rf_train, mse_noiseless_svm_train],
+            'R2 Noiseless Train': [r2_noiseless_ls_train, r2_noiseless_rr_train, r2_noiseless_rf_train, r2_noiseless_svm_train]
+
         })
 
         return results

@@ -4,6 +4,7 @@ import pandas as pd
 from synthetic_data import *
 import matplotlib.pyplot as plt
 import os
+import numpy as np
 
 
 class SyntheticDataGenerator:
@@ -18,14 +19,16 @@ class SyntheticDataGenerator:
         """
         Generate synthetic data for a transplant patient and donor. See comments for details on the data generation process. !!!!! Every feature is generated independently !!!!!!!!
         """
-        age = random.randint(20, 80)  # Age between 20 and 80
+        age = max(0, round(random.gauss(40, 5)) ) # Age between 20 and 80
         sex = random.choice(["male", "female"])  # Sex, 0 for Male and 1 for Female
-        blood_type = random.choice(["A", "B", "AB", "0"])  # Blood Type, 1 for 'A', 2 for 'B', 3 for 'AB', 4 for 'O'
+        # Define the probabilities
+        probabilities = [0.45, 0.09, 0.05, 0.41]
+        blood_type = np.random.choice(["A", "B", "AB", "0"], p=probabilities)
         rh = random.choice(["+", "-"])  # Rh, 0 for Negative and 1 for Positive
         weight  =  max(40, min(120, round(random.gauss(75,10),2))) # Weight normally distributed with a mean on 75 between 50 and 100 kg with 2 decimal places
-        hla_a = random.choice(range(1, 5))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
-        hla_b = random.choice(range(1, 5))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
-        hla_c = random.choice(range(1, 5))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
+        hla_a = random.choice(range(1, 3))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
+        hla_b = random.choice(range(1, 3))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
+        hla_c = random.choice(range(1, 3))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
         
 
         return {'pat_id': pat_id, 'age': age, 'sex': sex, 'blood_type': blood_type, 'rh': rh, 'weight': weight, 'hla_a': hla_a, 'hla_b': hla_b, 'hla_c': hla_c}
@@ -38,14 +41,15 @@ class SyntheticDataGenerator:
         """
         cold_ischemia_time = max(0, min(round(random.gauss(7, 2),2),24))  # Cold Ischemia Time between 0 and 24 hours, gaussian distribution with a mean of 7 hours and a standard deviation of 2 hours
         dsa = random.choice([0, 1])  # DSA, 0 for Negative and 1 for Positive
-        blood_type_don = random.choice(["A", "B", "AB", "0"])  # Blood Type, 1 for 'A', 2 for 'B', 3 for 'AB', 4 for 'O'
+        probabilities = [0.45, 0.09, 0.05, 0.41]
+        blood_type_don = np.random.choice(["A", "B", "AB", "0"], p=probabilities)
         rh_don = random.choice(["+", "-"])  # Rh, 0 for Negative and 1 for Positive
-        age_don = random.randint(20, 80)  # Age between 20 and 80
+        age_don = max(0,round(random.gauss(40, 5))) # Age between 20 and 80
         sex_don = random.choice(["male", "female"])
         weight_don = max(40, min(120, round(random.gauss(75,10),2))) # Weight normally distributed with a mean on 75 between 50 and 100 kg with 2 decimal places
-        hla_a_don = random.choice(range(1, 5))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
-        hla_b_don = random.choice(range(1, 5))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
-        hla_c_don = random.choice(range(1, 5))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
+        hla_a_don = random.choice(range(1, 3))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
+        hla_b_don = random.choice(range(1, 3))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
+        hla_c_don = random.choice(range(1, 3))  # HLA, 1 for 'A', 2 for 'B', 3 for 'C', 4 for 'D'
         ### How to generate DSAs? Ask Elias
 
 
@@ -86,7 +90,19 @@ class SyntheticDataGenerator:
 
 
         # TODO: implement logic to generate the outcomes ----> Elias
+
         if self.complexity == 1:
+            age_pat, weight_pat, blood_group_pat = features_pat["age"], features_pat["weight"], features_pat["blood_type"]
+            age_org, weight_org, blood_group_org = features_org["age_don"], features_org["weight_don"], features_org["blood_type_don"]
+
+            hla_a_pat, hla_b_pat, hla_c_pat = features_pat["hla_a"], features_pat["hla_b"], features_pat["hla_c"]
+            hla_a_don, hla_b_don, hla_c_don = features_org["hla_a_don"], features_org["hla_b_don"], features_org["hla_c_don"]
+
+            raise NotImplementedError("Complexity level not supported --> get coding!!")
+ 
+            # Generate outcome as if it were regression
+
+        if self.complexity == 2:
             #Simple approach to make the regressor more accurate
             slopes_1 = [0,0, 0, 0]
             slopes_2 = [-5,-5,-5,-5]
@@ -100,11 +116,11 @@ class SyntheticDataGenerator:
             hla_a_don, hla_b_don, hla_c_don = features_org["hla_a_don"], features_org["hla_b_don"], features_org["hla_c_don"]
 
             # Compare features and assign slopes accordingly
-            if abs(age_org - age_pat) <=5 and abs(weight_org - weight_pat) <=20 and blood_group_pat == blood_group_org and hla_a_pat == hla_a_don and hla_b_pat == hla_b_don and hla_c_pat == hla_c_don:
+            if abs(age_org - age_pat) <=20 and abs(weight_org - weight_pat) <=20 and blood_group_pat == blood_group_org and hla_a_pat == hla_a_don and hla_b_pat == hla_b_don and hla_c_pat == hla_c_don:
                 slopes = slopes_1
-            elif abs(age_org - age_pat) <=5 and abs(weight_org - weight_pat) <=20 and blood_group_pat == blood_group_org and hla_a_pat == hla_a_don and hla_b_pat == hla_b_don and hla_c_pat != hla_c_don:
+            elif abs(age_org - age_pat) <=20 and abs(weight_org - weight_pat) <=20 and blood_group_pat == blood_group_org and hla_a_pat == hla_a_don:
                 slopes = slopes_2
-            elif abs(age_org - age_pat) <=5 and abs(weight_org - weight_pat) <=20 and blood_group_pat == blood_group_org and hla_a_pat == hla_a_don and hla_b_pat != hla_b_don and hla_c_pat != hla_c_don:
+            elif abs(age_org - age_pat) <=20 and abs(weight_org - weight_pat) <=20 and blood_group_pat == blood_group_org:
                 slopes = slopes_3
             else: 
                 slopes = slopes_4
@@ -139,7 +155,7 @@ class SyntheticDataGenerator:
 
 
 
-        if self.complexity == 2:
+        if self.complexity == 3:
 
             # 1st approach: Generate eGFR and rejection outcomes for each patient-organ pair using the patient and organ feautes
             slopes_1 = [-3, -10, -15, -15]  # Slopes for each interval
@@ -229,11 +245,11 @@ def count_groups(df_patients, df_organs, complexity = 1):
     if complexity == 1:
         for index, observation in df_concatenated.iterrows():
             # Check if the current observation is a new group
-            if abs(observation["age"] - observation["age_don"]) <= 5 and abs(observation["weight"] - observation["weight_don"]) <= 20 and observation["blood_type"] == observation["blood_type_don"] and observation["hla_a"] == observation["hla_a_don"] and observation["hla_b"] == observation["hla_b_don"] and observation["hla_c"] == observation["hla_c_don"]:
+            if abs(observation["age"] - observation["age_don"]) <= 20 and abs(observation["weight"] - observation["weight_don"]) <= 20 and observation["blood_type"] == observation["blood_type_don"] and observation["hla_a"] == observation["hla_a_don"] and observation["hla_b"] == observation["hla_b_don"] and observation["hla_c"] == observation["hla_c_don"]:
                 slopes_1_count += 1
-            elif abs(observation["age"] - observation["age_don"]) <= 5 and abs(observation["weight"] - observation["weight_don"]) <= 20 and observation["blood_type"] == observation["blood_type_don"] and observation["hla_a"] == observation["hla_a_don"] and observation["hla_b"] == observation["hla_b_don"] and observation["hla_c"] != observation["hla_c_don"]:
+            elif abs(observation["age"] - observation["age_don"]) <= 20 and abs(observation["weight"] - observation["weight_don"]) <= 20 and observation["blood_type"] == observation["blood_type_don"] and observation["hla_a"] == observation["hla_a_don"]:
                 slopes_2_count += 1
-            elif abs(observation["age"] - observation["age_don"]) <= 5 and abs(observation["weight"] - observation["weight_don"]) <= 20 and observation["blood_type"] == observation["blood_type_don"] and observation["hla_a"] == observation["hla_a_don"] and observation["hla_b"] != observation["hla_b_don"] and observation["hla_c"] != observation["hla_c_don"]:
+            elif abs(observation["age"] - observation["age_don"]) <= 20 and abs(observation["weight"] - observation["weight_don"]) <= 20 and observation["blood_type"] == observation["blood_type_don"]:
                 slopes_3_count += 1
             else:
                 slopes_4_count += 1
@@ -241,8 +257,8 @@ def count_groups(df_patients, df_organs, complexity = 1):
         count_table = pd.DataFrame({'Slopes': ['Slopes_1', 'Slopes_2', 'Slopes_3', 'Slopes_4'],
                                 'Count': [slopes_1_count, slopes_2_count, slopes_3_count, slopes_4_count]})
         
-    if complexity == 2:
-        for index, observation in df_concatenated.iterrows():
+    else: ValueError("Complexity level not supported --> get coding!!")
+        
             
 
         
@@ -257,7 +273,7 @@ def count_groups(df_patients, df_organs, complexity = 1):
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=500, m=500, noise=0, complexity=1)
+    generator = SyntheticDataGenerator(n=500, m=500, noise=0, complexity=2)
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
 
     print(count_groups(df_patients, df_organs))

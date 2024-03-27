@@ -107,7 +107,7 @@ class ComparisonVaryingNoise:
 
 
 class ComparisonVaryingObservations:
-    def __init__(self, n_values, m_values, noise, n_simulations, complexity = 1):
+    def __init__(self, n_values, m_values, noise, n_simulations, complexity = 2):
         self.n_values = n_values
         self.m_values = m_values
         self.noise = noise
@@ -119,9 +119,9 @@ class ComparisonVaryingObservations:
         for _ in range(self.n_simulations):
             simulation_results = {}
             for i in range(len(self.n_values)):
-                generator = SyntheticDataGenerator(self.n_values[i], self.m_values[i], self.noise, complexity=1)
+                generator = SyntheticDataGenerator(self.n_values[i], self.m_values[i], self.noise, complexity=self.complexity)
                 df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
-                simulation_results[i] = reg_sklearn.RegressionModel(df_patients, df_organs, df_outcomes, df_outcomes_noiseless, remote=False).run_regression()
+                simulation_results[i] = reg_sklearn.RegressionModel(df_patients, df_organs, df_outcomes, df_outcomes_noiseless, remote=False, scale= True).run_regression()
                 print(f"Done with {self.n_values[i]} observations and {self.m_values[i]} organs.")
             self.results.append(simulation_results)
 
@@ -129,10 +129,18 @@ class ComparisonVaryingObservations:
         linear_mse = [np.mean([self.results[j][i]['root MSE'][0] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
         ridge_mse = [np.mean([self.results[j][i]['root MSE'][1] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
         random_forests_mse = [np.mean([self.results[j][i]['root MSE'][2] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
+        svm_mse = [np.mean([self.results[j][i]['root MSE'][3] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
 
-        linear_noiseless_mse = [np.mean([self.results[j][i]['root MSE Noiseless'][0] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
-        ridge_noiseless_mse = [np.mean([self.results[j][i]['root MSE Noiseless'][1] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
-        random_forests_noiseless_mse = [np.mean([self.results[j][i]['root MSE Noiseless'][2] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
+        # linear_noiseless_mse = [np.mean([self.results[j][i]['root MSE Noiseless'][0] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
+        # ridge_noiseless_mse = [np.mean([self.results[j][i]['root MSE Noiseless'][1] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
+        # random_forests_noiseless_mse = [np.mean([self.results[j][i]['root MSE Noiseless'][2] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
+
+        linear_mse_train = [np.mean([self.results[j][i]['root MSE Train'][0] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
+        ridge_mse_train = [np.mean([self.results[j][i]['root MSE Train'][1] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
+        random_forests_mse_train = [np.mean([self.results[j][i]['root MSE Train'][2] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
+        svm_mse_train = [np.mean([self.results[j][i]['root MSE Train'][3] for j in range(self.n_simulations)]) for i in range(len(self.n_values))]
+
+
 
         # Combine the two plots into one
         plt.figure(figsize=(10, 5))
@@ -142,32 +150,51 @@ class ComparisonVaryingObservations:
         plt.plot(self.n_values, linear_mse, label='Mean Linear Regression')
         plt.plot(self.n_values, ridge_mse, label='Mean Ridge Regression')
         plt.plot(self.n_values, random_forests_mse, label='Mean Random Forests')
+        plt.plot(self.n_values, svm_mse, label='Mean SVM')
         plt.xlabel('Number of Observations')
         plt.ylabel('Mean MSE')
         plt.title('Mean MSE for Different Number of Observations, Noise {}, and Models'.format(self.noise))
         plt.legend()
 
-        # Plot the mean noiseless MSE values
+        # # Plot the mean noiseless MSE values
+        # plt.subplot(1, 2, 2)
+        # plt.plot(self.n_values, linear_noiseless_mse, label='Mean Linear Regression Noiseless')
+        # plt.plot(self.n_values, ridge_noiseless_mse, label='Mean Ridge Regression Noiseless')
+        # plt.plot(self.n_values, random_forests_noiseless_mse, label='Mean Random Forests Noiseless')
+        # plt.xlabel('Number of Observations')
+        # plt.ylabel('Mean Noiseless MSE')
+        # plt.title('Mean Noiseless MSE for Different Number of Observations, Noise {}, and Models'.format(self.noise))
+        # plt.legend()
+
+
+        # PLot the mean MSE values for the training set
         plt.subplot(1, 2, 2)
-        plt.plot(self.n_values, linear_noiseless_mse, label='Mean Linear Regression Noiseless')
-        plt.plot(self.n_values, ridge_noiseless_mse, label='Mean Ridge Regression Noiseless')
-        plt.plot(self.n_values, random_forests_noiseless_mse, label='Mean Random Forests Noiseless')
+        plt.plot(self.n_values, linear_mse_train, label='Mean Linear Regression Train')
+        plt.plot(self.n_values, ridge_mse_train, label='Mean Ridge Regression Train')
+        plt.plot(self.n_values, random_forests_mse_train, label='Mean Random Forests Train')
+        plt.plot(self.n_values, svm_mse_train, label='Mean SVM Train')
         plt.xlabel('Number of Observations')
-        plt.ylabel('Mean Noiseless MSE')
-        plt.title('Mean Noiseless MSE for Different Number of Observations, Noise {}, and Models'.format(self.noise))
+        plt.ylabel('Mean MSE Train')
+        plt.title('Mean MSE Train for Different Number of Observations, Noise {}, and Models'.format(self.noise))
         plt.legend()
+
 
         plt.tight_layout()
         plt.savefig(os.path.join(my_path, 'combined_plots.png'))
         plt.show()
 
-# comparison = ComparisonVaryingObservations(n_values=[10, 20, 50, 100, 150, 200, 250, 300], m_values=[10, 20, 50, 100, 150, 200, 250, 300], noise=5, n_simulations=4, complexity=1)
-# comparison.run_comparison()
-# comparison.plot_results()
+
+##TODO :look into but of MSE in Test set(canno see ridge and rancom forest in the cahrt)
+
+comparison = ComparisonVaryingObservations(n_values=[30, 100, 150, 200, 300, 500], m_values=[30, 100, 150, 200, 300, 500], noise=5, n_simulations=1, complexity=2)
+comparison.run_comparison()
+comparison.plot_results()
         
 
+#TODO: Fix hard-coded scale parameter
+
 class Comparison_Counterfactual:
-    def __init__(self, n_values, m_values, noise, n_simulations, complexity = 1):
+    def __init__(self, n_values, m_values, noise, n_simulations, complexity = 1, scale = True):
         self.n_values = n_values
         self.m_values = m_values
         self.noise = noise
@@ -257,22 +284,22 @@ class Comparison_Counterfactual:
 
 
 
-n_values = [50, 100, 400, 600]
-mean_results = {'Linear Regression': [], 'Ridge Regression': [], 'Random Forest Regression': [], 'Counterfactual Linear Regression': []}
+# n_values = [50, 100, 400, 600]
+# mean_results = {'Linear Regression': [], 'Ridge Regression': [], 'Random Forest Regression': [], 'Counterfactual Linear Regression': []}
 
-for n in n_values:
+# for n in n_values:
 
-    comparison_counterfactual = Comparison_Counterfactual(n_values=n, m_values=n, noise=5, n_simulations=4, complexity=1)
-    comparison_counterfactual.run_comparison()
-    mean_mse_linear = np.mean([comparison_counterfactual.results[j]['Linear Regression'] for j in range(comparison_counterfactual.n_simulations)])
-    mean_mse_ridge = np.mean([comparison_counterfactual.results[j]['Ridge Regression'] for j in range(comparison_counterfactual.n_simulations)])
-    mean_mse_rf = np.mean([comparison_counterfactual.results[j]['Random Forest Regression'] for j in range(comparison_counterfactual.n_simulations)])
-    mean_mse_counterfactual = np.mean([comparison_counterfactual.results[j]['Counterfactual Linear Regression'] for j in range(comparison_counterfactual.n_simulations)])
-    mean_results['Linear Regression'].append(mean_mse_linear)
-    mean_results['Ridge Regression'].append(mean_mse_ridge)
-    mean_results['Random Forest Regression'].append(mean_mse_rf)
-    mean_results['Counterfactual Linear Regression'].append(mean_mse_counterfactual)
+#     comparison_counterfactual = Comparison_Counterfactual(n_values=n, m_values=n, noise=5, n_simulations=4, complexity=1)
+#     comparison_counterfactual.run_comparison()
+#     mean_mse_linear = np.mean([comparison_counterfactual.results[j]['Linear Regression'] for j in range(comparison_counterfactual.n_simulations)])
+#     mean_mse_ridge = np.mean([comparison_counterfactual.results[j]['Ridge Regression'] for j in range(comparison_counterfactual.n_simulations)])
+#     mean_mse_rf = np.mean([comparison_counterfactual.results[j]['Random Forest Regression'] for j in range(comparison_counterfactual.n_simulations)])
+#     mean_mse_counterfactual = np.mean([comparison_counterfactual.results[j]['Counterfactual Linear Regression'] for j in range(comparison_counterfactual.n_simulations)])
+#     mean_results['Linear Regression'].append(mean_mse_linear)
+#     mean_results['Ridge Regression'].append(mean_mse_ridge)
+#     mean_results['Random Forest Regression'].append(mean_mse_rf)
+#     mean_results['Counterfactual Linear Regression'].append(mean_mse_counterfactual)
 
-# Extend the table to show the mse for the different combinations of n_values and m_values
-table = pd.DataFrame(mean_results)
-print(table)
+# # Extend the table to show the mse for the different combinations of n_values and m_values
+# table = pd.DataFrame(mean_results)
+# print(table)
