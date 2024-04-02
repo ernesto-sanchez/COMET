@@ -273,7 +273,7 @@ def count_groups(df_patients, df_organs, complexity = 1):
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=500, m=500, noise=0, complexity=2)
+    generator = SyntheticDataGenerator(n=1000, m=1000, noise=0, complexity=2)
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
 
     print(count_groups(df_patients, df_organs))

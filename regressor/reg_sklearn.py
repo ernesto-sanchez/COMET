@@ -161,7 +161,7 @@ class DataHandler:
 
 
 class RegressionModel:
-    def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, remote:bool = False, split:bool = True, scale:bool = True):
+    def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, scale:bool, remote:bool = False, split:bool = True):
         self.split = split
         self.scale = scale
         self.data_handler = DataHandler(patients, organs, outcomes, outcomes_noiseless, remote=False)
@@ -186,7 +186,7 @@ class RegressionModel:
         """
         return model.predict(X)
 
-    def evaluate_model_test(self, model, scalery = None):
+    def  evaluate_model_test(self, model,scalerx ,  scalery ):
         """
         Evaluate the performance of a regression model.
 
@@ -194,6 +194,10 @@ class RegressionModel:
         :return: Model performance metrics
         """
         # Predictions
+
+        if self.scale:
+            self.X_test = scalerx.transform(self.X_test)
+
         y_pred = model.predict(self.X_test)
 
         if self.scale:
@@ -246,7 +250,7 @@ class RegressionModel:
         self.train_model(linear_model)
         if self.scale:
             mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(linear_model, scalery = scalery)
-            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model, scalery = scalery)
+            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model, scalerx = scalerx, scalery = scalery)
         else:
             mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(linear_model)
             mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model)
@@ -256,7 +260,7 @@ class RegressionModel:
         self.train_model(ridge_model)
         if self.scale:
             mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model, scalery = scalery)
-            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model, scalery = scalery)
+            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model,scalerx = scalerx, scalery = scalery)
         else:
             mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model)
             mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model)
@@ -267,7 +271,7 @@ class RegressionModel:
         self.train_model(rf_model)
         if self.scale:
             mse_rf_train, r2_rf_train, mse_noiseless_rf_train, r2_noiseless_rf_train = self.evaluate_model_train(rf_model, scalery = scalery)
-            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model, scalery = scalery)
+            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model,scalerx = scalerx, scalery = scalery)
 
         else:
             mse_rf_train, r2_rf_train, mse_noiseless_rf_train, r2_noiseless_rf_train = self.evaluate_model_train(rf_model)
@@ -279,7 +283,7 @@ class RegressionModel:
         self.train_model(svm_model)
         if self.scale:
             mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, scalery= scalery)
-            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, scalery= scalery)
+            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model,scalerx = scalerx, scalery= scalery)
         else:
             mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model)
             mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model)

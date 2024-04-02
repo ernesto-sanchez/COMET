@@ -186,7 +186,7 @@ class ComparisonVaryingObservations:
 
 ##TODO :look into but of MSE in Test set(canno see ridge and rancom forest in the cahrt)
 
-comparison = ComparisonVaryingObservations(n_values=[30, 100, 150, 200, 300, 500], m_values=[30, 100, 150, 200, 300, 500], noise=5, n_simulations=1, complexity=2)
+comparison = ComparisonVaryingObservations(n_values=[150, 500, 1000], m_values=[150, 500, 1000], noise=5, n_simulations=1, complexity=2)
 comparison.run_comparison()
 comparison.plot_results()
         
