@@ -135,7 +135,7 @@ class SyntheticDataGenerator:
 
 
 
-            # Generate rejection
+            # Generate rejection  ## TODO: DO it in vector notation
 
             if blood_group_org != blood_group_pat:
                 rejection = [1,1,1,1,1]
@@ -273,8 +273,11 @@ def count_groups(df_patients, df_organs, complexity = 1):
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=1000, m=1000, noise=0, complexity=2)
+    generator = SyntheticDataGenerator(n=500, m=500, noise=0, complexity=1)
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
+
+    df_outcomes_diagonal = np.diag(df_outcomes.values)
+    df_outcomes_diagonal = pd.DataFrame(df_outcomes_diagonal)
 
     print(count_groups(df_patients, df_organs))
 
@@ -283,6 +286,7 @@ if __name__ == '__main__':
     df_organs.to_csv(script_dir + "/organs.csv", index=False)
     df_outcomes.to_csv(script_dir + "/outcomes.csv", index=False)
     df_outcomes_noiseless.to_csv(script_dir + "/outcomes_noiseless.csv", index=False)
+    df_outcomes_diagonal.to_csv(script_dir + "/outcomes_diagonal.csv", index = False)
 
 
 

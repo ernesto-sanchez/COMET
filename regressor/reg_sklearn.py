@@ -19,6 +19,10 @@ from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.svm import SVR
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats as stats
 
 
 import matplotlib.pyplot as plt
@@ -41,18 +45,9 @@ class DataHandler:
         self.y_test_noiseless = None
 
 
-    def get_features(self, pat_id, org_id):
-
-        """
-        Return the features of a patient and organ in the training set with a specific pat_id and org_id
-
-        """
-        patient = self.X_train[pat_id, :]
 
 
-        return self.X_train, self.y_train, self.X_test, self.y_test, self.y_test_noiseless
-
-    def load_data(self, factual:bool = True, outcome:str = 'eGFR_3', traintest_split:bool = True):
+    def load_data(self, trainfac, evalfac, outcome:str = 'eGFR_3', traintest_split:bool = True):
         # if self.remote:
         #     patients = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/patients.csv')
         #     organs = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/organs.csv')
@@ -67,20 +62,20 @@ class DataHandler:
         # self.outcomes = pd.DataFrame(self.outcomes)
         # self.outcomes_noiseless = pd.DataFrame(self.outcomes_noiseless)
 
-        self.outcomes = self.outcomes.dropna()
-        self.outcomes_noiseless = self.outcomes_noiseless.dropna()
+        outcomes = self.outcomes.dropna()
+        outcomes_noiseless = self.outcomes_noiseless.dropna()
 
         # CAUTION: Uncomment this line if loading data from a csv file
         # self.outcomes = self.outcomes.map(ast.literal_eval)
         # self.outcomes_noiseless = self.outcomes_noiseless.map(ast.literal_eval)
 
 
-        if outcome == 'eGFR_3':
-            outcomes = self.outcomes.map(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
-            outcomes_noiseless = self.outcomes_noiseless.map(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
+        # if outcome == 'eGFR_3':
+        #     outcomes = self.outcomes.map(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
+        #     outcomes_noiseless = self.outcomes_noiseless.map(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
 
-        else:
-            raise ValueError('Outcome not supported')
+        # else:
+        #     raise ValueError('Outcome not supported')
         
 
 
@@ -90,45 +85,104 @@ class DataHandler:
         
 
 
-        if factual:
-            outcomes = np.diag(outcomes.values)
-            outcomes_noiseless = np.diag(outcomes_noiseless.values)
+        if trainfac:
+            # outcomes = np.diag(outcomes.values)     
+            # outcomes_noiseless = np.diag(outcomes_noiseless.values)
             merged = pd.concat([patients, organs], axis=1)
             merged = merged.drop('pat_id', axis = 1)
             merged = merged.drop('org_id', axis = 1)
-        else:
+        if not trainfac and not evalfac:
+            
 
-            """ If not factual, we match the first organ with all the patients
-                reminder outcomes[i][j] is the outcome of the i-th patient with the j-th organ
-            """
-            outcomes_temp = outcomes.values[:, 0]
-            outcomes_noiseless_temp = outcomes_noiseless.values[:, 0]
+            # """ If not factual, we match the first organ with all the patients
+            #     reminder outcomes[i][j] is the outcome of the i-th patient with the j-th organ
+            # """
+            # outcomes_temp = outcomes.values[:, 0]
+            # outcomes_noiseless_temp = outcomes_noiseless.values[:, 0]
 
-            # outcomes_temp[0] = outcomes.values[0,1]
-            # outcomes_noiseless_temp[0] = outcomes_noiseless.values[0,1]
+            # # outcomes_temp[0] = outcomes.values[0,1]
+            # # outcomes_noiseless_temp[0] = outcomes_noiseless.values[0,1]
+
+            # # Create the second DataFrame
+            # df2 = pd.concat([organs.iloc[0, :]] * len(patients), axis=1).transpose()
+
+            # # Reset the index of 'df2' and drop the old index
+            # df2 = df2.reset_index(drop=True)
+
+            # # Concatenate 'patients' and 'df2'
+            # merged = pd.concat([patients, df2], axis=1)
+
+            # merged = merged.drop('pat_id', axis = 1)
+            # merged = merged.drop('org_id', axis = 1)
+
+            # outcomes = outcomes_temp
+            # outcomes_noiseless = outcomes_noiseless_temp
 
             # Create the second DataFrame
-            df2 = pd.concat([organs.iloc[0, :]] * len(patients), axis=1).transpose()
+            df2 = pd.concat([organs.iloc[:, :]] * len(patients), axis=0)
 
             # Reset the index of 'df2' and drop the old index
             df2 = df2.reset_index(drop=True)
 
+            df_3 = patients.iloc[np.repeat(np.arange(len(patients)), len(organs))]
+
+            df_3 = df_3.reset_index(drop=True)
+
             # Concatenate 'patients' and 'df2'
-            merged = pd.concat([patients, df2], axis=1)
+            merged = pd.concat([df_3, df2], axis=1)
 
-            merged = merged.drop('pat_id', axis = 1)
-            merged = merged.drop('org_id', axis = 1)
+            merged = merged.drop('pat_id', axis=1)
+            merged = merged.drop('org_id', axis=1)
 
-            outcomes = outcomes_temp
-            outcomes_noiseless = outcomes_noiseless_temp
-        
+            outcomes = outcomes.iloc[:, 2]
+            outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
+
+        if trainfac and not evalfac:
+
+            X_train = merged
+
+
+            indices = [i*len(patients) + (i) for i in range(0, len(organs))]
+            y_train = outcomes.iloc[indices]
+
+            # Create the second DataFrame
+            df2 = pd.concat([organs.iloc[:, :]] * len(patients), axis=0)
+
+            # Reset the index of 'df2' and drop the old index
+            df2 = df2.reset_index(drop=True)
+
+            df_3 = patients.iloc[np.repeat(np.arange(len(patients)), len(organs))]
+
+            df_3 = df_3.reset_index(drop=True)
+
+            # Concatenate 'patients' and 'df2'
+            merged = pd.concat([df_3, df2], axis=1)
+
+            merged = merged.drop('pat_id', axis=1)
+            merged = merged.drop('org_id', axis=1)
+
+            outcomes = outcomes.iloc[:, 2]
+            outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
+
+            X_test = merged
+            y_test = outcomes
+
+
+            return X_train, y_train, X_test, y_test, outcomes_noiseless, outcomes_noiseless
+
+
+            
+            
+
+
+
 
 
 
 
         X = merged
-        y = outcomes
-        y_noiseless = outcomes_noiseless
+        y = outcomes.values
+        y_noiseless = outcomes_noiseless.values
 
     #     Coumns of Merged:  ['age', 'weight', 'hla_a', 'hla_b', 'hla_c', 'cold_ischemia_time', 'dsa',
     #    'age_don', 'weight_don', 'hla_a_don', 'hla_b_don', 'hla_c_don',
@@ -160,12 +214,14 @@ class DataHandler:
     #TODO: Standarize also outcomes!!!!!
 
 
-class RegressionModel:
-    def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, scale:bool, remote:bool = False, split:bool = True):
+class RegressionModels:
+    def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, scale:bool, trainfac:bool, evalfac:bool, remote:bool = False, split:bool = True):
         self.split = split
         self.scale = scale
+        self.trainfac = trainfac
+        self.evalfac = evalfac
         self.data_handler = DataHandler(patients, organs, outcomes, outcomes_noiseless, remote=False)
-        self.X_train, self.y_train, self.X_test, self.y_test, self.y_train_noiseless, self.y_test_noiseless = self.data_handler.load_data(factual=True, outcome='eGFR_3', traintest_split=split)
+        self.X_train, self.y_train, self.X_test, self.y_test, self.y_train_noiseless, self.y_test_noiseless = self.data_handler.load_data(trainfac = trainfac, evalfac = evalfac, outcome='eGFR_3', traintest_split=split)
 
     def train_model(self, model):
         """
@@ -186,7 +242,7 @@ class RegressionModel:
         """
         return model.predict(X)
 
-    def  evaluate_model_test(self, model,scalerx ,  scalery ):
+    def  evaluate_model_test(self, model, verbose:bool, scalerx ,  scalery ):
         """
         Evaluate the performance of a regression model.
 
@@ -201,7 +257,7 @@ class RegressionModel:
         y_pred = model.predict(self.X_test)
 
         if self.scale:
-            y_pred = scalery.inverse_transform(y_pred.reshape(-1, 1))
+            y_pred = scalery.inverse_transform(y_pred)
 
         # Evaluate
         rmse = np.sqrt(mean_squared_error(self.y_test, y_pred))
@@ -211,7 +267,7 @@ class RegressionModel:
 
         return rmse, r2, rmse_noiseless, r2_noiseless
     
-    def evaluate_model_train(self, model, scalery = None):
+    def evaluate_model_train(self, model, verbose:bool, scalery = None):
         """
         Evaluate the performance of a regression model.
 
@@ -224,8 +280,8 @@ class RegressionModel:
 
 
         if self.scale:
-            y_pred = scalery.inverse_transform(y_pred.reshape(-1, 1))
-            y_train = scalery.inverse_transform(self.y_train.reshape(-1, 1))
+            y_pred = scalery.inverse_transform(y_pred)
+            y_train = scalery.inverse_transform(self.y_train)
 
     
 
@@ -235,58 +291,71 @@ class RegressionModel:
         r2 = r2_score(y_train, y_pred)
         r2_noiseless = r2_score(y_train, y_pred)
 
+        if verbose:
+
+            print('verbose not implemented')
+            
+            # sns.residplot(y = y_pred.reshape(-1),x = self.X_train['age'],lowess=True,
+            #                                 line_kws={'color': 'red', 'lw': 1, 'alpha': 1})
+            # plt.xlabel("Fitted values")
+            # plt.title('Residual plot')
+                        
+
+
+        
+
         return rmse, r2, rmse_noiseless, r2_noiseless
 
-    def run_regression(self):
+    def run_regression(self, verbose:bool = False):
 
         if self.scale:
             scalerx = StandardScaler()
             scalery = StandardScaler()
             self.X_train = scalerx.fit_transform(self.X_train)
-            self.y_train = scalery.fit_transform(self.y_train.reshape(-1, 1))
+            self.y_train = scalery.fit_transform(self.y_train)
     
         # Linear Regression
         linear_model = LinearRegression()
         self.train_model(linear_model)
         if self.scale:
-            mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(linear_model, scalery = scalery)
-            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model, scalerx = scalerx, scalery = scalery)
+            mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(linear_model, verbose, scalery = scalery)
+            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model, verbose, scalerx = scalerx, scalery = scalery)
         else:
-            mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(linear_model)
-            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model)
+            mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(linear_model, verbose)
+            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model, verbose)
 
         # Ridge Regression
         ridge_model = Ridge(alpha=1.0)
         self.train_model(ridge_model)
         if self.scale:
-            mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model, scalery = scalery)
-            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model,scalerx = scalerx, scalery = scalery)
+            mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model, verbose, scalery = scalery)
+            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model, verbose, scalerx = scalerx, scalery = scalery)
         else:
-            mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model)
-            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model)
+            mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model, verbose)
+            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model, verbose)
 
 
         # Random Forest Regression
         rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
         self.train_model(rf_model)
         if self.scale:
-            mse_rf_train, r2_rf_train, mse_noiseless_rf_train, r2_noiseless_rf_train = self.evaluate_model_train(rf_model, scalery = scalery)
-            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model,scalerx = scalerx, scalery = scalery)
+            mse_rf_train, r2_rf_train, mse_noiseless_rf_train, r2_noiseless_rf_train = self.evaluate_model_train(rf_model, verbose, scalery = scalery)
+            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model, verbose, scalerx = scalerx, scalery = scalery)
 
         else:
-            mse_rf_train, r2_rf_train, mse_noiseless_rf_train, r2_noiseless_rf_train = self.evaluate_model_train(rf_model)
-            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model)
+            mse_rf_train, r2_rf_train, mse_noiseless_rf_train, r2_noiseless_rf_train = self.evaluate_model_train(rf_model, verbose)
+            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model, verbose)
 
 
         # SVM Regression
         svm_model = SVR(kernel= 'rbf')
         self.train_model(svm_model)
         if self.scale:
-            mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, scalery= scalery)
-            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model,scalerx = scalerx, scalery= scalery)
+            mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, verbose, scalery= scalery)
+            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, verbose, scalerx = scalerx, scalery= scalery)
         else:
-            mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model)
-            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model)
+            mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, verbose)
+            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, verbose)
 
         # Create a table, 
         results = pd.DataFrame({
@@ -304,16 +373,15 @@ class RegressionModel:
 
         return results
 
-# if __name__ == '__main__':
-#     patients = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/patients.csv')
-#     organs = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/organs.csv')
-#     outcomes = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes.csv')
-#     outcomes_noiseless = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_noiseless.csv')
-#     regression_model = RegressionModel(patients, organs, outcomes, outcomes_noiseless, remote=False, split=True, scale=True)
-#     model = LinearRegression()
-#     regression_model.train_model(model)
-#     print(regression_model.evaluate_model(model))
+if __name__ == '__main__':
+    patients = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/patients.csv')
+    organs = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/organs.csv')
+    outcomes = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes.csv')
+    outcomes_noiseless = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_noiseless.csv')
 
-#     results = regression_model.run_regression()
-#     print(results)
+    
+    regression_model = RegressionModels(patients, organs, outcomes, outcomes_noiseless, trainfac = True, evalfac = False, remote=False, split=True, scale=True)
+
+    print(regression_model.run_regression(verbose=True))
+
 

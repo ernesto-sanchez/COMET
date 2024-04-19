@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 class DataHandler:
-    def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, remote:bool = False):
+    def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, remote:bool = False, onlyfactual = True):
         self.remote = remote
         self.patients = patients
         self.organs = organs
@@ -55,16 +55,16 @@ class DataHandler:
         self.outcomes_noiseless = self.outcomes_noiseless.dropna()
 
         # CAUTION: Uncomment this line if loading data from a csv file
-        self.outcomes = self.outcomes.map(ast.literal_eval)
-        self.outcomes_noiseless = self.outcomes_noiseless.map(ast.literal_eval)
+        # self.outcomes = self.outcomes.map(ast.literal_eval)
+        # self.outcomes_noiseless = self.outcomes_noiseless.map(ast.literal_eval)
 
 
-        if outcome == 'eGFR_3':
-            outcomes = self.outcomes.map(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
-            outcomes_noiseless = self.outcomes_noiseless.map(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
+        # if outcome == 'eGFR_3':
+        #     outcomes = self.outcomes.map(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
+        #     outcomes_noiseless = self.outcomes_noiseless.map(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
 
-        else:
-            raise ValueError('Outcome not supported')
+        # else:
+        #     raise ValueError('Outcome not supported')
         
 
 
@@ -75,8 +75,8 @@ class DataHandler:
 
 
         if factual:
-            outcomes = np.diag(outcomes.values)
-            outcomes_noiseless = np.diag(outcomes_noiseless.values)
+            #outcomes = np.diag(outcomes.values)
+            #outcomes_noiseless = np.diag(outcomes_noiseless.values)
             merged = pd.concat([patients, organs], axis=1)
             merged = merged.drop('pat_id', axis = 1)
             merged = merged.drop('org_id', axis = 1)
@@ -85,34 +85,34 @@ class DataHandler:
             """ If not factual, we match the first organ with all the patients
                 reminder outcomes[i][j] is the outcome of the i-th patient with the j-th organ
             """
-            outcomes_temp = outcomes.values[:, 0]
-            outcomes_noiseless_temp = outcomes_noiseless.values[:, 0]
+            # outcomes_temp = outcomes.values[:, 0]
+            # outcomes_noiseless_temp = outcomes_noiseless.values[:, 0]
 
-            # outcomes_temp[0] = outcomes.values[0,1]
-            # outcomes_noiseless_temp[0] = outcomes_noiseless.values[0,1]
+            # # outcomes_temp[0] = outcomes.values[0,1]
+            # # outcomes_noiseless_temp[0] = outcomes_noiseless.values[0,1]
 
-            # Create the second DataFrame
-            df2 = pd.concat([organs.iloc[0, :]] * len(patients), axis=1).transpose()
+            # # Create the second DataFrame
+            # df2 = pd.concat([organs.iloc[0, :]] * len(patients), axis=1).transpose()
 
-            # Reset the index of 'df2' and drop the old index
-            df2 = df2.reset_index(drop=True)
+            # # Reset the index of 'df2' and drop the old index
+            # df2 = df2.reset_index(drop=True)
 
-            # Concatenate 'patients' and 'df2'
-            merged = pd.concat([patients, df2], axis=1)
+            # # Concatenate 'patients' and 'df2'
+            # merged = pd.concat([patients, df2], axis=1)
 
-            merged = merged.drop('pat_id', axis = 1)
-            merged = merged.drop('org_id', axis = 1)
+            # merged = merged.drop('pat_id', axis = 1)
+            # merged = merged.drop('org_id', axis = 1)
 
-            outcomes = outcomes_temp
-            outcomes_noiseless = outcomes_noiseless_temp
+            # outcomes = outcomes_temp
+            # outcomes_noiseless = outcomes_noiseless_temp
         
 
 
 
 
         X = merged
-        y = outcomes
-        y_noiseless = outcomes_noiseless
+        y = outcomes.values
+        y_noiseless = outcomes_noiseless.values
 
     #     Coumns of Merged:  ['age', 'weight', 'hla_a', 'hla_b', 'hla_c', 'cold_ischemia_time', 'dsa',
     #    'age_don', 'weight_don', 'hla_a_don', 'hla_b_don', 'hla_c_don',
@@ -140,9 +140,11 @@ class MLPRegressor(nn.Module):
 
     def __init__(self, split, scale, patients, organs, outcomes, outcomes_noiseless, remote=False):
         super(MLPRegressor, self).__init__()
-        self.fc1 = nn.Linear(28, 40)##TODO change later, hardcoded now
+        self.fc1 = nn.Linear(28, 25)##TODO change later, hardcoded now
         self.relu1 = nn.ReLU()
-        self.fc2 = nn.Linear(40, 1)
+        self.fc2 = nn.Linear(25, 25)
+        self.relu2 = nn.ReLU()
+        self.fc3 = nn.Linear(25,1)
         self.split = split
         self.scale = scale
         self.data_handler = DataHandler(patients, organs, outcomes, outcomes_noiseless, remote=False)
@@ -152,6 +154,8 @@ class MLPRegressor(nn.Module):
         out = self.fc1(x)
         out = self.relu1(out)
         out = self.fc2(out)
+        out = self.relu2(out)
+        out = self.fc3(out)
         return out
 
     def train_model(model, train_loader, criterion, optimizer, num_epochs):
@@ -221,9 +225,11 @@ def run_regression(model, scale=True):
         scalerx = StandardScaler()
         scalery = StandardScaler()
         model.X_train = scalerx.fit_transform(model.X_train)
-        model.y_train = scalery.fit_transform(model.y_train.reshape(-1, 1))
+        #model.y_train = scalery.fit_transform(model.y_train.reshape(-1, 1))
+        model.y_train = scalery.fit_transform(model.y_train)
+
         model.X_test = scalerx.transform(model.X_test)
-        model.y_test = scalery.transform(model.y_test.reshape(-1, 1))
+        model.y_test = scalery.transform(model.y_test) #reshape if not using onlydiagonal
 
     # Create DataLoader for training and test datasets
     train_dataset = torch.utils.data.TensorDataset(torch.Tensor(model.X_train.astype(float)), torch.Tensor(model.y_train))
@@ -233,10 +239,10 @@ def run_regression(model, scale=True):
 
     # Define the loss function and optimizer
     criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0003)
 
     # Train the model
-    num_epochs = 100
+    num_epochs = 50
     model.train_model(train_loader, criterion, optimizer, num_epochs)
 
     # Evaluate the model
@@ -258,7 +264,8 @@ if __name__ == '__main__':
     organs = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/organs.csv')
     outcomes = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes.csv')
     outcomes_noiseless = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_noiseless.csv')
-    regression_model = MLPRegressor(patients= patients, organs= organs,outcomes= outcomes, outcomes_noiseless= outcomes_noiseless, remote=False, split=True, scale=True)
+    #outcomes_diagonal = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_diagonal.csv')
+    regression_model = MLPRegressor(patients= patients, organs= organs,outcomes= outcomes, outcomes_noiseless= outcomes, remote=False, split=True, scale=True)
 
     print(run_regression(regression_model, scale=True))
 
