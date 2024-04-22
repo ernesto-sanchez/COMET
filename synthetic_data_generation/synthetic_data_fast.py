@@ -98,8 +98,8 @@ class SyntheticDataGenerator:
                 outcomes['eGFR'] = 100*np.ones(self.n) - organs['age_don'] - 0.5*patients["age"] - 0.1*organs['weight_don'] - 0.1*patients['weight'] + np.random.normal(0, noise, self.n)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n) - organs['age_don'] - 0.5*patients["age"] - 0.1*organs['weight_don'] - 0.1*patients['weight']
 
-                outcomes['survival'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'] + 0.05*patients["age"] + 0.01*organs['weight_don'] + 0.01*patients['weight'] + np.random.normal(0, noise, self.n)))
-                outcomes_noiseless['survival'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'] + 0.05*patients["age"] + 0.01*organs['weight_don'] + 0.01*patients['weight']))
+                outcomes['survival'] = 1/(1 + np.exp(- 82 +organs['age_don'] + 0.5*patients["age"] + 0.2*organs['weight_don'] + 0.1*patients['weight'] + np.random.normal(0, noise, self.n)))
+                outcomes_noiseless['survival'] = 1/(1 + np.exp(- 82 +organs['age_don'] + 0.5*patients["age"] + 0.2*organs['weight_don'] + 0.1*patients['weight']))
 
                 outcomes['survival'] = np.random.binomial(1, outcomes['survival'])
                 outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival'])
@@ -175,7 +175,7 @@ class SyntheticDataGenerator:
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=2000, m =2000, noise=1, complexity=1, only_factual=True)
+    generator = SyntheticDataGenerator(n=20000, m =20000, noise=1, complexity=1, only_factual=True)
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
 
 
