@@ -23,6 +23,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as stats
+from sklearn import metrics
 
 
 import matplotlib.pyplot as plt
@@ -62,8 +63,11 @@ class DataHandler:
         # self.outcomes = pd.DataFrame(self.outcomes)
         # self.outcomes_noiseless = pd.DataFrame(self.outcomes_noiseless)
 
-        outcomes = self.outcomes.dropna()
-        outcomes_noiseless = self.outcomes_noiseless.dropna()
+        outcomes = self.outcomes[['pat_id', 'org_id', outcome]]
+        outcomes_noiseless = self.outcomes_noiseless[['pat_id', 'org_id', outcome]]
+
+        outcomes = outcomes.dropna()
+        outcomes_noiseless = outcomes_noiseless.dropna()
 
         # CAUTION: Uncomment this line if loading data from a csv file
         # self.outcomes = self.outcomes.map(ast.literal_eval)
@@ -143,7 +147,11 @@ class DataHandler:
 
 
             indices = [i*len(patients) + (i) for i in range(0, len(organs))]
+            outcomes = outcomes.iloc[:, 2]
+            outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
+
             y_train = outcomes.iloc[indices]
+            y_train_noiseless = outcomes_noiseless.iloc[indices]
 
             # Create the second DataFrame
             df2 = pd.concat([organs.iloc[:, :]] * len(patients), axis=0)
@@ -161,14 +169,77 @@ class DataHandler:
             merged = merged.drop('pat_id', axis=1)
             merged = merged.drop('org_id', axis=1)
 
-            outcomes = outcomes.iloc[:, 2]
-            outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
 
             X_test = merged
             y_test = outcomes
+            y_test_noiseless = outcomes_noiseless
+
+            X_test = X_test.sample(n = len(patients), random_state=42)
+            y_test = y_test.sample(n = len(patients), random_state=42)
+            y_test_noiseless = y_test_noiseless.sample(n = len(patients), random_state=42)
+
+            y_train = y_train.values
+            y_test = y_test.values
+            y_train_noiseless = y_train_noiseless.values
+            y_test_noiseless = y_test_noiseless.values
 
 
-            return X_train, y_train, X_test, y_test, outcomes_noiseless, outcomes_noiseless
+            return X_train, y_train, X_test, y_test, y_train_noiseless, y_test_noiseless
+
+
+        if not trainfac and evalfac:
+
+            
+            # Create the second DataFrame
+            df2 = pd.concat([organs.iloc[:, :]] * len(patients), axis=0) 
+
+            # Reset the index of 'df2' and drop the old index
+            df2 = df2.reset_index(drop=True)
+
+            df_3 = patients.iloc[np.repeat(np.arange(len(patients)), len(organs))]
+
+            df_3 = df_3.reset_index(drop=True)
+
+            # Concatenate 'patients' and 'df2'
+            merged = pd.concat([df_3, df2], axis=1)
+
+    
+
+            # merged = merged.drop('pat_id', axis=1)
+            # merged = merged.drop('org_id', axis=1)
+
+            outcomes = outcomes.iloc[:, 2]
+            outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
+
+            X_train, X_test, y_train, y_test = train_test_split(merged, outcomes, test_size=0.5, shuffle=False)
+            _, _, y_train_noiseless,  y_test_noiseless = train_test_split(merged, outcomes_noiseless, test_size=0.5, shuffle=False)
+
+            ind = X_test['pat_id'] == X_test['org_id']
+            X_test = X_test[ind]
+
+            y_test = y_test[ind]
+            y_test_noiseless = y_test_noiseless[ind]
+
+
+            X_train = X_train.drop('pat_id', axis=1)
+            X_train = X_train.drop('org_id', axis=1)
+            X_test = X_test.drop('pat_id', axis=1)
+            X_test = X_test.drop('org_id', axis=1)
+
+            y_train = y_train.values
+            y_test = y_test.values
+            y_train_noiseless = y_train_noiseless.values
+            y_test_noiseless = y_test_noiseless.values
+
+
+
+
+ 
+
+
+
+
+            return X_train, y_train, X_test, y_test, y_train_noiseless, y_test_noiseless
 
 
             
@@ -178,7 +249,8 @@ class DataHandler:
 
 
 
-
+        outcomes = outcomes.iloc[:, 2]
+        outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
 
         X = merged
         y = outcomes.values
@@ -215,22 +287,28 @@ class DataHandler:
 
 
 class RegressionModels:
-    def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, scale:bool, trainfac:bool, evalfac:bool, remote:bool = False, split:bool = True):
+    def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, outcome:str, scale:bool, trainfac:bool, evalfac:bool, remote:bool = False, split:bool = True):
         self.split = split
         self.scale = scale
         self.trainfac = trainfac
         self.evalfac = evalfac
+        self.outcome = outcome
         self.data_handler = DataHandler(patients, organs, outcomes, outcomes_noiseless, remote=False)
-        self.X_train, self.y_train, self.X_test, self.y_test, self.y_train_noiseless, self.y_test_noiseless = self.data_handler.load_data(trainfac = trainfac, evalfac = evalfac, outcome='eGFR_3', traintest_split=split)
+        self.X_train, self.y_train, self.X_test, self.y_test, self.y_train_noiseless, self.y_test_noiseless = self.data_handler.load_data(trainfac = trainfac, evalfac = evalfac, outcome=self.outcome, traintest_split=split)
 
-    def train_model(self, model):
+    def train_model(self, model, scalery = None):
         """
         Train a regression model.
 
         :param model: The regression model to train
         """
         # Train the model
-        return model.fit(self.X_train, self.y_train)
+        y_train = self.y_train
+        if isinstance(model, LogisticRegression):
+            y_train = scalery.inverse_transform(self.y_train.reshape(-1,1))
+
+
+        return model.fit(self.X_train, y_train)
 
     def predict(self, model, X):
         """
@@ -242,7 +320,7 @@ class RegressionModels:
         """
         return model.predict(X)
 
-    def  evaluate_model_test(self, model, verbose:bool, scalerx ,  scalery ):
+    def  evaluate_model_test(self, model, verbose:bool, scalerx:None ,  scalery:None ):
         """
         Evaluate the performance of a regression model.
 
@@ -252,18 +330,23 @@ class RegressionModels:
         # Predictions
 
         if self.scale:
-            self.X_test = scalerx.transform(self.X_test)
+            X_test = scalerx.transform(self.X_test)
+        else:
+            X_test = self.X_test
 
-        y_pred = model.predict(self.X_test)
+        y_pred = model.predict(X_test)
 
-        if self.scale:
-            y_pred = scalery.inverse_transform(y_pred)
+        if self.scale and not isinstance(model, LogisticRegression):
+            y_pred = scalery.inverse_transform(y_pred.reshape(-1,1))
 
         # Evaluate
         rmse = np.sqrt(mean_squared_error(self.y_test, y_pred))
         rmse_noiseless = np.sqrt(mean_squared_error(self.y_test_noiseless, y_pred))
         r2 = r2_score(self.y_test, y_pred)
         r2_noiseless = r2_score(self.y_test_noiseless, y_pred)
+        if isinstance(model,LogisticRegression):
+            conf_matrix_test = metrics.confusion_matrix(self.y_test, y_pred)
+            print("confusion matrix train" ,conf_matrix_test)
 
         return rmse, r2, rmse_noiseless, r2_noiseless
     
@@ -277,11 +360,13 @@ class RegressionModels:
         # Predictions
         y_pred = model.predict(self.X_train)
         y_train = self.y_train
+        if isinstance(model, LogisticRegression):
+            y_train = scalery.inverse_transform(y_train.reshape(-1,1))
 
 
-        if self.scale:
-            y_pred = scalery.inverse_transform(y_pred)
-            y_train = scalery.inverse_transform(self.y_train)
+        if self.scale and not isinstance(model, LogisticRegression):
+            y_pred = scalery.inverse_transform(y_pred.reshape(-1,1))
+            y_train = scalery.inverse_transform(self.y_train.reshape(-1,1))
 
     
 
@@ -290,6 +375,11 @@ class RegressionModels:
         rmse_noiseless = np.sqrt(mean_squared_error(y_train, y_pred))
         r2 = r2_score(y_train, y_pred)
         r2_noiseless = r2_score(y_train, y_pred)
+
+
+        if isinstance(model, LogisticRegression):
+            conf_matrix_train = metrics.confusion_matrix(y_train, y_pred)
+            print("confusion matrix train" ,conf_matrix_train)
 
         if verbose:
 
@@ -312,7 +402,7 @@ class RegressionModels:
             scalerx = StandardScaler()
             scalery = StandardScaler()
             self.X_train = scalerx.fit_transform(self.X_train)
-            self.y_train = scalery.fit_transform(self.y_train)
+            self.y_train = scalery.fit_transform(self.y_train.reshape(-1, 1))
     
         # Linear Regression
         linear_model = LinearRegression()
@@ -322,7 +412,7 @@ class RegressionModels:
             mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model, verbose, scalerx = scalerx, scalery = scalery)
         else:
             mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(linear_model, verbose)
-            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model, verbose)
+            mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = self.evaluate_model_test(linear_model, verbose, scalerx = None, scalery = None)
 
         # Ridge Regression
         ridge_model = Ridge(alpha=1.0)
@@ -332,7 +422,18 @@ class RegressionModels:
             mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model, verbose, scalerx = scalerx, scalery = scalery)
         else:
             mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model, verbose)
-            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model, verbose)
+            mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model, verbose, scalerx=None, scalery=None)
+
+        logistic_model = LogisticRegression()
+        self.train_model(logistic_model, scalery = scalery)
+        # if self.scale:
+        #     mse_log_train, r2_log_train, mse_noiseless_log_train, r2_noiseless_log_train = self.evaluate_model_train(logistic_model, verbose, scalery = scalery)
+        #     mse_log, r2_log, mse_noiseless_log, r2_noiseless_log = self.evaluate_model_test(logistic_model, verbose, scalerx = scalerx, scalery = scalery)
+        # else:
+        mse_log_train, r2_log_train, mse_noiseless_log_train, r2_noiseless_log_train = self.evaluate_model_train(logistic_model, verbose, scalery = scalery)
+        mse_log, r2_log, mse_noiseless_log, r2_noiseless_log = self.evaluate_model_test(logistic_model, verbose, scalerx=scalerx, scalery=scalery)
+
+
 
 
         # Random Forest Regression
@@ -344,7 +445,7 @@ class RegressionModels:
 
         else:
             mse_rf_train, r2_rf_train, mse_noiseless_rf_train, r2_noiseless_rf_train = self.evaluate_model_train(rf_model, verbose)
-            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model, verbose)
+            mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model, verbose, scalerx=None, scalery=None)
 
 
         # SVM Regression
@@ -355,19 +456,19 @@ class RegressionModels:
             mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, verbose, scalerx = scalerx, scalery= scalery)
         else:
             mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, verbose)
-            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, verbose)
+            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, verbose, scalerx=None, scalery=None)
 
         # Create a table, 
         results = pd.DataFrame({
-            'Model': ['Linear Regression', 'Ridge Regression', 'Random Forest Regression', 'SVM Regression'],
-            'root MSE': [mse_lr, mse_rr, mse_rf, mse_svm],
-            'R2': [r2_lr, r2_rr, r2_rf, r2_svm],
-            'root MSE Noiseless': [mse_noiseless_lr, mse_noiseless_rr, mse_noiseless_rf, mse_noiseless_svm],
-            'R2 Noiseless': [r2_noiseless_lr, r2_noiseless_rr, r2_noiseless_rf, r2_noiseless_svm], 
-            'root MSE Train': [mse_ls_train, mse_rr_train, mse_rf_train, mse_svm_train],
-            'R2 Train': [r2_ls_train, r2_rr_train, r2_rf_train, r2_svm_train],
-            'root MSE Noiseless Train': [mse_noiseless_ls_train, mse_noiseless_rr_train, mse_noiseless_rf_train, mse_noiseless_svm_train],
-            'R2 Noiseless Train': [r2_noiseless_ls_train, r2_noiseless_rr_train, r2_noiseless_rf_train, r2_noiseless_svm_train]
+            'Model': ['Linear Regression', 'Ridge Regression', 'Log. Regression', 'Random Forest Regression', 'SVM Regression'],
+            'root MSE': [mse_lr, mse_rr,mse_log,  mse_rf, mse_svm],
+            # 'R2': [r2_lr, r2_rr, r2_rf, r2_svm],
+            # 'root MSE Noiseless': [mse_noiseless_lr, mse_noiseless_rr, mse_noiseless_rf, mse_noiseless_svm],
+            # 'R2 Noiseless': [r2_noiseless_lr, r2_noiseless_rr, r2_noiseless_rf, r2_noiseless_svm], 
+            'root MSE Train': [mse_ls_train, mse_rr_train,mse_log_train,  mse_rf_train, mse_svm_train],
+            # 'R2 Train': [r2_ls_train, r2_rr_train, r2_rf_train, r2_svm_train],
+            # 'root MSE Noiseless Train': [mse_noiseless_ls_train, mse_noiseless_rr_train, mse_noiseless_rf_train, mse_noiseless_svm_train],
+            # 'R2 Noiseless Train': [r2_noiseless_ls_train, r2_noiseless_rr_train, r2_noiseless_rf_train, r2_noiseless_svm_train]
 
         })
 
@@ -380,7 +481,7 @@ if __name__ == '__main__':
     outcomes_noiseless = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_noiseless.csv')
 
     
-    regression_model = RegressionModels(patients, organs, outcomes, outcomes_noiseless, trainfac = True, evalfac = False, remote=False, split=True, scale=True)
+    regression_model = RegressionModels(patients, organs, outcomes, outcomes_noiseless, outcome = 'survival',trainfac = True, evalfac = True, remote=False, split=True, scale=True)
 
     print(regression_model.run_regression(verbose=True))
 
