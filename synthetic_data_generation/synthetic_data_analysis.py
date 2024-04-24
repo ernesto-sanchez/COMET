@@ -19,7 +19,7 @@ import pandas as pd
 
 
 
-generator = SyntheticDataGenerator(n=5000, m=5000, noise=5, complexity=2, only_factual=True)
+generator = SyntheticDataGenerator(n=100, m=100, noise=0, complexity=2, TAB = 0, only_factual=True)
 df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
 
 
@@ -27,9 +27,9 @@ df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_
 # Analysis of outcomes data
 print("Outcomes Data:")
 print("Mean:")
-print(df_outcomes.mean())
+print(df_outcomes['eGFR'].mean())
 print("Standard Deviation:")
-print(df_outcomes.std())
+print(df_outcomes['eGFR'].std())
 
 # Plotting the data
 plt.figure(figsize=(10, 6))
@@ -37,7 +37,7 @@ plt.figure(figsize=(10, 6))
 
 
 # Plotting outcomes data
-plt.hist(df_outcomes.values.flatten(), bins=50, color='red')
+plt.hist(df_outcomes['eGFR'].values.flatten(), bins=50, color='red')
 plt.title("Outcomes Data")
 plt.xlabel("Value")
 plt.ylabel("Frequency")

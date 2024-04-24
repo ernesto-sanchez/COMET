@@ -346,7 +346,9 @@ class RegressionModels:
         r2_noiseless = r2_score(self.y_test_noiseless, y_pred)
         if isinstance(model,LogisticRegression):
             conf_matrix_test = metrics.confusion_matrix(self.y_test, y_pred)
-            print("confusion matrix train" ,conf_matrix_test)
+            accuracy_score = metrics.accuracy_score(self.y_test, y_pred)
+            print("confusion matrix test" ,conf_matrix_test)
+            print("accuracy score test", accuracy_score)
 
         return rmse, r2, rmse_noiseless, r2_noiseless
     
@@ -379,7 +381,9 @@ class RegressionModels:
 
         if isinstance(model, LogisticRegression):
             conf_matrix_train = metrics.confusion_matrix(y_train, y_pred)
+            accuracy_score = metrics.accuracy_score(y_train, y_pred)
             print("confusion matrix train" ,conf_matrix_train)
+            print("accuracy score train", accuracy_score)
 
         if verbose:
 

@@ -7,13 +7,14 @@ import numpy as np
 
 
 class SyntheticDataGenerator:
-    def __init__(self, n:int, m:int, complexity: int, only_factual: bool, bias:bool = False, noise:int = 0 ) -> None:
+    def __init__(self, n:int, m:int, complexity: int, only_factual: bool,TAB:float,  bias:bool = False, noise:int = 0 ) -> None:
         self.n = n  # number of patients
         self.m = m  # number of organs
         self.noise = noise
         self.complexity = complexity
         self.only_factual = only_factual
         self.bias = bias
+        self.alpha = TAB
 
 
 
@@ -59,12 +60,66 @@ class SyntheticDataGenerator:
         df['hla_c_don'] = np.random.choice(range(1, 3), size=m)
 
         return df
-
-
-
     
 
-    def generate_outcomes(self, patients: pd.DataFrame, organs: pd.DataFrame) -> dict:
+
+    def pat_org_matching(self, patients: pd.DataFrame, organs: pd.DataFrame, alpha: float) -> tuple:
+
+        """
+        Function get as input a dataframe with patients and a dataframe with organs. Returns the same data frames but with different ordering of the rows.
+        The ith patient corresponds to the ith organ in the new dataframes. The new dataframes are obtained by sampling from the original dataframes.
+
+        When alpha == 0, the best organ is given to each patient, this is measured by euclidena distance between selected features. For other values of alpha, a random organ from the alpha*m nearest organs is smapled.         
+        
+        """
+
+        n = self.n #patients
+        m = self.m #organs
+
+
+        ## Compute distance matrix
+        dist_matrix = np.zeros((n, m))
+        #Use broadcasting: take first the age difference, then the weight difference, then the blood type difference, then the HLA difference
+        age_pat = patients['age'].values.reshape(-1, 1)
+        weight_pat = patients['weight'].values.reshape(-1, 1)
+        blood_type_pat = patients['blood_type'].values.reshape(-1, 1)
+        rh_pat = patients['rh'].values.reshape(-1, 1)
+        hla_a_pat = patients['hla_a'].values.reshape(-1, 1)
+        hla_b_pat = patients['hla_b'].values.reshape(-1, 1)
+        hla_c_pat = patients['hla_c'].values.reshape(-1, 1)
+
+        age_org = organs['age_don'].values.reshape(1, -1)
+        weight_org = organs['weight_don'].values.reshape(1, -1)
+        blood_type_org = organs['blood_type_don'].values.reshape(1, -1)
+        rh_org = organs['rh_don'].values.reshape(1, -1)
+        hla_a_org = organs['hla_a_don'].values.reshape(1, -1)
+        hla_b_org = organs['hla_b_don'].values.reshape(1, -1)
+        hla_c_org = organs['hla_c_don'].values.reshape(1, -1)
+
+        dist_matrix = np.abs(age_pat - age_org) + np.abs(weight_pat - weight_org) + 10*(blood_type_pat != blood_type_org) + 10*(rh_pat != rh_org) + 5* np.abs(hla_a_pat != hla_a_org) + 2*np.abs(hla_b_pat != hla_b_org) + np.abs(hla_c_pat != hla_c_org)
+
+
+        ## Create indices of the best organ for each patient
+
+        best_organ = np.zeros(n, dtype=int)
+
+        dist_matrix = pd.DataFrame(dist_matrix)
+        #print(dist_matrix)
+      
+        for patient in range(n):
+            m = dist_matrix.shape[1]
+            best_organ[patient] = np.random.choice(list(dist_matrix.iloc[patient].nsmallest(int((1-alpha)*(m - 1) +1)).index), size = 1)[0]
+            dist_matrix.drop(columns = best_organ[patient], inplace = True)
+
+
+        ## Create new dataframes with the best organ for each patient
+
+        organs = organs.iloc[best_organ]
+
+        return patients, organs
+
+
+    def generate_outcomes(self, patients: pd.DataFrame, organs: pd.DataFrame) -> tuple:
         """
         Generate (factual and counterfactual) outcomes for transplant patients. Have 3 complexities for generating the data.
 
@@ -82,11 +137,14 @@ class SyntheticDataGenerator:
             outcomes = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id','eGFR', 'survival'] )
             outcomes_noiseless = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id', 'eGFR', 'survival'] )
 
-            outcomes['pat_id'] = range(self.n)
-            outcomes['org_id'] = range(self.m)
+            patients = patients.reset_index(drop=True)
+            organs = organs.reset_index(drop=True)
 
-            outcomes_noiseless['pat_id'] = range(self.n)
-            outcomes_noiseless['org_id'] = range(self.m)
+            outcomes['pat_id'] = patients['pat_id']
+            outcomes['org_id'] = organs['org_id']
+
+            outcomes_noiseless['pat_id'] = patients['pat_id']
+            outcomes_noiseless['org_id'] = organs['org_id']
 
 
 
@@ -108,7 +166,7 @@ class SyntheticDataGenerator:
                 outcomes['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) + np.random.normal(0, noise, self.n)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don'])
 
-                outcomes['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) + np.random.normal(0, noise, self.n))))
+                outcomes['survival'] = 1/(1 + np.exp(-(23  - abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) + np.random.normal(0, noise, self.n))))
                 outcomes_noiseless['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']))))
 
                 outcomes['survival'] = np.random.binomial(1, outcomes['survival'])
@@ -120,10 +178,10 @@ class SyntheticDataGenerator:
         else:
             outcomes = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
             outcomes_noiseless = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
-            outcomes['pat_id'] = np.repeat(range(self.n), self.m)
-            outcomes['org_id'] = np.tile(range(self.m), self.n)
-            outcomes_noiseless['pat_id'] = np.repeat(range(self.n), self.m)
-            outcomes_noiseless['org_id'] = np.tile(range(self.m), self.n)
+            outcomes['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
+            outcomes['org_id'] = np.tile(np.array(organs['org_id']), self.n)
+            outcomes_noiseless['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
+            outcomes_noiseless['org_id'] = np.tile(np.array(organs['org_id']), self.n)
 
             if self.complexity == 1:
                 outcomes['eGFR'] = 100*np.ones(self.n * self.m) - organs['age_don'].values[outcomes['org_id']] - 0.5*patients["age"].values[outcomes['pat_id']] - 0.1*organs['weight_don'].values[outcomes['org_id']] - 0.1*patients['weight'].values[outcomes['pat_id']] + np.random.normal(0, noise, self.n * self.m)
@@ -162,6 +220,7 @@ class SyntheticDataGenerator:
         """
         patients = self.generate_patients()
         organs = self.generate_organs()
+        patients, organs = self.pat_org_matching(patients, organs, self.alpha)
         outcomes, outcomes_noiseless = self.generate_outcomes(patients, organs)
 
         return patients, organs, outcomes, outcomes_noiseless
@@ -175,7 +234,7 @@ class SyntheticDataGenerator:
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=20000, m =20000, noise=1, complexity=1, only_factual=True)
+    generator = SyntheticDataGenerator(n=10, m =10, noise=1, complexity=2, TAB = 0,  only_factual=False)
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
 
 
