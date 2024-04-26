@@ -110,9 +110,11 @@ class SyntheticDataGenerator:
             m = dist_matrix.shape[1]
             best_organ[patient] = np.random.choice(list(dist_matrix.iloc[patient].nsmallest(int((1-alpha)*(m - 1) +1)).index), size = 1)[0]
             dist_matrix.drop(columns = best_organ[patient], inplace = True)
+    
 
 
         ## Create new dataframes with the best organ for each patient
+        #print(best_organ)
 
         organs = organs.iloc[best_organ]
 
@@ -176,33 +178,36 @@ class SyntheticDataGenerator:
                 outcomes['eGFR'] = 100*np.ones(self.n) - 15 * (abs(patients['age'] - organs['age_don']) >= 15) - 10 * (abs(patients['weight'] - organs['weight_don']) >=15) + np.random.normal(0, noise, self.n)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n) - 15 * (abs(patients['age'] - organs['age_don']) >= 15) - 10 * (abs(patients['weight'] - organs['weight_don']) >=15)
         else:
+            patients = patients.reset_index(drop=True)
+            organs = organs.reset_index(drop=True)
             outcomes = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
             outcomes_noiseless = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
             outcomes['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
             outcomes['org_id'] = np.tile(np.array(organs['org_id']), self.n)
+            tiled_indices = np.tile(np.arange(self.n), self.m)
             outcomes_noiseless['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
             outcomes_noiseless['org_id'] = np.tile(np.array(organs['org_id']), self.n)
 
             if self.complexity == 1:
-                outcomes['eGFR'] = 100*np.ones(self.n * self.m) - organs['age_don'].values[outcomes['org_id']] - 0.5*patients["age"].values[outcomes['pat_id']] - 0.1*organs['weight_don'].values[outcomes['org_id']] - 0.1*patients['weight'].values[outcomes['pat_id']] + np.random.normal(0, noise, self.n * self.m)
-                outcomes_noiseless['eGFR'] = 100*np.ones(self.n * self.m) - organs['age_don'].values[outcomes['org_id']] - 0.5*patients["age"].values[outcomes['pat_id']] - 0.1*organs['weight_don'].values[outcomes['org_id']] - 0.1*patients['weight'].values[outcomes['pat_id']]
+                outcomes['eGFR'] = 100*np.ones(self.n * self.m) - organs['age_don'].values[tiled_indices] - 0.5*patients["age"].values[outcomes['pat_id']] - 0.1*organs['weight_don'].values[tiled_indices] - 0.1*patients['weight'].values[outcomes['pat_id']] + np.random.normal(0, noise, self.n * self.m)
+                outcomes_noiseless['eGFR'] = 100*np.ones(self.n * self.m) - organs['age_don'].values[tiled_indices] - 0.5*patients["age"].values[outcomes['pat_id']] - 0.1*organs['weight_don'].values[tiled_indices] - 0.1*patients['weight'].values[outcomes['pat_id']]
 
-                outcomes['survival'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[outcomes['org_id']] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[outcomes['org_id']] + 0.01*patients['weight'].values[outcomes['pat_id']] + np.random.normal(0, noise, self.n * self.m)))
-                outcomes_noiseless['survival'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[outcomes['org_id']] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[outcomes['org_id']] + 0.01*patients['weight'].values[outcomes['pat_id']]))
+                outcomes['survival'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[tiled_indices] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[tiled_indices] + 0.01*patients['weight'].values[outcomes['pat_id']] + np.random.normal(0, noise, self.n * self.m)))
+                outcomes_noiseless['survival'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[tiled_indices] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[tiled_indices] + 0.01*patients['weight'].values[outcomes['pat_id']]))
 
                 outcomes['survival'] = np.random.binomial(1, outcomes['survival'])
                 outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival'])
 
             if self.complexity == 2:
-                outcomes['eGFR'] = 100*np.ones(self.n * self.m)  - 2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[outcomes['org_id']]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[outcomes['org_id']]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[outcomes['org_id']]) + np.random.normal(0, noise, self.n * self.m)
-                outcomes_noiseless['eGFR'] = 100*np.ones(self.n * self.m)  - 2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[outcomes['org_id']]) - 0.1*patients['weight'].values[outcomes['pat_id']]
+                outcomes['eGFR'] = 100*np.ones(self.n * self.m)  - 2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) + np.random.normal(0, noise, self.n * self.m)
+                outcomes_noiseless['eGFR'] = 100*np.ones(self.n * self.m)  - 2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - 0.1*patients['weight'].values[outcomes['pat_id']] - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices])
 
-                outcomes['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[outcomes['org_id']]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[outcomes['org_id']]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[outcomes['org_id']]) + np.random.normal(0, noise, self.n * self.m))))
-                outcomes_noiseless['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[outcomes['org_id']]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[outcomes['org_id']]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[outcomes['org_id']]) )))
+                outcomes['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) + np.random.normal(0, noise, self.n * self.m))))
+                outcomes_noiseless['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) )))
 
             if self.complexity == 3:
-                outcomes['eGFR'] = 100*np.ones(self.n * self.m) - 15 * (abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[outcomes['org_id']]) >= 15) - 10 * (abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[outcomes['org_id']]) >=15) + np.random.normal(0, noise, self.n * self.m)
-                outcomes_noiseless['eGFR'] = 100*np.ones(self.n * self.m) - 15 * (abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[outcomes['org_id']]) >= 15) - 10 * (abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[outcomes['org_id']]) >=15)
+                outcomes['eGFR'] = 100*np.ones(self.n * self.m) - 15 * (abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) >= 15) - 10 * (abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) >=15) + np.random.normal(0, noise, self.n * self.m)
+                outcomes_noiseless['eGFR'] = 100*np.ones(self.n * self.m) - 15 * (abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) >= 15) - 10 * (abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) >=15)
 
             return outcomes, outcomes_noiseless
 
@@ -234,7 +239,7 @@ class SyntheticDataGenerator:
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=10, m =10, noise=1, complexity=2, TAB = 0,  only_factual=False)
+    generator = SyntheticDataGenerator(n=100, m =100, noise=1, complexity=2, TAB = 1,  only_factual=False)
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
 
 

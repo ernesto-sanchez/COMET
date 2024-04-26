@@ -138,8 +138,8 @@ class DataHandler:
             merged = merged.drop('pat_id', axis=1)
             merged = merged.drop('org_id', axis=1)
 
-            outcomes = outcomes.iloc[:, 2]
-            outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
+            # outcomes = outcomes.iloc[:, 2]
+            # outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
 
         if trainfac and not evalfac:
 
@@ -147,6 +147,7 @@ class DataHandler:
 
 
             indices = [i*len(patients) + (i) for i in range(0, len(organs))]
+
             outcomes = outcomes.iloc[:, 2]
             outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
 
@@ -208,23 +209,43 @@ class DataHandler:
             # merged = merged.drop('pat_id', axis=1)
             # merged = merged.drop('org_id', axis=1)
 
-            outcomes = outcomes.iloc[:, 2]
-            outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
+            # outcomes = outcomes.iloc[:, 2]
+            # outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
 
-            X_train, X_test, y_train, y_test = train_test_split(merged, outcomes, test_size=0.5, shuffle=False)
-            _, _, y_train_noiseless,  y_test_noiseless = train_test_split(merged, outcomes_noiseless, test_size=0.5, shuffle=False)
+            X_train, X_test, y_train, y_test = train_test_split(merged, outcomes, test_size=0.5, shuffle=True, random_state=3)
+            _, _, y_train_noiseless,  y_test_noiseless = train_test_split(merged, outcomes_noiseless, test_size=0.5, shuffle=True, random_state=3)
 
-            ind = X_test['pat_id'] == X_test['org_id']
-            X_test = X_test[ind]
+            true_match = pd.concat([patients['pat_id'], organs['org_id']], axis = 1)
 
-            y_test = y_test[ind]
-            y_test_noiseless = y_test_noiseless[ind]
+            df1 = pd.concat([X_test['pat_id'], X_test['org_id']], axis = 1)
+            df3 = df1.merge(true_match)
+
+            X_test = X_test.merge(df3)
+            y_test = y_test.merge(df3)
+            y_test_noiseless = y_test_noiseless.merge(df3)
+
+
+
+
+
 
 
             X_train = X_train.drop('pat_id', axis=1)
             X_train = X_train.drop('org_id', axis=1)
             X_test = X_test.drop('pat_id', axis=1)
             X_test = X_test.drop('org_id', axis=1)
+            y_train = y_train.drop('org_id', axis=1)
+            y_train = y_train.drop('pat_id', axis=1)
+            y_test = y_test.drop('org_id', axis=1)
+            y_test = y_test.drop('pat_id', axis=1)
+
+            y_train_noiseless = y_train_noiseless.drop('org_id', axis=1)
+            y_train_noiseless = y_train_noiseless.drop('pat_id', axis=1)
+
+            y_test_noiseless = y_test_noiseless.drop('org_id', axis=1)
+            y_test_noiseless = y_test_noiseless.drop('pat_id', axis=1)
+
+
 
             y_train = y_train.values
             y_test = y_test.values
@@ -428,14 +449,23 @@ class RegressionModels:
             mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model, verbose)
             mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model, verbose, scalerx=None, scalery=None)
 
-        logistic_model = LogisticRegression()
-        self.train_model(logistic_model, scalery = scalery)
-        # if self.scale:
-        #     mse_log_train, r2_log_train, mse_noiseless_log_train, r2_noiseless_log_train = self.evaluate_model_train(logistic_model, verbose, scalery = scalery)
-        #     mse_log, r2_log, mse_noiseless_log, r2_noiseless_log = self.evaluate_model_test(logistic_model, verbose, scalerx = scalerx, scalery = scalery)
-        # else:
-        mse_log_train, r2_log_train, mse_noiseless_log_train, r2_noiseless_log_train = self.evaluate_model_train(logistic_model, verbose, scalery = scalery)
-        mse_log, r2_log, mse_noiseless_log, r2_noiseless_log = self.evaluate_model_test(logistic_model, verbose, scalerx=scalerx, scalery=scalery)
+
+
+        # if oucome===survival, do classification
+        if self.outcome == 'survival':
+
+            logistic_model = LogisticRegression()
+            self.train_model(logistic_model, scalery = scalery)
+            # if self.scale:
+            #     mse_log_train, r2_log_train, mse_noiseless_log_train, r2_noiseless_log_train = self.evaluate_model_train(logistic_model, verbose, scalery = scalery)
+            #     mse_log, r2_log, mse_noiseless_log, r2_noiseless_log = self.evaluate_model_test(logistic_model, verbose, scalerx = scalerx, scalery = scalery)
+            # else:
+            mse_log_train, r2_log_train, mse_noiseless_log_train, r2_noiseless_log_train = self.evaluate_model_train(logistic_model, verbose, scalery = scalery)
+            mse_log, r2_log, mse_noiseless_log, r2_noiseless_log = self.evaluate_model_test(logistic_model, verbose, scalerx=scalerx, scalery=scalery)
+
+        else:
+            mse_log_train, r2_log_train, mse_noiseless_log_train, r2_noiseless_log_train = -1, -1, -1, -1
+            mse_log, r2_log, mse_noiseless_log, r2_noiseless_log = -1, -1, -1, -1
 
 
 
@@ -485,7 +515,7 @@ if __name__ == '__main__':
     outcomes_noiseless = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_noiseless.csv')
 
     
-    regression_model = RegressionModels(patients, organs, outcomes, outcomes_noiseless, outcome = 'survival',trainfac = True, evalfac = True, remote=False, split=True, scale=True)
+    regression_model = RegressionModels(patients, organs, outcomes, outcomes_noiseless, outcome = 'eGFR',trainfac = False, evalfac = True, remote=False, split=True, scale=True)
 
     print(regression_model.run_regression(verbose=True))
 
