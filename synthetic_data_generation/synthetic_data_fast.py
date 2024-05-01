@@ -239,7 +239,7 @@ class SyntheticDataGenerator:
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=100, m =100, noise=1, complexity=2, TAB = 1,  only_factual=False)
+    generator = SyntheticDataGenerator(n=1000, m =1000, noise=1, complexity=2, TAB = 1,  only_factual=True)
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
 
 
