@@ -136,8 +136,8 @@ class SyntheticDataGenerator:
         """
         noise = self.noise
         if self.only_factual:
-            outcomes = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id','eGFR', 'survival'] )
-            outcomes_noiseless = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id', 'eGFR', 'survival'] )
+            outcomes = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id','eGFR', 'survival_prob', 'survival'] )
+            outcomes_noiseless = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id', 'eGFR','survival_prob' 'survival'] )
 
             patients = patients.reset_index(drop=True)
             organs = organs.reset_index(drop=True)
@@ -158,21 +158,21 @@ class SyntheticDataGenerator:
                 outcomes['eGFR'] = 100*np.ones(self.n) - organs['age_don'] - 0.5*patients["age"] - 0.1*organs['weight_don'] - 0.1*patients['weight'] + np.random.normal(0, noise, self.n)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n) - organs['age_don'] - 0.5*patients["age"] - 0.1*organs['weight_don'] - 0.1*patients['weight']
 
-                outcomes['survival'] = 1/(1 + np.exp(- 82 +organs['age_don'] + 0.5*patients["age"] + 0.2*organs['weight_don'] + 0.1*patients['weight'] + np.random.normal(0, noise, self.n)))
-                outcomes_noiseless['survival'] = 1/(1 + np.exp(- 82 +organs['age_don'] + 0.5*patients["age"] + 0.2*organs['weight_don'] + 0.1*patients['weight']))
+                outcomes['survival_prob'] = 1/(1 + np.exp(- 82 +organs['age_don'] + 0.5*patients["age"] + 0.2*organs['weight_don'] + 0.1*patients['weight'] + np.random.normal(0, noise, self.n)))
+                outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(- 82 +organs['age_don'] + 0.5*patients["age"] + 0.2*organs['weight_don'] + 0.1*patients['weight']))
 
-                outcomes['survival'] = np.random.binomial(1, outcomes['survival'])
-                outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival'])
+                outcomes['survival'] = np.random.binomial(1, outcomes['survival_prob'])
+                outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival_prob'])
 
             if self.complexity == 2:
                 outcomes['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) + np.random.normal(0, noise, self.n)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don'])
 
-                outcomes['survival'] = 1/(1 + np.exp(-(23  - abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) + np.random.normal(0, noise, self.n))))
-                outcomes_noiseless['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']))))
+                outcomes['survival_prob'] = 1/(1 + np.exp(-(23  - abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) + np.random.normal(0, noise, self.n))))
+                outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(-(-2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']))))
 
-                outcomes['survival'] = np.random.binomial(1, outcomes['survival'])
-                outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival'])
+                outcomes['survival'] = np.random.binomial(1, outcomes['survival_prob'])
+                outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival_prob'])
 
             if self.complexity == 3:
                 outcomes['eGFR'] = 100*np.ones(self.n) - 15 * (abs(patients['age'] - organs['age_don']) >= 15) - 10 * (abs(patients['weight'] - organs['weight_don']) >=15) + np.random.normal(0, noise, self.n)
@@ -196,21 +196,21 @@ class SyntheticDataGenerator:
                 outcomes['eGFR'] = 100*np.ones(self.n * self.m) - organs['age_don'].values[tiled_indices] - 0.5*patients["age"].values[outcomes['pat_id']] - 0.1*organs['weight_don'].values[tiled_indices] - 0.1*patients['weight'].values[outcomes['pat_id']] + np.random.normal(0, noise, self.n * self.m)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n * self.m) - organs['age_don'].values[tiled_indices] - 0.5*patients["age"].values[outcomes['pat_id']] - 0.1*organs['weight_don'].values[tiled_indices] - 0.1*patients['weight'].values[outcomes['pat_id']]
 
-                outcomes['survival'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[tiled_indices] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[tiled_indices] + 0.01*patients['weight'].values[outcomes['pat_id']] + np.random.normal(0, noise, self.n * self.m)))
-                outcomes_noiseless['survival'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[tiled_indices] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[tiled_indices] + 0.01*patients['weight'].values[outcomes['pat_id']]))
+                outcomes['survival_prob'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[tiled_indices] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[tiled_indices] + 0.01*patients['weight'].values[outcomes['pat_id']] + np.random.normal(0, noise, self.n * self.m)))
+                outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[tiled_indices] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[tiled_indices] + 0.01*patients['weight'].values[outcomes['pat_id']]))
 
-                outcomes['survival'] = np.random.binomial(1, outcomes['survival'])
-                outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival'])
+                outcomes['survival'] = np.random.binomial(1, outcomes['survival_prob'])
+                outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival_prob'])
 
             if self.complexity == 2:
                 outcomes['eGFR'] = 100*np.ones(self.n * self.m)  - 2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) + np.random.normal(0, noise, self.n * self.m)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n * self.m)  - 2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - 0.1*patients['weight'].values[outcomes['pat_id']] - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices])
 
-                outcomes['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) + np.random.normal(0, noise, self.n * self.m))))
-                outcomes_noiseless['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) )))
+                outcomes['survival_prob'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) + np.random.normal(0, noise, self.n * self.m))))
+                outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) )))
 
-                outcomes['survival'] = np.random.binomial(1, outcomes['survival'])
-                outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival'])
+                outcomes['survival'] = np.random.binomial(1, outcomes['survival_prob'])
+                outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival_prob'])
 
             if self.complexity == 3:
                 outcomes['eGFR'] = 100*np.ones(self.n * self.m) - 15 * (abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) >= 15) - 10 * (abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) >=15) + np.random.normal(0, noise, self.n * self.m)
@@ -228,7 +228,7 @@ class SyntheticDataGenerator:
 
         """
 
-        effects = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
+        effects = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival_prob'])
         patients = patients.reset_index(drop=True)
         organs = organs.reset_index(drop=True)
         effects['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
@@ -240,7 +240,7 @@ class SyntheticDataGenerator:
         factual_outcomes = factual_outcomes.loc[factual_outcomes.index.repeat(self.m)].reset_index(drop=True)
 
         effects['eGFR'] = outcomes['eGFR'] - factual_outcomes['eGFR']
-        effects['survival'] = outcomes['survival'] - factual_outcomes['survival']
+        effects['survival_prob'] = outcomes['survival_prob'] - factual_outcomes['survival_prob']
         
 
 
