@@ -16,7 +16,7 @@ class Clustering_kmeans():
 
         # Assuming 'df' is your DataFrame
         # Specify the columns of your categorical features
-        catColumnsPos = [self.data.columns.get_loc(col) for col in list(self.data.select_dtypes('object').columns)]
+        catColumnsPos = [self.data.columns.get_loc(col) for col in list(self.data.select_dtypes('bool').columns)]
 
         kproto = KPrototypes(n_clusters=self.n_clusters, init='Cao', verbose=2)
         clusters = kproto.fit_predict(self.data, categorical=catColumnsPos)
