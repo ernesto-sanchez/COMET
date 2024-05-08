@@ -1,0 +1,3 @@
+/cluster/work/medinfmk/STCS_swiss_transplant/ern_env/lib/python3.10/site-packages/sklearn/base.py:1474: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples,), for example using ravel().
+  return fit_method(estimator, *args, **kwargs)
+slurmstepd-compute-medinfmk-01: error: *** JOB 21181 ON compute-medinfmk-01 CANCELLED AT 2024-05-03T12:45:11 DUE TO TIME LIMIT ***

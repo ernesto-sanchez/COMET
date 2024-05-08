@@ -19,7 +19,7 @@ import pandas as pd
 
 
 
-generator = SyntheticDataGenerator(n=100, m=100, noise=0, complexity=2, TAB = 1, only_factual=True)
+generator = SyntheticDataGenerator(n=100, m=100, noise=0, complexity=2, TAB = 0, only_factual=True)
 df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
 
 

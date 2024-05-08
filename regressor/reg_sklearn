@@ -1,0 +1,131 @@
+import torch
+from torch import nn
+import pandas as pd
+from torch.utils.data import DataLoader, Dataset
+import torch
+from torch.utils.data import TensorDataset
+import ast
+from sklearn.model_selection import train_test_split
+from tqdm import tqdm
+from sklearn.model_selection import KFold
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+import os
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+
+
+import matplotlib.pyplot as plt
+
+
+
+class DataHandler:
+    def __init__(self, remote=False):
+        self.remote = remote
+
+    def load_data(self):
+        if self.remote:
+            patients = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/patients.csv')
+            organs = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/organs.csv')
+            outcomes = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/outcomes.csv')
+            outcomes_noiseless = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/outcomes_noiseless.csv')
+        else: 
+            patients = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/patients.csv')
+            organs = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/organs.csv')
+            outcomes = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes.csv')
+            outcomes_noiseless = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_noiseless.csv')
+
+        outcomes = outcomes.dropna()
+        outcomes_noiseless = outcomes_noiseless.dropna()
+
+        outcomes = outcomes.applymap(ast.literal_eval)
+        outcomes_noiseless = outcomes_noiseless.applymap(ast.literal_eval)
+
+        outcomes = outcomes.applymap(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
+        outcomes = np.diag(outcomes.values)
+
+        outcomes_noiseless = outcomes_noiseless.applymap(lambda x: x['eGFR'][2] if x and 'eGFR' in x else None)
+        outcomes_noiseless = np.diag(outcomes_noiseless.values)
+
+        merged = pd.concat([patients, organs], axis=1)
+        merged = merged.drop('pat_id', axis = 1)
+        merged = merged.drop('org_id', axis = 1)
+        merged = pd.get_dummies(merged)  
+
+        X = merged
+        y = outcomes
+        y_noiseless = outcomes_noiseless
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        X_train_noiseless, X_test_noiseless, y_train_noiseless, y_test_noiseless = train_test_split(X, y_noiseless, test_size=0.2, random_state=42)
+
+        X_train_scaled, X_test_scaled = self.scale_data(X_train, X_test)
+
+        return X_train_scaled, y_train, X_test_scaled, y_test, y_test_noiseless
+
+    def scale_data(self, X_train, X_test):
+        scaler = StandardScaler()
+        X_train_scaled = scaler.fit_transform(X_train)
+        X_test_scaled = scaler.transform(X_test)
+        return X_train_scaled, X_test_scaled
+
+def train_and_evaluate(model, X_train, y_train, X_test, y_test, y_test_noiseless):
+    """
+    Train a model and evaluate its performance.
+    
+    :param model: The regression model to train
+    :param X_train: Training set features
+    :param y_train: Training set target
+    :param X_test: Testing set features
+    :param y_test: Testing set target
+    :return: Model performance metrics
+    """
+    # Train the model
+    model.fit(X_train, y_train)
+    
+    # Predictions
+    y_pred = model.predict(X_test)
+    
+    # Evaluate
+    mse = mean_squared_error(y_test, y_pred)
+    mse_noiseless = mean_squared_error(y_test_noiseless, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    r2_noiseless = r2_score(y_test_noiseless, y_pred)
+    
+    return mse, r2, mse_noiseless, r2_noiseless
+
+def main():
+    data_handler = DataHandler(remote=False)
+    X_train, y_train, X_test, y_test, y_test_noiseless = data_handler.load_data()
+
+    # Linear Regression
+    linear_model = LinearRegression()
+    mse_lr, r2_lr, mse_noiseless_lr, r2_noiseless_lr = train_and_evaluate(linear_model, X_train, y_train, X_test, y_test, y_test_noiseless)
+
+    # Ridge Regression
+    ridge_model = Ridge(alpha=1.0)
+    mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = train_and_evaluate(ridge_model, X_train, y_train, X_test, y_test,  y_test_noiseless)
+
+    # Random Forest Regression
+    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = train_and_evaluate(rf_model, X_train, y_train, X_test, y_test,  y_test_noiseless)
+
+    # Create a table
+    results = pd.DataFrame({
+        'Model': ['Linear Regression', 'Ridge Regression', 'Random Forest Regression'],
+        'MSE': [mse_lr, mse_rr, mse_rf],
+        'R2': [r2_lr, r2_rr, r2_rf],
+        'MSE Noiseless': [mse_noiseless_lr, mse_noiseless_rr, mse_noiseless_rf],
+        'R2 Noiseless': [r2_noiseless_lr, r2_noiseless_rr, r2_noiseless_rf]
+    })
+
+    #print(results)
+    return results
+
+if __name__ == '__main__':
+    main()

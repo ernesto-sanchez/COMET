@@ -180,15 +180,11 @@ class SyntheticDataGenerator:
         else:
             patients = patients.reset_index(drop=True)
             organs = organs.reset_index(drop=True)
-
             outcomes = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
             outcomes_noiseless = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
-
             outcomes['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
             outcomes['org_id'] = np.tile(np.array(organs['org_id']), self.n)
-
             tiled_indices = np.tile(np.arange(self.n), self.m)
-
             outcomes_noiseless['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
             outcomes_noiseless['org_id'] = np.tile(np.array(organs['org_id']), self.n)
 
@@ -209,9 +205,6 @@ class SyntheticDataGenerator:
                 outcomes['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) + np.random.normal(0, noise, self.n * self.m))))
                 outcomes_noiseless['survival'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) )))
 
-                outcomes['survival'] = np.random.binomial(1, outcomes['survival'])
-                outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival'])
-
             if self.complexity == 3:
                 outcomes['eGFR'] = 100*np.ones(self.n * self.m) - 15 * (abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) >= 15) - 10 * (abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) >=15) + np.random.normal(0, noise, self.n * self.m)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n * self.m) - 15 * (abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) >= 15) - 10 * (abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) >=15)
@@ -220,41 +213,6 @@ class SyntheticDataGenerator:
 
 
         return outcomes, outcomes_noiseless
-    
-
-    def generate_effects(self, patients: pd.DataFrame, organs: pd.DataFrame, outcomes: pd.DataFrame, outcomes_noiseless: pd.DataFrame) -> pd.DataFrame:
-        """
-        Generate treatment effects for transplant patients. The treatment effect is the difference between the factual and counterfactual outcomes.
-
-        """
-
-        effects = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
-        patients = patients.reset_index(drop=True)
-        organs = organs.reset_index(drop=True)
-        effects['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
-        effects['org_id'] = np.tile(np.array(organs['org_id']), self.n)
-
-        factual_indices = [i*len(patients) + (i) for i in range(0, len(organs))]
-
-        factual_outcomes = outcomes.loc[factual_indices]
-        factual_outcomes = factual_outcomes.loc[factual_outcomes.index.repeat(self.m)].reset_index(drop=True)
-
-        effects['eGFR'] = outcomes['eGFR'] - factual_outcomes['eGFR']
-        effects['survival'] = outcomes['survival'] - factual_outcomes['survival']
-        
-
-
-
-
-        
-
-
-
-
-        return effects
-
-
-
 
 
 
@@ -269,10 +227,8 @@ class SyntheticDataGenerator:
         organs = self.generate_organs()
         patients, organs = self.pat_org_matching(patients, organs, self.alpha)
         outcomes, outcomes_noiseless = self.generate_outcomes(patients, organs)
-        effects = self.generate_effects(patients, organs, outcomes, outcomes_noiseless)
 
-
-        return patients, organs, outcomes, outcomes_noiseless, effects
+        return patients, organs, outcomes, outcomes_noiseless
 
 
 
@@ -283,8 +239,8 @@ class SyntheticDataGenerator:
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=10, m=10, noise=0, complexity=2, TAB = 1,  only_factual=False)
-    df_patients, df_organs, df_outcomes, df_outcomes_noiseless, df_effects = generator.generate_datasets()
+    generator = SyntheticDataGenerator(n=10000, m =10000, noise=1, complexity=1, TAB = 1,  only_factual=True)
+    df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
 
 
 
@@ -294,7 +250,6 @@ if __name__ == '__main__':
     df_organs.to_csv(script_dir + "/organs.csv", index=False)
     df_outcomes.to_csv(script_dir + "/outcomes.csv", index=False)
     df_outcomes_noiseless.to_csv(script_dir + "/outcomes_noiseless.csv", index=False)
-    df_effects.to_csv(script_dir + "/effects.csv", index=False)
 
 
 

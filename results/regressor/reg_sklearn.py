@@ -11,8 +11,7 @@ from sklearn.model_selection import KFold
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import Lasso, LogisticRegression
-from sklearn.neural_network import MLPRegressor
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import os
 from sklearn.preprocessing import StandardScaler
@@ -20,17 +19,12 @@ from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.svm import SVR
-#import seaborn as sns
+import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as stats
 from sklearn import metrics
-# import sys
-# sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\synthetic_data_generation")
-# sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET")
-# sys.path.append(r"C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/regressor")
 
-# from synthetic_data_fast import SyntheticDataGenerator
 
 import matplotlib.pyplot as plt
 
@@ -455,17 +449,6 @@ class RegressionModels:
             mse_rr_train, r2_rr_train, mse_noiseless_rr_train, r2_noiseless_rr_train = self.evaluate_model_train(ridge_model, verbose)
             mse_rr, r2_rr, mse_noiseless_rr, r2_noiseless_rr = self.evaluate_model_test(ridge_model, verbose, scalerx=None, scalery=None)
 
-        #Lasso regression
-        lasso_model = Lasso(alpha=1.0)
-        self.train_model(lasso_model)
-        if self.scale:
-            mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(lasso_model, verbose, scalery = scalery)
-            mse_ls, r2_ls, mse_noiseless_ls, r2_noiseless_ls = self.evaluate_model_test(lasso_model, verbose, scalerx = scalerx, scalery = scalery)
-        else:
-            mse_ls_train, r2_ls_train, mse_noiseless_ls_train, r2_noiseless_ls_train = self.evaluate_model_train(lasso_model, verbose)
-            mse_ls, r2_ls, mse_noiseless_ls, r2_noiseless_ls = self.evaluate_model_test(lasso_model, verbose, scalerx=None, scalery=None)
-
-            
 
 
         # if oucome===survival, do classification
@@ -499,35 +482,24 @@ class RegressionModels:
             mse_rf, r2_rf, mse_noiseless_rf, r2_noiseless_rf = self.evaluate_model_test(rf_model, verbose, scalerx=None, scalery=None)
 
 
-        # # SVM Regression
-        # svm_model = SVR(kernel= 'rbf')
-        # self.train_model(svm_model)
-        # if self.scale:
-        #     mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, verbose, scalery= scalery)
-        #     mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, verbose, scalerx = scalerx, scalery= scalery)
-        # else:
-        #     mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, verbose)
-        #     mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, verbose, scalerx=None, scalery=None)
-
-
-        # ANN
-        ann_model = MLPRegressor(hidden_layer_sizes=(10, 10), max_iter=1000)
-        self.train_model(ann_model)
+        # SVM Regression
+        svm_model = SVR(kernel= 'rbf')
+        self.train_model(svm_model)
         if self.scale:
-            mse_ann_train, r2_ann_train, mse_noiseless_ann_train, r2_noiseless_ann_train = self.evaluate_model_train(ann_model, verbose, scalery = scalery)
-            mse_ann, r2_ann, mse_noiseless_ann, r2_noiseless_ann = self.evaluate_model_test(ann_model, verbose, scalerx = scalerx, scalery = scalery)
+            mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, verbose, scalery= scalery)
+            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, verbose, scalerx = scalerx, scalery= scalery)
         else:
-            mse_ann_train, r2_ann_train, mse_noiseless_ann_train, r2_noiseless_ann_train = self.evaluate_model_train(ann_model, verbose)
-            mse_ann, r2_ann, mse_noiseless_ann, r2_noiseless_ann = self.evaluate_model_test(ann_model, verbose, scalerx=None, scalery=None)
+            mse_svm_train, r2_svm_train, mse_noiseless_svm_train, r2_noiseless_svm_train = self.evaluate_model_train(svm_model, verbose)
+            mse_svm, r2_svm, mse_noiseless_svm, r2_noiseless_svm = self.evaluate_model_test(svm_model, verbose, scalerx=None, scalery=None)
 
         # Create a table, 
         results = pd.DataFrame({
-            'Model': ['Linear Regression', 'Ridge Regression', 'Lasso Regression', 'Log. Regression', 'Random Forest Regression', 'MLP Regression'],
-            'root MSE': [mse_lr, mse_rr, mse_ls, mse_log,  mse_rf, mse_ann],
+            'Model': ['Linear Regression', 'Ridge Regression', 'Log. Regression', 'Random Forest Regression', 'SVM Regression'],
+            'root MSE': [mse_lr, mse_rr,mse_log,  mse_rf, mse_svm],
             # 'R2': [r2_lr, r2_rr, r2_rf, r2_svm],
             # 'root MSE Noiseless': [mse_noiseless_lr, mse_noiseless_rr, mse_noiseless_rf, mse_noiseless_svm],
             # 'R2 Noiseless': [r2_noiseless_lr, r2_noiseless_rr, r2_noiseless_rf, r2_noiseless_svm], 
-            'root MSE Train': [mse_ls_train, mse_rr_train, mse_ls_train, mse_log_train,  mse_rf_train, mse_ann_train],
+            'root MSE Train': [mse_ls_train, mse_rr_train,mse_log_train,  mse_rf_train, mse_svm_train],
             # 'R2 Train': [r2_ls_train, r2_rr_train, r2_rf_train, r2_svm_train],
             # 'root MSE Noiseless Train': [mse_noiseless_ls_train, mse_noiseless_rr_train, mse_noiseless_rf_train, mse_noiseless_svm_train],
             # 'R2 Noiseless Train': [r2_noiseless_ls_train, r2_noiseless_rr_train, r2_noiseless_rf_train, r2_noiseless_svm_train]
@@ -537,22 +509,13 @@ class RegressionModels:
         return results
 
 if __name__ == '__main__':
-    # patients = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/patients.csv')
-    # organs = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/organs.csv')
-    # outcomes = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes.csv')
-    # outcomes_noiseless = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_noiseless.csv')
-
-
-    patients = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/patients.csv')
-    organs = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/organs.csv')
-    outcomes = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/outcomes.csv')
-    outcomes_noiseless = pd.read_csv('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/synthetic_data_generation/outcomes_noiseless.csv')
-
-    # generator = SyntheticDataGenerator(n=100, m=100, noise=0, complexity=1, TAB = 1, only_factual=False)
-    # df_patients, df_organs, df_outcomes, df_outcomes_noiseless = generator.generate_datasets()
+    patients = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/patients.csv')
+    organs = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/organs.csv')
+    outcomes = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes.csv')
+    outcomes_noiseless = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_noiseless.csv')
 
     
-    regression_model = RegressionModels(patients, organs, outcomes, outcomes_noiseless, outcome = 'eGFR',trainfac = False, evalfac = False, remote=False, split=True, scale=True)
+    regression_model = RegressionModels(patients, organs, outcomes, outcomes_noiseless, outcome = 'eGFR',trainfac = False, evalfac = True, remote=False, split=True, scale=True)
 
     print(regression_model.run_regression(verbose=True))
 

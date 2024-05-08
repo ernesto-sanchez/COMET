@@ -1,0 +1,9 @@
+Complexity 1, sigma 1, 500^2 samples, trainfac = False, evalfac = True
+
+                      Model  root MSE  root MSE Train
+0         Linear Regression  1.030172        5.848497
+1          Ridge Regression  1.030167        0.997322
+2          Lasso Regression  7.431485        5.848497
+3           Log. Regression -1.000000       -1.000000
+4  Random Forest Regression  1.121367        0.408621
+5            MLP Regression  1.044570        1.000892
