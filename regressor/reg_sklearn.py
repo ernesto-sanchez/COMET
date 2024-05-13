@@ -99,8 +99,8 @@ class DataHandler:
             # outcomes = np.diag(outcomes.values)     
             # outcomes_noiseless = np.diag(outcomes_noiseless.values)
             merged = pd.concat([patients, organs], axis=1)
-            merged = merged.drop('pat_id', axis = 1)
-            merged = merged.drop('org_id', axis = 1)
+            # merged = merged.drop('pat_id', axis = 1)
+            # merged = merged.drop('org_id', axis = 1)
         if not trainfac and not evalfac:
             
 
@@ -141,8 +141,8 @@ class DataHandler:
             # Concatenate 'patients' and 'df2'
             merged = pd.concat([df_3, df2], axis=1)
 
-            merged = merged.drop('pat_id', axis=1)
-            merged = merged.drop('org_id', axis=1)
+            # merged = merged.drop('pat_id', axis=1)
+            # merged = merged.drop('org_id', axis=1)
 
             # outcomes = outcomes.iloc[:, 2]
             # outcomes_noiseless = outcomes_noiseless.iloc[:, 2]
@@ -173,8 +173,8 @@ class DataHandler:
             # Concatenate 'patients' and 'df2'
             merged = pd.concat([df_3, df2], axis=1)
 
-            merged = merged.drop('pat_id', axis=1)
-            merged = merged.drop('org_id', axis=1)
+            # merged = merged.drop('pat_id', axis=1)
+            # merged = merged.drop('org_id', axis=1)
 
 
             X_test = merged
@@ -236,20 +236,20 @@ class DataHandler:
 
 
 
-            X_train = X_train.drop('pat_id', axis=1)
-            X_train = X_train.drop('org_id', axis=1)
-            X_test = X_test.drop('pat_id', axis=1)
-            X_test = X_test.drop('org_id', axis=1)
-            y_train = y_train.drop('org_id', axis=1)
-            y_train = y_train.drop('pat_id', axis=1)
-            y_test = y_test.drop('org_id', axis=1)
-            y_test = y_test.drop('pat_id', axis=1)
+            # X_train = X_train.drop('pat_id', axis=1)
+            # X_train = X_train.drop('org_id', axis=1)
+            # X_test = X_test.drop('pat_id', axis=1)
+            # X_test = X_test.drop('org_id', axis=1)
+            # y_train = y_train.drop('org_id', axis=1)
+            # y_train = y_train.drop('pat_id', axis=1)
+            # y_test = y_test.drop('org_id', axis=1)
+            # y_test = y_test.drop('pat_id', axis=1)
 
-            y_train_noiseless = y_train_noiseless.drop('org_id', axis=1)
-            y_train_noiseless = y_train_noiseless.drop('pat_id', axis=1)
+            # y_train_noiseless = y_train_noiseless.drop('org_id', axis=1)
+            # y_train_noiseless = y_train_noiseless.drop('pat_id', axis=1)
 
-            y_test_noiseless = y_test_noiseless.drop('org_id', axis=1)
-            y_test_noiseless = y_test_noiseless.drop('pat_id', axis=1)
+            # y_test_noiseless = y_test_noiseless.drop('org_id', axis=1)
+            # y_test_noiseless = y_test_noiseless.drop('pat_id', axis=1)
 
 
 
