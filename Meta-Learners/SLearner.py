@@ -78,7 +78,9 @@ from kmeans import Clustering_kmeans
 
 
 
-class T_Learner:
+
+
+class S_Learner:
     def __init__(self, patients, organs, outcomes, outcomes_noiseless, effects,  split=bool, scale=True, trainfac=bool, evalfac=bool, outcome='eGFR'):
         self.split = split
         self.scale = scale
@@ -89,6 +91,8 @@ class T_Learner:
         self.n = len(patients)
         self.patients = patients
         self.organs = organs
+        self.model = GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)
+
 
 
 
@@ -96,77 +100,83 @@ class T_Learner:
         self.data_handler = DataHandler(patients, organs, outcomes, outcomes_noiseless, remote=False)
         self.X_train, self.y_train, self.X_test, self.y_test, self.y_train_noiseless, self.y_test_noiseless = self.data_handler.load_data(trainfac = self.trainfac, evalfac = self.evalfac, outcome=self.outcome, traintest_split=split)
         
-        #Fix: trim the unnecessary columns and import organs dataset to cluster afterwards
 
-        #Trim the organs columns
-        self.X_train = self.X_train.iloc[:, 0:14]
-        self.X_test = self.X_test.iloc[:, 0:14]
+
 
         #Take out the pat_id colums s.t. it doesnt affect clustering or training
-        self.X_train = self.X_train.drop(columns=['pat_id'])
-        self.X_test = self.X_test.drop(columns=['pat_id'])
+        self.X_train = self.X_train.drop(columns=['pat_id', 'org_id'])
+        self.X_test = self.X_test.drop(columns=['pat_id', 'org_id'])
 
 
-        #Do the clustering
+        # #Do the clustering
+        # self.clustering = Clustering_kmeans(self.organs, 4)
+        # self.clusters = self.clustering.fit_and_encode()
+
+        #Fit the model
+        self.model.fit(self.X_train, self.y_train)
+
+
+        #Get the treatment effect
+        #First get factual features
+        self.organs = pd.get_dummies(self.organs)
+        factual_organs = self.organs.loc[self.organs.index.repeat(self.n)]
+        factual_patients = self.X_test.iloc[:, 0:13]
+
+        factual_organs = factual_organs.reset_index(drop=True)
+        factual_patients = factual_patients.reset_index(drop=True)
+
+        factual = pd.concat([factual_patients, factual_organs], axis=1)
+
+        # factual.drop(columns=['org_id'], inplace=True)
         
-        self.clustering = Clustering_kmeans(self.organs, 4)
-        self.clusters = self.clustering.fit_and_encode()
+
+
+        #get counterfactual features
+        # self.X_test = self.X_test.drop(columns=['org_id'])
+        caounterfactual = self.X_test
+
+
+        
 
 
 
-        # Instantiate T learner
-        self.models = GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)
 
-
-        self.T_learner = TLearner(models=LinearRegression())
-
-
-        # Train T_learner
-        self.T_learner.fit(self.y_train, T = self.clusters, X=self.X_train, inference= BootstrapInference(n_bootstrap_samples=100, n_jobs=-1))
 
 
     def get_pehe(self):
+        
+        #Get the treatment effect
+        #First get factual features
+        self.organs = pd.get_dummies(self.organs)
+        factual_organs = self.organs.loc[self.organs.index.repeat(self.n)]
+        factual_patients = self.X_test.iloc[:, 0:12]
 
-        # Get the base treatments vectors (to compare to the effects)
-        indices_factual = [i*len(self.patients) + (i) for i in range(0, len(self.organs))]
-        factual_treatments = self.effects['org_id'].iloc[indices_factual] #these are the org_ids of the factual treatments
-        factual_treatments_encoded = self.clusters[factual_treatments] #these are the clusters of the factual treatments
+        factual_organs = factual_organs.reset_index(drop=True)
+        factual_patients = factual_patients.reset_index(drop=True)
 
-        factual_treatments_encoded = factual_treatments_encoded.repeat(self.n)
+        factual = pd.concat([factual_patients, factual_organs], axis=1)
 
-        #Get the alternative treatments vector
-
-        count_treatments = self.effects['org_id']
-        count_treatments = self.clusters[count_treatments]
-
-
-        #Prepare the features for the T-learner
-        patient_features = self.patients.loc[self.patients.index.repeat(self.n)]
-        patient_features  = patient_features.drop(columns=['pat_id'])
-        patient_features = pd.get_dummies(patient_features)
+        factual.drop(columns=['org_id'], inplace=True)
         
 
 
-        
+        #get counterfactual features
+        #self.X_test = self.X_test.drop(columns=['org_id'])
+        caounterfactual = self.X_test
 
-
-        # Estimate treatment effects on test data
-        T_te = self.T_learner.effect(patient_features, T0 = factual_treatments_encoded, T1 = count_treatments)
-
-
-
-
-
-
-        #calculate the PEHE
-
-        pehe = np.sqrt(np.mean((T_te - self.effects['eGFR'])**2))
-
-        T_te_2 = self.T_learner.effect_inference(patient_features, T0 = factual_treatments_encoded, T1 = count_treatments)
-
-
+        #Get the treatment effects
+        te_slearner = self.model.predict(factual) - self.model.predict(caounterfactual)
+        pehe = np.sqrt(np.mean((te_slearner - self.effects['eGFR'])**2))
 
         return pehe
+
+
+
+
+
+
+
+
 
 
             
@@ -183,6 +193,6 @@ if __name__ == "__main__":
     effects = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/effects.csv')
 
 
-    tlearner = T_Learner(patients, organs, outcomes, outcomes_noiseless, effects,split=True, scale=True, trainfac=True, evalfac=False, outcome='eGFR')
+    tlearner = S_Learner(patients, organs, outcomes, outcomes_noiseless, effects,split=True, scale=True, trainfac=True, evalfac=False, outcome='eGFR')
 
     print(tlearner.get_pehe())

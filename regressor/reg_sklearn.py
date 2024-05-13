@@ -181,9 +181,9 @@ class DataHandler:
             y_test = outcomes
             y_test_noiseless = outcomes_noiseless
 
-            X_test = X_test.sample(n = len(patients), random_state=42)
-            y_test = y_test.sample(n = len(patients), random_state=42)
-            y_test_noiseless = y_test_noiseless.sample(n = len(patients), random_state=42)
+            # X_test = X_test.sample(n = len(patients), random_state=42)
+            # y_test = y_test.sample(n = len(patients), random_state=42)
+            # y_test_noiseless = y_test_noiseless.sample(n = len(patients), random_state=42)
 
             y_train = y_train.values
             y_test = y_test.values
