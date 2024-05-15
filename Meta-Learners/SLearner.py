@@ -143,7 +143,7 @@ class S_Learner:
 
 
 
-    def get_pehe(self):
+    def get_pehe(self, outcome ):
         
         #Get the treatment effect
         #First get factual features
@@ -166,7 +166,7 @@ class S_Learner:
 
         #Get the treatment effects
         te_slearner = self.model.predict(factual) - self.model.predict(caounterfactual)
-        pehe = np.sqrt(np.mean((te_slearner - self.effects['eGFR'])**2))
+        pehe = np.mean((te_slearner - self.effects['eGFR'])**2)
 
         return pehe
 

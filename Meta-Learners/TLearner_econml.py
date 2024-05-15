@@ -35,7 +35,7 @@ from econml.metalearners import TLearner, SLearner, XLearner, DomainAdaptationLe
 from econml.inference import BootstrapInference
 
 
-from synthetic_data_fast import SyntheticDataGenerator
+from synthetic_data_faster import SyntheticDataGenerator
 
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingRegressor
 
@@ -43,6 +43,7 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, Grad
 import statsmodels.api as sm
 from xgboost import XGBRegressor, XGBClassifier
 import warnings
+from expert_clustering import Clustering_expert
 
 # # from causalml.inference.meta import XGBTLearner, MLPTLearner
 # from causalml.inference.meta import BaseSRegressor, BaseTRegressor, BaseXRegressor, BaseRRegressor
@@ -79,7 +80,7 @@ from kmeans import Clustering_kmeans
 
 
 class T_Learner:
-    def __init__(self, patients, organs, outcomes, outcomes_noiseless, effects,  split=bool, scale=True, trainfac=bool, evalfac=bool, outcome='eGFR'):
+    def __init__(self, patients, organs, outcomes, outcomes_noiseless, effects, models,   split=bool, scale=True, trainfac=bool, evalfac=bool, outcome='eGFR'):
         self.split = split
         self.scale = scale
         self.trainfac = trainfac
@@ -89,6 +90,8 @@ class T_Learner:
         self.n = len(patients)
         self.patients = patients
         self.organs = organs
+        self.models = models
+
 
 
 
@@ -109,20 +112,23 @@ class T_Learner:
 
         #Do the clustering
         
-        self.clustering = Clustering_kmeans(self.organs, 4)
+        # self.clustering = Clustering_kmeans(self.organs, 4)
+        # self.clusters = self.clustering.fit_and_encode()
+
+        self.clustering = Clustering_expert(self.organs)
         self.clusters = self.clustering.fit_and_encode()
 
 
 
         # Instantiate T learner
-        self.models = GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)
+        #self.models = GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)
 
 
-        self.T_learner = TLearner(models=LinearRegression())
+        self.T_learner = TLearner(models = self.models)
 
 
         # Train T_learner
-        self.T_learner.fit(self.y_train, T = self.clusters, X=self.X_train, inference= BootstrapInference(n_bootstrap_samples=100, n_jobs=-1))
+        self.T_learner.fit(self.y_train, T = self.clusters, X=self.X_train)
 
 
     def get_pehe(self):
@@ -159,8 +165,10 @@ class T_Learner:
 
 
         #calculate the PEHE
+        #TODO(1) automate this!!
 
-        pehe = np.sqrt(np.mean((T_te - self.effects['eGFR'])**2))
+        ## TODO(1): think how to accomodate classification and regression outcomes --> store also the log of the survival probabbilities in the data-generation
+        pehe = np.mean((T_te - self.effects[self.outcome])**2)
 
         T_te_2 = self.T_learner.effect_inference(patient_features, T0 = factual_treatments_encoded, T1 = count_treatments)
 
@@ -183,6 +191,6 @@ if __name__ == "__main__":
     effects = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/effects.csv')
 
 
-    tlearner = T_Learner(patients, organs, outcomes, outcomes_noiseless, effects,split=True, scale=True, trainfac=True, evalfac=False, outcome='eGFR')
+    tlearner = T_Learner(patients, organs, outcomes, outcomes_noiseless, effects, models = LinearRegression(), split=True, scale=True, trainfac=True, evalfac=False, outcome='eGFR')
 
     print(tlearner.get_pehe())
