@@ -34,8 +34,10 @@ sys.path.append(r"C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/Cluste
 from econml.metalearners import TLearner, SLearner, XLearner, DomainAdaptationLearner
 from econml.inference import BootstrapInference
 
+import 
 
-from synthetic_data_fast import SyntheticDataGenerator
+
+from synthetic_data_faster import SyntheticDataGenerator
 
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingRegressor
 
@@ -70,7 +72,8 @@ logging.basicConfig(level=logging.INFO)
 
 from reg_sklearn import DataHandler
 
-from kmeans import Clustering_kmeans
+from kmeans_clustering import Clustering_kmeans
+from expert_clustering import Clustering_expert
 
 
 
@@ -81,7 +84,7 @@ from kmeans import Clustering_kmeans
 
 
 class S_Learner:
-    def __init__(self, patients, organs, outcomes, outcomes_noiseless, effects,  split=bool, scale=True, trainfac=bool, evalfac=bool, outcome='eGFR'):
+    def __init__(self, patients, organs, outcomes, outcomes_noiseless, effects, model = GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1), clustering_type, split=bool, scale=True, trainfac=bool, evalfac=bool, outcome='eGFR'):
         self.split = split
         self.scale = scale
         self.trainfac = trainfac
@@ -92,6 +95,8 @@ class S_Learner:
         self.patients = patients
         self.organs = organs
         self.model = GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)
+        self.clustering_type = clustering_type
+        self.clustering = None
 
 
 
@@ -108,9 +113,44 @@ class S_Learner:
         self.X_test = self.X_test.drop(columns=['pat_id', 'org_id'])
 
 
-        # #Do the clustering
-        # self.clustering = Clustering_kmeans(self.organs, 4)
-        # self.clusters = self.clustering.fit_and_encode()
+        #Do the clustering
+
+        if self.clustering_type == 'kmeans':
+            #Trim the organs columns
+            self.X_train = self.X_train.iloc[:, 0:14]
+            self.X_test = self.X_test.iloc[:, 0:14]     
+
+                  
+            #Do the clustering
+            self.clustering = Clustering_kmeans(self.organs, 4)
+            self.clusters = self.clustering.fit_and_encode()
+
+            #Append the clustering as an additional feature
+            self.X_train['cluster'] = self.clusters
+            self.X_test['cluster'] = self.clusters
+            
+
+        elif self.clustering_type == 'expert':
+            #Trim the organs columns
+            self.X_train = self.X_train.iloc[:, 0:14]
+            self.X_test = self.X_test.iloc[:, 0:14]
+
+
+            #Do the clustering
+            self.clustering = Clustering_expert(self.organs)
+            self.clusters = self.clustering.fit_and_encode()
+
+            #Append the clustering as an additional feature
+            self.X_train['cluster'] = self.clusters
+            self.X_test['cluster'] = self.clusters
+
+        elif self.clustering_type == None:
+            pass
+        else:
+            raise ValueError('Clustering type not supported')
+        
+
+
 
         #Fit the model
         self.model.fit(self.X_train, self.y_train)

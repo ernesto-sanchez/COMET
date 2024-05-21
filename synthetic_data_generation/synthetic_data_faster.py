@@ -61,9 +61,9 @@ class SyntheticDataGenerator:
         df['blood_type'] = np.random.choice(["A", "B", "AB", "0"], size=n, p=[0.45, 0.09, 0.05, 0.41])
         df['rh'] = np.random.choice(["+", "-"], size=n)
         df['weight'] = np.maximum(40, np.minimum(120, np.round(np.random.normal(75, 10, size=n), 2)))
-        df['hla_a'] = np.random.choice(range(1, 3), size=n)
-        df['hla_b'] = np.random.choice(range(1, 3), size=n)
-        df['hla_c'] = np.random.choice(range(1, 3), size=n)
+        df['hla_a'] = np.random.choice(range(1, 4), size=n)
+        df['hla_b'] = np.random.choice(range(1, 4), size=n)
+        df['hla_c'] = np.random.choice(range(1, 4), size=n)
 
         return df
 
@@ -86,9 +86,9 @@ class SyntheticDataGenerator:
         df['age_don'] = np.maximum(0, np.round(np.random.normal(40, 5, size=m)))
         df['sex_don'] = np.random.choice(["male", "female"], size=m)
         df['weight_don'] = np.maximum(40, np.minimum(120, np.round(np.random.normal(75, 10, size=m), 2)))
-        df['hla_a_don'] = np.random.choice(range(1, 3), size=m)
-        df['hla_b_don'] = np.random.choice(range(1, 3), size=m)
-        df['hla_c_don'] = np.random.choice(range(1, 3), size=m)
+        df['hla_a_don'] = np.random.choice(range(1, 4), size=m)
+        df['hla_b_don'] = np.random.choice(range(1, 4), size=m)
+        df['hla_c_don'] = np.random.choice(range(1, 4), size=m)
         df['height_don'] = np.maximum(140, np.minimum(220, np.round(np.random.normal(170, 10, size=m), 2)))
         df['race_don'] = np.random.choice([0,1], size=m, p=[0.9, 0.1]) # 0 is non-black, 1 is black
         df['hypertension_don'] = np.random.choice([0, 1], size=m, p=[0.8, 0.2])
@@ -201,8 +201,8 @@ class SyntheticDataGenerator:
 
             # Generate outcomes for factual patient-organ pairs --> Use vectorized operations couse loop takes too long
 
-            outcomes = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id','eGFR', 'survival_prob', 'survival'] )
-            outcomes_noiseless = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id', 'eGFR','survival_prob' 'survival'] )
+            outcomes = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id','eGFR', 'survival_prob','survival_log_prob', 'survival'] )
+            outcomes_noiseless = pd.DataFrame(index=range(self.n), columns=['pat_id', 'org_id', 'eGFR','survival_prob', 'survival_log_prob', 'survival'] )
 
             patients = patients.reset_index(drop=True)
             organs = organs.reset_index(drop=True)
@@ -218,11 +218,14 @@ class SyntheticDataGenerator:
 
 
             if self.complexity == 1:
-                outcomes['eGFR'] = 100*np.ones(self.n) - organs['age_don'] - 0.5*patients["age"] - 0.1*organs['weight_don'] - 0.1*patients['weight'] + np.random.normal(0, noise, self.n)
+                outcomes['eGFR'] = 100*np.ones(self.n) - organs['age_don'] - 0.5*patients["age"] - 0.1*organs['weight_don'] - 0.1*patients['weight']  + np.random.normal(0, noise, self.n)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n) - organs['age_don'] - 0.5*patients["age"] - 0.1*organs['weight_don'] - 0.1*patients['weight']
 
                 outcomes['survival_prob'] = 1/(1 + np.exp(- 82 +organs['age_don'] + 0.5*patients["age"] + 0.2*organs['weight_don'] + 0.1*patients['weight'] + np.random.normal(0, noise, self.n)))
                 outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(- 82 +organs['age_don'] + 0.5*patients["age"] + 0.2*organs['weight_don'] + 0.1*patients['weight']))
+
+                outcomes['survival_log_prob'] = np.log(outcomes['survival_prob'])
+                outcomes_noiseless['survival_log_prob'] = np.log(outcomes_noiseless['survival_prob'])
 
                 outcomes['survival'] = np.random.binomial(1, outcomes['survival_prob'])
                 outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival_prob'])
@@ -231,8 +234,11 @@ class SyntheticDataGenerator:
                 outcomes['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) + np.random.normal(0, noise, self.n)
                 outcomes_noiseless['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don'])
 
-                outcomes['survival_prob'] = 1/(1 + np.exp(-(22.7  - abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) + np.random.normal(0, noise, self.n))))
-                outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(-(22.7  -  abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']))))
+                outcomes['survival_prob'] = 1/(1 + np.exp(-0.25*(20  - 2* abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) -  5* (patients['hla_a'] != organs['hla_a_don']) + np.random.normal(0, noise, self.n))))
+                outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(-0.25*(20  - 2* abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) -  5* (patients['hla_a'] != organs['hla_a_don']) )))
+
+                outcomes['survival_log_prob'] = np.log(outcomes['survival_prob'])
+                outcomes_noiseless['survival_log_prob'] = np.log(outcomes_noiseless['survival_prob'])
 
                 outcomes['survival'] = np.random.binomial(1, outcomes['survival_prob'])
                 outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival_prob'])
@@ -249,8 +255,8 @@ class SyntheticDataGenerator:
             patients = patients.reset_index(drop=True)
             organs = organs.reset_index(drop=True)
 
-            outcomes = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
-            outcomes_noiseless = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival'])
+            outcomes = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival_prob', 'survival_log_prob' , 'survival'])
+            outcomes_noiseless = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival_prob', 'survival_log_prob' , 'survival'])
 
             outcomes['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
             outcomes['org_id'] = np.tile(np.array(organs['org_id']), self.n)
@@ -267,6 +273,9 @@ class SyntheticDataGenerator:
                 outcomes['survival_prob'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[tiled_indices] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[tiled_indices] + 0.01*patients['weight'].values[outcomes['pat_id']] + np.random.normal(0, noise, self.n * self.m)))
                 outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(- 5 +0.03*organs['age_don'].values[tiled_indices] + 0.05*patients["age"].values[outcomes['pat_id']] + 0.01*organs['weight_don'].values[tiled_indices] + 0.01*patients['weight'].values[outcomes['pat_id']]))
 
+                outcomes['survival_log_prob'] = np.log(outcomes['survival_prob'])
+                outcomes_noiseless['survival_log_prob'] = np.log(outcomes_noiseless['survival_prob'])
+
                 outcomes['survival'] = np.random.binomial(1, outcomes['survival_prob'])
                 outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival_prob'])
 
@@ -276,6 +285,9 @@ class SyntheticDataGenerator:
 
                 outcomes['survival_prob'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) + np.random.normal(0, noise, self.n * self.m))))
                 outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(-(-2 * abs(patients['age'].values[outcomes['pat_id']] - organs['age_don'].values[tiled_indices]) - abs(patients['weight'].values[outcomes['pat_id']] - organs['weight_don'].values[tiled_indices]) - 10*(patients['blood_type'].values[outcomes['pat_id']] != organs['blood_type_don'].values[tiled_indices]) )))
+
+                outcomes['survival_log_prob'] = np.log(outcomes['survival_prob'])
+                outcomes_noiseless['survival_log_prob'] = np.log(outcomes_noiseless['survival_prob'])
 
                 outcomes['survival'] = np.random.binomial(1, outcomes['survival_prob'])
                 outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival_prob'])
@@ -346,7 +358,7 @@ class SyntheticDataGenerator:
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=10, m=10, noise=3, complexity=2, TAB = 0,  only_factual=False)
+    generator = SyntheticDataGenerator(n=100, m=100, noise=0, complexity=1, TAB = 0.5,  only_factual=False)
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless, df_effects = generator.generate_datasets()
 
 

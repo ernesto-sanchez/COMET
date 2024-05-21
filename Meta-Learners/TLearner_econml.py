@@ -80,7 +80,7 @@ from kmeans import Clustering_kmeans
 
 
 class T_Learner:
-    def __init__(self, patients, organs, outcomes, outcomes_noiseless, effects, models,   split=bool, scale=True, trainfac=bool, evalfac=bool, outcome='eGFR'):
+    def __init__(self, patients, organs, outcomes, outcomes_noiseless, effects, models, clustering_type,  split=bool, scale=True, trainfac=bool, evalfac=bool, outcome='eGFR'):
         self.split = split
         self.scale = scale
         self.trainfac = trainfac
@@ -91,6 +91,7 @@ class T_Learner:
         self.patients = patients
         self.organs = organs
         self.models = models
+        self.clustering_type = clustering_type
 
 
 
@@ -111,12 +112,17 @@ class T_Learner:
 
 
         #Do the clustering
-        
-        # self.clustering = Clustering_kmeans(self.organs, 4)
-        # self.clusters = self.clustering.fit_and_encode()
 
-        self.clustering = Clustering_expert(self.organs)
-        self.clusters = self.clustering.fit_and_encode()
+        if self.clustering_type == 'kmeans':
+        
+            self.clustering = Clustering_kmeans(self.organs, 4)
+            self.clusters = self.clustering.fit_and_encode()
+        elif self.clustering_type == 'expert':
+
+            self.clustering = Clustering_expert(self.organs)
+            self.clusters = self.clustering.fit_and_encode()
+        else:
+            raise ValueError('Clustering type not supported')
 
 
 
@@ -191,6 +197,6 @@ if __name__ == "__main__":
     effects = pd.read_csv('C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/effects.csv')
 
 
-    tlearner = T_Learner(patients, organs, outcomes, outcomes_noiseless, effects, models = LinearRegression(), split=True, scale=True, trainfac=True, evalfac=False, outcome='eGFR')
+    tlearner = T_Learner(patients, organs, outcomes, outcomes_noiseless, effects, models = LinearRegression(), clustering_type= 'kmeans', split=True, scale=True, trainfac=True, evalfac=False, outcome='eGFR')
 
     print(tlearner.get_pehe())

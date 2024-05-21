@@ -16,11 +16,29 @@ from sklearn.metrics import mean_squared_error, r2_score
 import pandas as pd
 
 
+fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+
+for i, tab in enumerate([0.0, 0.2, 0.4, 0.6, 0.8, 1.0]):
+    generator = SyntheticDataGenerator(n=1000, m=1000, noise=0, complexity=2, TAB=tab, only_factual=True) 
+    df_patients, df_organs, df_outcomes, df_outcomes_noiseless, _ = generator.generate_datasets()
+    
+    # Plotting outcomes data
+    row = i // 3
+    col = i % 3
+    axes[row, col].hist(df_outcomes['survival_prob'].values.flatten(), bins=30, color='blue')
+    axes[row, col].set_title(f"Outcomes Data (TAB={tab})")
+    axes[row, col].set_xlabel("Value")
+    axes[row, col].set_ylabel("Frequency")
+
+plt.tight_layout()
+plt.show()
 
 
 
-generator = SyntheticDataGenerator(n=100, m=100, noise=0, complexity=2, TAB = 1, only_factual=True)
-df_patients, df_organs, df_outcomes, df_outcomes_noiseless, _ = generator.generate_datasets()
+
+
+
+
 
 
 
@@ -57,3 +75,4 @@ plt.show()
 
 # plt.tight_layout()
 # plt.show()
+
