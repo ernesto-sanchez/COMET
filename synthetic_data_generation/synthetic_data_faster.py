@@ -4,9 +4,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import numpy as np
-
+import sys
+config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config'))
+sys.path.append(config_path)
+from config import config
 
 class SyntheticDataGenerator:
+
     """
     Class for generating synthetic data for transplant patients. Patients and organs are generated independently. 
     After generating the data, we match patients with organs based on their features. We then generate outcomes and effects for the matched patients and organs.
@@ -20,26 +24,33 @@ class SyntheticDataGenerator:
     - noise: standard deviation of the noise added to the outcomes
 
     """
-    def __init__(self, n:int, m:int, complexity: int, only_factual: bool, TAB:float, noise:int = 0 ) -> None:
-        if n <= 0:
+    def __init__(self) -> None:
+
+        self.n = config['synthetic_data']['n']
+        self.m = config['synthetic_data']['m']
+        self.noise = config['synthetic_data']['noise']
+        self.complexity = config['synthetic_data']['complexity']
+        self.only_factual = config['synthetic_data']['only_factual']
+        self.alpha = config['synthetic_data']['TAB']
+        if self.n <= 0:
             raise ValueError("n must be a positive integer")
-        if m <= 0:
+        if self.m <= 0:
             raise ValueError("m must be a positive integer")
-        if n != m:
+        if self.n != self.m:
             raise ValueError("n must be equal to m")
-        if complexity not in [1, 2]:
+        if self.complexity not in [1, 2]:
             raise ValueError("complexity must be either 1 or 2")
-        if TAB < 0 or TAB > 1:
+        if self.alpha < 0 or self.alpha > 1:
             raise ValueError("TAB must be between 0 and 1")
-        if noise < 0:
+        if self.noise < 0:
             raise ValueError("noise must be a positive float")
         
-        self.n = n  # number of patients
-        self.m = m  # number of organs
-        self.noise = noise
-        self.complexity = complexity
-        self.only_factual = only_factual
-        self.alpha = TAB
+        # self.n = n  # number of patients
+        # self.m = m  # number of organs
+        # self.noise = noise
+        # self.complexity = complexity
+        # self.only_factual = only_factual
+        # self.alpha = TAB
 
         
 
@@ -322,7 +333,6 @@ class SyntheticDataGenerator:
         effects['eGFR'] = outcomes['eGFR'] - factual_outcomes['eGFR']
         effects['survival_prob'] = outcomes['survival_prob'] - factual_outcomes['survival_prob']
         
-        #TODO(1): See what happens with the survial probabilities
         return effects
 
 
@@ -358,7 +368,7 @@ class SyntheticDataGenerator:
 
 
 if __name__ == '__main__':
-    generator = SyntheticDataGenerator(n=100, m=100, noise=0, complexity=1, TAB = 0.5,  only_factual=False)
+    generator = SyntheticDataGenerator()
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless, df_effects = generator.generate_datasets()
 
 

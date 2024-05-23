@@ -1,0 +1,29 @@
+data:
+  path_patients: 'C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/patients.csv'
+  path_organs: 'C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/organs.csv'
+  path_outcomes: 'C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes.csv'
+  path_outcomes_noiseless: 'C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/outcomes_noiseless.csv'
+  path_effects: 'C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/effects.csv'
+  
+synthetic_data:
+  n : 200  # number of patients
+  m :  200 # number of organs
+  noise: 5
+  complexity : 2
+  only_factual : False
+  TAB : 0.5 #Treatment assignment bias
+
+
+evaluation:
+  split : true
+  scale : false
+  trainfac : true
+  evalfac : false
+  outcome : 'eGFR'
+  outcome_type : 'continuous'
+  model : 'GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)'
+  clustering_type : 'kmeans' #options: 'kmeans', 'expert', 'None'
+  clustering_n_clusters : 3
+
+
+ 
