@@ -11,7 +11,7 @@ synthetic_data:
   noise: 5
   complexity : 2
   only_factual : False
-  TAB : 0.5 #Treatment assignment bias
+  TAB : 1 #Treatment assignment bias
 
 
 evaluation:
@@ -19,11 +19,13 @@ evaluation:
   scale : false
   trainfac : true
   evalfac : false
-  outcome : 'eGFR'
-  outcome_type : 'continuous'
-  model : 'GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)'
+  learner : 'S_Learner()'
+  outcome : 'survival_prob'
+  outcome_type : 'binary' #options: 'binary', 'continuous', ´categorical
+  model : 'RandomForestRegressor()' #GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)
   clustering_type : 'kmeans' #options: 'kmeans', 'expert', 'None'
-  clustering_n_clusters : 3
+  clustering_n_clusters : 5
+  metric : 'CATE' #options: RMSE, AUROC, AUPRC, CATE 
 
 
  

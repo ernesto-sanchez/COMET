@@ -19,7 +19,7 @@ import pandas as pd
 fig, axes = plt.subplots(2, 3, figsize=(15, 10))
 
 for i, tab in enumerate([0.0, 0.2, 0.4, 0.6, 0.8, 1.0]):
-    generator = SyntheticDataGenerator(n=1000, m=1000, noise=0, complexity=2, TAB=tab, only_factual=True) 
+    generator = SyntheticDataGenerator(n=200, m=200, noise=5, complexity=2, TAB=tab, only_factual=True) 
     df_patients, df_organs, df_outcomes, df_outcomes_noiseless, _ = generator.generate_datasets()
     
     # Plotting outcomes data

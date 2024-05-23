@@ -1,34 +1,68 @@
+import sys
+import os
+import pandas as pd
+config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config'))
+sys.path.append(config_path)
+from config import config  # noqa: E402
 
-
+sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\synthetic_data_generation")
+sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET")
+sys.path.append(r"C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/regressor")
+sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\Meta-Learners")
+from SLearner import *
 
 
 
 
 class Evaluate:
-    def __init__(self, model, data_loader):
-        self.model = model
-        self.data_loader = data_loader
+    def __init__(self):
+        self.model = config['evaluation']['model']
+        self.metric = config['evaluation']['metric']
+        self.learner = config['evaluation']['learner']
+        
 
-    def evaluate(self):
-        patients, organs, outcomes, outcomes_noiseless, effects = self.data_loader.load_data()
+    def make_table_cate(self):
+        if self.metric != 'CATE':
+            raise NotImplementedError("Only CATE metric is implemented")
+        
+        # Define the table data
+        columns = ['Train', 'Test']
+        rows = ['factual', 'counterfactual']
+
+
+        #get the data
+        self.learner = eval(self.learner)
+        
+        data = [[self.learner.get_pehe_train_factual(), self.learner.get_pehe_test_factual()], [self.learner.get_pehe_train_count(), self.learner.get_pehe()]]
+        
+        # Create the table using pandas DataFrame
+        table = pd.DataFrame(data, index=rows, columns=columns)
+        
+        # Set the title of the table
+        title = config['evaluation']['metric']
+        
+        # Save the table as a file
+        table_file =  r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\Evaluation\results.csv" # Replace with your desired file path
+        table.to_csv(table_file)
+        
+        # Append the title to the file
+        with open(table_file, 'r+') as f:
+            content = f.read()
+            f.seek(0)
+            f.write(f'{title}' + content)
 
 
 
 
-        #If clustering is needed
-        if self.clustering:
-            organs = encode_clustering(organs)
-        model = self.model
+
 
 
 
 
 if __name__ == "__main__":
-    pass
-    # evaluate = Evaluate(model, data_loader)
-    # evaluate.evaluate()
-    # evaluate.plot()
-    # evaluate.save_results()
+    evaluate = Evaluate()
+    evaluate.make_table_cate()
+
     
 
 
