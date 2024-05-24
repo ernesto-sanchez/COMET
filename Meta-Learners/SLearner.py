@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import os
 import sys
+
+from sklearn.metrics import roc_auc_score, average_precision_score
+
 sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\synthetic_data_generation")
 sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET")
 sys.path.append(r"C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/regressor")
@@ -269,6 +272,184 @@ class S_Learner:
 
     def get_pehe_test_factual(self):
         return 0
+
+
+
+    def get_outcome_error_train_factual(self):
+        """
+        Train model on factual training data and evaluate outcome on train factual data as well ("MSE outcome train")
+
+        """
+
+        #fit the model
+        X_train = self.processed_data['X_train_factual']
+        y_train = self.processed_data['y_train_factual']
+
+        model = eval(config['evaluation']['model'])
+
+        model.fit(X_train, y_train)
+
+        #get the estimated outcome of the train data
+        est_outcome = model.predict(X_train)
+
+        #get the ground truth effects
+        true_outcome = self.processed_data['y_train_noiseless_factual']
+
+        #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+            
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
+        
+
+        return error
+
+
+
+
+
+
+    def get_outcome_error_test_factual(self):
+        """
+        Train model on factual training data and evaluate outcome on test factual data as well ("MSE outcome test")
+
+        """
+
+        #fit the model
+        X_train = self.processed_data['X_train_factual']
+        y_train = self.processed_data['y_train_factual']
+
+
+        model = eval(config['evaluation']['model'])
+        model.fit(X_train, y_train)
+
+        #get the estimated outcome of the test data
+        est_outcome = model.predict(self.processed_data['X_test_factual'])
+        
+        #get the ground truth effects
+        true_outcome = self.processed_data['y_test_noiseless_factual']
+        
+        #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+                
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+                
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
+        
+        return error
+
+
+    def get_outcome_error_train_count(self):
+        """
+        Train model on factual training data and evaluate outcome on train counterfactual data as well ("MSE outcome train")
+
+        """
+
+        #fit the model
+        X_train = self.processed_data['X_train_factual']
+        y_train = self.processed_data['y_train_factual']
+
+
+        model = eval(config['evaluation']['model'])
+        model.fit(X_train, y_train)
+
+        #get the estimated outcome of the test data
+        est_outcome = model.predict(self.processed_data['X_train_count'])
+        
+        #get the ground truth effects
+        true_outcome = self.processed_data['y_train_noiseless_count']
+        
+        #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+                
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+                
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
+        
+        return error
+    
+
+    def get_outcome_error_test_count(self):
+        """
+        Train model on factual training data and evaluate outcome on test counterfactual data as well ("MSE outcome test")
+
+        """
+        #fit the model
+        X_train = self.processed_data['X_train_factual']
+        y_train = self.processed_data['y_train_factual']
+
+
+        model = eval(config['evaluation']['model'])
+        model.fit(X_train, y_train)
+
+        #get the estimated outcome of the test data
+        est_outcome = model.predict(self.processed_data['X_test_count'])
+        
+        #get the ground truth effects
+        true_outcome = self.processed_data['y_test_noiseless_count']
+        
+        #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+                
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+                
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
+        
+        return error
+
 
     
 

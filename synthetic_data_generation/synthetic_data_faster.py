@@ -315,7 +315,7 @@ class SyntheticDataGenerator:
 
         """
         #extend datasets
-        effects = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival_prob'])
+        effects = pd.DataFrame(index=range(self.n * self.m), columns=['pat_id', 'org_id', 'eGFR', 'survival_prob', 'survival'])
         patients = patients.reset_index(drop=True)
         organs = organs.reset_index(drop=True)
         effects['pat_id'] = np.repeat(np.array(patients['pat_id']), self.m)
@@ -332,6 +332,7 @@ class SyntheticDataGenerator:
         #get treatment effect
         effects['eGFR'] = outcomes['eGFR'] - factual_outcomes['eGFR']
         effects['survival_prob'] = outcomes['survival_prob'] - factual_outcomes['survival_prob']
+        effects['survival'] = outcomes['survival'] - factual_outcomes['survival']
         
         return effects
 

@@ -42,7 +42,7 @@ class Evaluate:
         title = config['evaluation']['metric']
         
         # Save the table as a file
-        table_file =  r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\Evaluation\results.csv" # Replace with your desired file path
+        table_file =  r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\Evaluation\results_cate.csv" # Replace with your desired file path
         table.to_csv(table_file)
         
         # Append the title to the file
@@ -53,6 +53,32 @@ class Evaluate:
 
 
 
+    def make_table_outcomes(self):
+        #define the table data
+        columns = ['Train', 'Test']
+        rows = ['factual', 'counterfactual']
+
+        #get the data
+        self.learner = eval(self.learner)
+        data = [[self.learner.get_outcome_error_train_factual(), self.learner.get_outcome_error_test_factual()], [self.learner.get_outcome_error_train_count(), self.learner.get_outcome_error_test_count()]]
+
+        #create the table using pandas DataFrame
+        table = pd.DataFrame(data, index=rows, columns=columns)
+
+        #set the title of the table
+        title = config['evaluation']['metric']
+
+        #save the table as a file
+        table_file =  r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\Evaluation\results_outcome.csv"
+        table.to_csv(table_file)
+
+        #append the title to the file
+        with open(table_file, 'r+') as f:
+            content = f.read()
+            f.seek(0)
+            f.write(f'{title}' + content)   
+
+
 
 
 
@@ -61,7 +87,8 @@ class Evaluate:
 
 if __name__ == "__main__":
     evaluate = Evaluate()
-    evaluate.make_table_cate()
+    #evaluate.make_table_cate()
+    evaluate.make_table_outcomes()
 
     
 
