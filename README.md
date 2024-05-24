@@ -1,5 +1,5 @@
 # ![Comet Logo (1) (1)](https://github.com/ernesto-sanchez/COMET/blob/main/Comet%20Logo%20(3).png)
-
+# **C**ounterfactual **O**utcome **M**odels for **E**nhanced **T**ransplants
 
 
 ## Project description
