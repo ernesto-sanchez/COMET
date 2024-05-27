@@ -10,6 +10,7 @@ sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET")
 sys.path.append(r"C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/regressor")
 sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\Meta-Learners")
 from SLearner import *
+from TLearner_econml import *
 
 
 
@@ -87,8 +88,8 @@ class Evaluate:
 
 if __name__ == "__main__":
     evaluate = Evaluate()
-    #evaluate.make_table_cate()
-    evaluate.make_table_outcomes()
+    evaluate.make_table_cate()
+    #evaluate.make_table_outcomes()
 
     
 

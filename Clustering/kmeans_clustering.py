@@ -8,7 +8,7 @@ import pandas as pd
 
 class Clustering_kmeans():
     def __init__(self, data, n_clusters):
-        self.data = data
+        self.data = data  # should be the data of the training organs only!!!
         self.n_clusters = n_clusters
         self.clust_model = None
 

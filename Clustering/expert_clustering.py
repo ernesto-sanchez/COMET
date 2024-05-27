@@ -151,6 +151,29 @@ class Clustering_expert():
         labels = pd.cut(KDRI_median, bins=self.bins, labels=self.labels)
         
         return np.array(labels)
+    
+
+    def encode(self, data):
+
+
+        Xbeta = 0.0128 * (data['age_don'] -  40)  - (0.0194 * (data['age_don']- 18) *(data['age_don'] < 18)) + (0.0107 * (data['age_don'] - 50) * (data['age_don'] > 50))
+        Xbeta -=  (0.0464 * ((data['height_don'] - 170)/10)) - (0.0199 * ((data['weight_don'] - 80)/10) * (data['weight_don'] < 80))
+        Xbeta +=  0.1790 * (data['race_don']) + (0.1260 * (data['hypertension_don'])) + 0.1300 * (data['diabetes_don'])
+        Xbeta +=  0.0881 * (data['death_cerebrovascular']) + (0.2200 * (data['creatinine_don'] - 1))
+        Xbeta -= 0.2090 * (data['creatinine_don'] - 1) * (data['creatinine_don'] > 1.5 ) + (0.2400 * (data['HCV_don'])) + (0.1330 * (data['DCD_don']))
+
+        KDRI_RAO = np.exp(Xbeta)
+        normalizing_factor = 1.318253823684 #Should be the median KDRI from most recent cohort (taken from paper (USA, 2021))
+        KDRI_median = KDRI_RAO/normalizing_factor
+
+
+
+        labels = pd.cut(KDRI_median, bins=self.bins, labels=self.labels)
+        
+        return np.array(labels)
+    
+
+
 
         
     

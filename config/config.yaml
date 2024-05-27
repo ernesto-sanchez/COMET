@@ -6,12 +6,12 @@ data:
   path_effects: 'C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/synthetic_data_generation/effects.csv'
   
 synthetic_data:
-  n : 500  # number of patients
+  n : 500 # number of patients
   m :  500 # number of organs
   noise: 0
   complexity : 1
   only_factual : False
-  TAB : 0 #Treatment assignment bias
+  TAB : 1 #Treatment assignment bias
 
 
 evaluation:
@@ -20,12 +20,12 @@ evaluation:
   trainfac : true
   evalfac : false
   learner : 'S_Learner()'
-  outcome : 'survival'
-  outcome_type : 'binary' #options: 'binary', 'continuous', ´categorical
-  model : 'RandomForestClassifier()' #GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)
-  clustering_type : 'kmeans' #options: 'kmeans', 'expert', 'None'
-  clustering_n_clusters : 5
-  metric : 'AUPRC' #options: RMSE, AUROC, AUPRC, CATE 
+  outcome : 'eGFR'
+  outcome_type : 'continuous' #options: 'binary', 'continuous', ´categorical
+  model : 'RandomForestRegressor()' #GradientBoostingRegressor(n_estimators=100, max_depth=6, min_samples_leaf=1)
+  clustering_type : 'expert' #options: 'kmeans', 'expert', 'None'
+  clustering_n_clusters : 5 
+  metric : 'CATE' #options: RMSE, AUROC, AUPRC, CATE 
 
 
  
