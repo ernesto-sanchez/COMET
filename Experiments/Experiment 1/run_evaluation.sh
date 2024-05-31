@@ -58,7 +58,7 @@ for tab in 0 0.2 0.4 0.6 0.8 1; do
         exit 1
     fi
 
-    sleep 5
+    sleep 1
 
     # Define the evaluation script path
     file="$project_path/evaluation/evaluation.py"
