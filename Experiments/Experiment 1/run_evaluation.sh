@@ -15,7 +15,7 @@ project_path=$(realpath "$script_dir/../../")
 config_path="$project_path/config/config1.ini"
 
 # Define results file path
-results_file="$script_dir/results_experiment_1"
+results_file="$script_dir/results_experiment_1.h5"
 
 
 # Export stuff
@@ -40,6 +40,7 @@ fi
 # Loop through TAB values and update config file, then run the Python script
 for tab in 0 0.2 0.4 0.6 0.8 1; do
     echo "Updating TAB to $tab"
+
     
     # Update the TAB value in the config file
     crudini --set "$config_path" synthetic_data TAB "$tab"
@@ -48,6 +49,16 @@ for tab in 0 0.2 0.4 0.6 0.8 1; do
         echo "Failed to update config file"
         exit 1
     fi
+
+    #generate data with the new tab parameter
+    python "$project_path/synthetic_data_generation/synthetic_data_faster.py"
+
+    if [ $? -ne 0 ]; then
+        echo "Failed to generate synthetic data"
+        exit 1
+    fi
+
+    sleep 5
 
     # Define the evaluation script path
     file="$project_path/evaluation/evaluation.py"

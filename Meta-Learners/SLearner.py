@@ -244,7 +244,7 @@ class S_Learner:
         self.trainfac = bool(config['evaluation']['trainfac'] == 'True')
         self.evalfac = bool(config['evaluation']['evalfac'] == 'True')
         self.outcome = config['evaluation']['outcome']
-        self.effects = pd.read_csv(config['data']['path_effects'])
+        self.effects = pd.read_csv(str(config['data']['path_effects']))
         self.patients = pd.read_csv(config['data']['path_patients'])
         self.organs = pd.read_csv(config['data']['path_organs'])
         self.outcomes = pd.read_csv(config['data']['path_outcomes'])
