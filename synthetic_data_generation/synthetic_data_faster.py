@@ -5,9 +5,18 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 import sys
-config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config'))
-sys.path.append(config_path)
-from config import config
+import configparser
+project_path = os.path.dirname(os.path.dirname(__file__))
+
+
+# Create a config parser
+config = configparser.ConfigParser()
+
+config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+
+
+# Read the config file
+config.read(config_file)
 
 class SyntheticDataGenerator:
 
@@ -26,12 +35,12 @@ class SyntheticDataGenerator:
     """
     def __init__(self) -> None:
 
-        self.n = config['synthetic_data']['n']
-        self.m = config['synthetic_data']['m']
-        self.noise = config['synthetic_data']['noise']
-        self.complexity = config['synthetic_data']['complexity']
-        self.only_factual = config['synthetic_data']['only_factual']
-        self.alpha = config['synthetic_data']['TAB']
+        self.n = int(config['synthetic_data']['n'])
+        self.m = int(config['synthetic_data']['m'])
+        self.noise = float(config['synthetic_data']['noise'])
+        self.complexity = int(config['synthetic_data']['complexity'])
+        self.only_factual = bool(config['synthetic_data']['only_factual'] == 'True')
+        self.alpha = float(config['synthetic_data']['TAB'])
         if self.n <= 0:
             raise ValueError("n must be a positive integer")
         if self.m <= 0:

@@ -20,7 +20,7 @@ class Clustering_kmeans():
         catColumnsPos = [self.data.columns.get_loc(col) for col in list(self.data.select_dtypes('bool').columns)]
         catColumnsPos += [self.data.columns.get_loc(col) for col in list(self.data.select_dtypes('object').columns)]
 
-        self.clust_model = KPrototypes(n_clusters=self.n_clusters, init='Cao', verbose=2)
+        self.clust_model = KPrototypes(n_clusters=self.n_clusters, init='Cao', verbose=0)
         clusters = self.clust_model.fit_predict(self.data, categorical=catColumnsPos)
 
          # Create a new DataFrame that includes the cluster assignments

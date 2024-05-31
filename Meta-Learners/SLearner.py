@@ -4,11 +4,20 @@ import os
 import sys
 
 from sklearn.metrics import roc_auc_score, average_precision_score
+import configparser
+project_path = os.path.dirname(os.path.dirname(__file__))
 
-sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\synthetic_data_generation")
-sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET")
-sys.path.append(r"C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/regressor")
-sys.path.append(r"C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/Clustering")
+
+# Create a config parser
+config = configparser.ConfigParser()
+
+config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
+
+# Read the config file
+config.read(config_file)
+
+
+sys.path.append(os.path.join(project_path, 'Clustering'))
 
 
 from sklearn.ensemble import  GradientBoostingRegressor
@@ -18,12 +27,10 @@ from sklearn.ensemble import RandomForestRegressor
 from kmeans_clustering import Clustering_kmeans
 from expert_clustering import Clustering_expert
 
-config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config'))
-sys.path.append(config_path)
-from config import config  # noqa: E402
 
 
-class DataHandler:
+
+class DataHandler_SLearner:
     def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, effects:pd.DataFrame):
         self.patients = patients
         self.organs = organs
@@ -72,8 +79,8 @@ class DataHandler:
         #Keep the organ and patients ids bc it gets messy due to the shuffle
 
         #Hard-coded-flag! -> change the 0.8
-        training_patients_ids = self.patients['pat_id'].sample(frac = 0.8, random_state=42)
-        training_organs_ids = self.organs['org_id'].sample(frac = 0.8, random_state=42)
+        training_patients_ids = self.patients['pat_id'].sample(frac = float(config['evaluation']['split_proportion']) , random_state=42)
+        training_organs_ids = self.organs['org_id'].sample(frac = float(config['evaluation']['split_proportion']), random_state=42)
 
         test_patients_ids = self.patients['pat_id'][~self.patients['pat_id'].isin(training_patients_ids)]
         test_organs_ids = self.organs['org_id'][~self.organs['org_id'].isin(training_organs_ids)]
@@ -89,13 +96,14 @@ class DataHandler:
 
         if config['evaluation']['clustering_type'] == 'kmeans':
             #Do the clustering
-            self.clustering = Clustering_kmeans(training_organs.drop(columns=['org_id']), config['evaluation']['clustering_n_clusters'])
+            self.clustering = Clustering_kmeans(training_organs.drop(columns=['org_id']), int(config['evaluation']['clustering_n_clusters']))
             self.clustering.fit_and_encode()
         
 
 
             #indices_organs = np.stack([self.organs['org_id'], self.clusters], axis = 1) -> not used!
             
+
 
 
 
@@ -107,7 +115,7 @@ class DataHandler:
             self.clustering.fit_and_encode()
 
 
-        elif config['evaluation']['clustering_type'] is None:
+        elif config['evaluation']['clustering_type'] == 'None':
             pass
 
 
@@ -117,6 +125,7 @@ class DataHandler:
             X_train_factual = training_patients
             X_train_factual['organ_cluster'] = self.clustering.encode(data = training_organs.drop(columns=['org_id'])) #dont forget to frop the 'org_id column as it shouldnt inlfuence the clustering!
             
+
             X_test_factual = test_patients
             X_test_factual['organ_cluster'] = self.clustering.encode(data = test_organs.drop(columns=['org_id'])) #dont forget to frop the 'org_id column as it shouldnt inlfuence the clustering!
 
@@ -222,16 +231,18 @@ class DataHandler:
             'y_test_noiseless_count': y_test_noiseless_count, 
             'effects_train': effects_train,
             'effects_test': effects_test,
+            'indices_train': indices_train,
+            'indices_test': indices_test
         }
 
 
 
 class S_Learner:
     def __init__(self):
-        self.split = config['evaluation']['split']  
-        self.scale = config['evaluation']['scale']
-        self.trainfac = config['evaluation']['trainfac']
-        self.evalfac = config['evaluation']['evalfac']
+        self.split = bool(config['evaluation']['split']  == 'True')
+        self.scale = bool(config['evaluation']['scale'] == 'True')
+        self.trainfac = bool(config['evaluation']['trainfac'] == 'True')
+        self.evalfac = bool(config['evaluation']['evalfac'] == 'True')
         self.outcome = config['evaluation']['outcome']
         self.effects = pd.read_csv(config['data']['path_effects'])
         self.patients = pd.read_csv(config['data']['path_patients'])
@@ -247,7 +258,7 @@ class S_Learner:
 
 
 
-        self.data_handler = DataHandler(self.patients, self.organs, self.outcomes, self.outcomes_noiseless, self.effects)
+        self.data_handler = DataHandler_SLearner(self.patients, self.organs, self.outcomes, self.outcomes_noiseless, self.effects)
         self.processed_data = self.data_handler.load_data()
 
         #fit the model
@@ -306,6 +317,40 @@ class S_Learner:
 
         return pehe
     
+
+    def get_pairwise_cate_train(self):
+
+        #get the estimated treatment effect of the train data: E(y| X(train), factual_treatment(train)) - E(y| X(train), counterfactual_treatment(train))
+        m = len(self.organs)
+        features_train_factual = self.processed_data['X_train_factual'].loc[self.processed_data['X_train_factual'].index.repeat(m)].reset_index(drop=True)
+        features_train_count = self.processed_data['X_train_count']
+
+        est_effects = self.model.predict(features_train_factual) - self.model.predict(features_train_count)
+
+        #Append the correct indexing to make it more useful
+        indices_train = self.processed_data['indices_train']
+
+        est_effects = pd.concat([indices_train.reset_index(drop=True), pd.DataFrame(est_effects, columns=['cate'])], axis=1)
+        
+        return est_effects
+    
+
+    def get_pairwise_cate_test(self):
+
+        #get the estimated treatment effect of the test data: E(y| X(test), factual_treatment(test)) - E(y| X(test), counterfactual_treatment(test))
+        m = len(self.organs)
+        features_test_factual = self.processed_data['X_test_factual'].loc[self.processed_data['X_test_factual'].index.repeat(m)].reset_index(drop=True)
+        features_test_count = self.processed_data['X_test_count']
+
+        est_effects = self.model.predict(features_test_factual) - self.model.predict(features_test_count)
+
+        #Append the correct indexing to make it more useful
+        indices_test = self.processed_data['indices_test']
+
+        est_effects = pd.concat([indices_test.reset_index(drop=True), pd.DataFrame(est_effects, columns=['cate'])], axis=1)
+        
+        return est_effects
+
     def get_pehe_train_factual(self):
 
         return 0
@@ -492,6 +537,8 @@ if __name__ == "__main__":
 
 
     slearner = S_Learner()
+    print(slearner.get_pairwise_cate_train())
+    print(slearner.get_pairwise_cate_test())
 
     print(slearner.get_pehe())
     print(slearner.get_pehe_train_factual())

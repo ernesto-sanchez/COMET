@@ -1,86 +1,59 @@
-import torch
-from torch import nn
-import pandas as pd
-from torch.utils.data import DataLoader, Dataset
-import torch
-from torch.utils.data import TensorDataset
-import ast
-from sklearn.model_selection import train_test_split
-from tqdm import tqdm
-from sklearn.model_selection import KFold
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import Lasso, LogisticRegression
-from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import accuracy_score
-import os
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression, Ridge
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.svm import SVR
-#import seaborn as sns
-import matplotlib.pyplot as plt
-import numpy as np
-import scipy.stats as stats
-from sklearn import metrics
-import sys
-sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\synthetic_data_generation")
-sys.path.append(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET")
-sys.path.append(r"C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/regressor")
-sys.path.append(r"C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET/Clustering")
-
-from econml.metalearners import TLearner, SLearner, XLearner, DomainAdaptationLearner
-from econml.inference import BootstrapInference
-
-
-from synthetic_data_faster import SyntheticDataGenerator
-
-from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingRegressor
-
-
+# imports from package
+import logging
 import statsmodels.api as sm
-from xgboost import XGBRegressor, XGBClassifier
+from econml.metalearners import TLearner
 import warnings
-from expert_clustering import Clustering_expert
 
-# # from causalml.inference.meta import XGBTLearner, MLPTLearner
-# from causalml.inference.meta import BaseSRegressor, BaseTRegressor, BaseXRegressor, BaseRRegressor
-# from causalml.inference.meta import BaseSClassifier, BaseTClassifier, BaseXClassifier, BaseRClassifier
-# from causalml.inference.meta import LRSRegressor
-# from causalml.match import NearestNeighborMatch, MatchOptimizer, create_table_one
-# from causalml.propensity import ElasticNetPropensityModel
-# from causalml.dataset import *
-# from causalml.metrics import *
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingRegressor
+from sklearn.metrics import accuracy_score, average_precision_score, roc_auc_score
+import os
+import matplotlib.pyplot as plt
+import sys
+import configparser
+
+project_path = os.path.dirname(os.path.dirname(__file__))
+
+
+# Create a config parser
+config = configparser.ConfigParser()
+
+config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
+
+# Read the config file
+config.read(config_file)
+
+sys.path.append(os.path.join(project_path, 'Clustering'))
+sys.path.append(os.path.join(project_path, 'Meta-Learners'))
+
+
+from expert_clustering import Clustering_expert
+from kmeans_clustering import Clustering_kmeans
+from SLearner import DataHandler_SLearner
+
+
+
+
+
+
+
+
 
 warnings.filterwarnings('ignore')
 plt.style.use('fivethirtyeight')
 pd.set_option('display.float_format', lambda x: '%.4f' % x)
 
-# imports from package
-import logging
-from sklearn.dummy import DummyRegressor
-from sklearn.metrics import mean_squared_error as mse
-from sklearn.metrics import mean_absolute_error as mae
-import statsmodels.api as sm
-from copy import deepcopy
+
 
 logger = logging.getLogger('causalml')
 logging.basicConfig(level=logging.INFO)
 
 
-from kmeans_clustering import Clustering_kmeans
-
-
-config_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config'))
-sys.path.append(config_path)
-from config import config  # noqa: E402
 
 
 
-
-class DataHandler:
+class DataHandler_TLearner:
     def __init__(self, patients:pd.DataFrame, organs:pd.DataFrame, outcomes:pd.DataFrame, outcomes_noiseless:pd.DataFrame, effects:pd.DataFrame):
         self.patients = patients
         self.organs = organs
@@ -115,22 +88,17 @@ class DataHandler:
 
 
 
-        if not config['evaluation']['split']:
+        if not bool(config['evaluation']['split'] == 'True'):
             raise ValueError('Not using the The train test split is not supported for the T-Learner')
         
-
-
-
-        
-
 
 
         #1) We split the data into train and test sets. Need a to shuffle as the last patients tend to get worse organs!
         #Keep the organ and patients ids bc it gets messy due to the shuffle
 
         #Hard-coded-flag! -> change the 0.8
-        training_patients_ids = self.patients['pat_id'].sample(frac = 0.8, random_state=42)
-        training_organs_ids = self.organs['org_id'].sample(frac = 0.8, random_state=42)
+        training_patients_ids = self.patients['pat_id'].sample(frac = float(config['evaluation']['split_proportion']), random_state=42)
+        training_organs_ids = self.organs['org_id'].sample(frac = float(config['evaluation']['split_proportion']), random_state=42)
 
         test_patients_ids = self.patients['pat_id'][~self.patients['pat_id'].isin(training_patients_ids)]
         test_organs_ids = self.organs['org_id'][~self.organs['org_id'].isin(training_organs_ids)]
@@ -146,7 +114,7 @@ class DataHandler:
 
         if config['evaluation']['clustering_type'] == 'kmeans':
             #Do the clustering
-            self.clustering = Clustering_kmeans(training_organs.drop(columns=['org_id']), config['evaluation']['clustering_n_clusters'])
+            self.clustering = Clustering_kmeans(training_organs.drop(columns=['org_id']), int(config['evaluation']['clustering_n_clusters']))
             self.clustering.fit_and_encode()
         
 
@@ -164,36 +132,65 @@ class DataHandler:
             self.clustering.fit_and_encode()
 
 
-        elif config['evaluation']['clustering_type'] is None:
+        elif config['evaluation']['clustering_type'] == 'None':
             raise ValueError('Clustering must be done for the T-Learner')
             
 
 
         #3) Add the organs/clusters to the training/test data. 
-
-        X_train_factual = training_patients
-        treatments_train_factual = self.clustering.encode(data = training_organs.drop(columns=['org_id'])) #dont forget to frop the 'org_id column as it shouldnt inlfuence the clustering!
-        
-        X_test_factual = test_patients
-        treatments_test_factual = self.clustering.encode(data = test_organs.drop(columns=['org_id'])) #dont forget to frop the 'org_id column as it shouldnt inlfuence the clustering!
+        if config['evaluation']['clustering_type'] != 'None':
 
 
-        #get the counterfactual training data. Need to create a dataset 
-
-        indices_train = self.effects.loc[self.effects['pat_id'].isin(training_patients_ids)].iloc[:, 0:2]
-        X_train_count = self.patients.reindex(indices_train['pat_id'])
-
-        #now append the organ cluster to the training data also
-        orgs = self.organs.set_index('org_id')
-        treatments_train_count = self.clustering.encode(orgs.reindex(indices_train['org_id']))
+            X_train_factual = training_patients
+            treatments_train_factual = self.clustering.encode(data = training_organs.drop(columns=['org_id'])) #dont forget to frop the 'org_id column as it shouldnt inlfuence the clustering!
+            
+            X_test_factual = test_patients
+            treatments_test_factual = self.clustering.encode(data = test_organs.drop(columns=['org_id'])) #dont forget to frop the 'org_id column as it shouldnt inlfuence the clustering!
 
 
-        #get the counterfactual test data. Need to create a dataset
-        indices_test = self.effects.loc[self.effects['pat_id'].isin(test_patients_ids)].iloc[:, 0:2]
-        X_test_count = self.patients.reindex(indices_test['pat_id'])
+            #get the counterfactual training data. Need to create a dataset 
 
-        #now append the organ cluster to the training data also
-        treatments_test_count = self.clustering.encode(orgs.reindex(indices_test['org_id']))
+            indices_train = self.effects.loc[self.effects['pat_id'].isin(training_patients_ids)].iloc[:, 0:2]
+            X_train_count = self.patients.reindex(indices_train['pat_id'])
+
+            #now append the organ cluster to the training data also
+            orgs = self.organs.set_index('org_id')
+            treatments_train_count = self.clustering.encode(orgs.reindex(indices_train['org_id']))
+
+
+            #get the counterfactual test data. Need to create a dataset
+            indices_test = self.effects.loc[self.effects['pat_id'].isin(test_patients_ids)].iloc[:, 0:2]
+            X_test_count = self.patients.reindex(indices_test['pat_id'])
+
+            #now append the organ cluster to the training data also
+            treatments_test_count = self.clustering.encode(orgs.reindex(indices_test['org_id']))
+
+          
+        else: 
+            #Do the organ dummy encoding here! 
+            columns_to_dummy_organs = self.organs.columns.drop(['org_id', 'cold_ischemia_time', 'age_don', 'weight_don', 'height_don', 'creatinine_don'])
+
+            self.organs = pd.get_dummies(self.organs, columns=columns_to_dummy_organs) 
+
+            X_train_factual = training_patients
+            treatments_train_factual = self.organs.loc[training_organs_ids].reset_index(drop = True)
+
+            X_test_factual = test_patients.reset_index(drop = True)
+            treatments_test_factual = self.organs.loc[test_organs_ids].reset_index(drop = True)
+
+
+            indices_train = self.effects.loc[self.effects['pat_id'].isin(training_patients_ids)].iloc[:, 0:2]
+
+
+
+            X_train_count = self.patients.reindex(indices_train['pat_id']).reset_index(drop = True)
+            treatments_train_count = self.organs.reindex(indices_train['org_id']).reset_index(drop = True)
+
+
+            indices_test = self.effects.loc[self.effects['pat_id'].isin(test_patients_ids)].iloc[:, 0:2]
+
+            X_test_count = self.patients.reindex(indices_test['pat_id']).reset_index(drop = True)
+            treatments_test_count = self.organs.reindex(indices_test['org_id']).reset_index(drop = True)
 
 
     
@@ -259,14 +256,113 @@ class DataHandler:
             'treatments_train_factual': treatments_train_factual, 
             'treatments_test_factual': treatments_test_factual,
             'treatments_train_count': treatments_train_count,
-            'treatments_test_count': treatments_test_count
+            'treatments_test_count': treatments_test_count, 
+            'indices_train': indices_train,
+            'indices_test': indices_test
         }
+
+
+def from_cate_to_outcomes_train(predicted_cates):
+
+    """
+    This function is used to convert the estimated CATE to outcomes (in the train set). It is model agnostic, and it assumes linear in treatment models.
+    We fit a baseline model b(X,t_0) that estimates factual outcomes conditional on patients and treatment features. 
+    Then we add the estimated CATE te(x, t_0, t_1) between the factual and counterfactual treatment to the baseline model to get the counterfactual outcome.
+
+    Inputs:
+    - Implicitly (through config): Patients, organs, effects, and outcomes, the S-Learner data-handler
+
+    - predicted cates: A dataframe with the predicted CATEs. The dataframe should have the same indices as the DataHandler's dataframes.
+
+    Outputs: 
+    - A dataframe with the estimated counterfactual outcomes. The dataframe should have the same indices as the DataHandler's dataframes.
+
+    CAREFUL WITH: 
+        - The indices fo the training and test patients in the S-Learner shoulb be the same as the ones use in the cate prediction
+    """
+
+    effects = pd.read_csv(config['data']['path_effects'])
+    patients = pd.read_csv(config['data']['path_patients'])
+    organs = pd.read_csv(config['data']['path_organs'])
+    outcomes = pd.read_csv(config['data']['path_outcomes'])
+    outcomes_noiseless = pd.read_csv(config['data']['path_outcomes_noiseless'])
+
+    processed_data = DataHandler_SLearner(patients, organs, outcomes, outcomes_noiseless, effects).load_data()
+
+    #fit the baseline model
+    X_train_factual = processed_data['X_train_factual']
+    y_train_factual = processed_data['y_train_factual']
+
+    model = eval(config['evaluation']['model_to_outcome'])
+    model.fit(X_train_factual, y_train_factual)
+
+    # predict the baseline outcomes
+    predicted_outcomes = model.predict(processed_data['X_train_count'])
+
+    #add the estimated cate to the baseline outcomes
+    predicted_outcomes = predicted_outcomes + predicted_cates
+
+    return predicted_outcomes
+
+
+
+
+
+
+
+
+
+
+def from_cate_to_outcomes(predicted_cates):
+
+    """
+    This function is used to convert the estimated CATE to outcomes. It is model agnostic, and it assumes linear in treatment models.
+    We fit a baseline model b(X,t_0) that estimates factual outcomes conditional on patients and treatment features. 
+    Then we add the estimated CATE te(x, t_0, t_1) between the factual and counterfactual treatment to the baseline model to get the counterfactual outcome.
+
+    Inputs:
+    - Implicitly (through config): Patients, organs, effects, and outcomes, the S-Learner data-handler
+    - predicted cates: A dataframe with the predicted CATEs. The dataframe should have the same indices as the DataHandler's dataframes.
+
+    Outputs: 
+    - A dataframe with the estimated counterfactual outcomes. The dataframe should have the same indices as the DataHandler's dataframes.
+    """
+
+    effects = pd.read_csv(config['data']['path_effects'])
+    patients = pd.read_csv(config['data']['path_patients'])
+    organs = pd.read_csv(config['data']['path_organs'])
+    outcomes = pd.read_csv(config['data']['path_outcomes'])
+    outcomes_noiseless = pd.read_csv(config['data']['path_outcomes_noiseless'])
+
+    processed_data = DataHandler_SLearner(patients, organs, outcomes, outcomes_noiseless, effects).load_data()
+
+    #fit the baseline model
+    X_train_factual = processed_data['X_train_factual']
+    y_train_factual = processed_data['y_train_factual']
+
+    model = eval(config['evaluation']['model_to_outcome'])
+    model.fit(X_train_factual, y_train_factual)
+
+
+    # predict the baseline outcomes
+    predicted_outcomes = model.predict(processed_data['X_test_count'])
+
+    #add the estimated cate to the baseline outcomes
+    predicted_outcomes = predicted_outcomes + predicted_cates
+
+    return predicted_outcomes
+
+
+
+
+
+
 
 
 
 class T_Learner:
     def __init__(self):
-        self.split = config['evaluation']['split']  
+        self.split = bool(config['evaluation']['split'] == 'True')  
         self.scale = config['evaluation']['scale']
         self.trainfac = config['evaluation']['trainfac']
         self.evalfac = config['evaluation']['evalfac']
@@ -285,14 +381,8 @@ class T_Learner:
 
 
         #prepare the data for the T-learner (This data Handler class is not the same as the one of the S-learner)
-        self.data_handler = DataHandler(self.patients, self.organs, self.outcomes, self.outcomes_noiseless, self.effects)
+        self.data_handler = DataHandler_TLearner(self.patients, self.organs, self.outcomes, self.outcomes_noiseless, self.effects)
         self.processed_data = self.data_handler.load_data()
-
-
-
-  
-
-
 
         # Instantiate T learner
         models  = [eval(config['evaluation']['model']) for _ in range(len(np.unique(self.processed_data['treatments_train_factual'])))]
@@ -380,8 +470,126 @@ class T_Learner:
         pehe = np.sqrt(np.mean((effects - est_effects)**2))
 
         return pehe
-       
+    
+    def get_pairwise_cate_train(self):
 
+        #true effects
+        effects = self.processed_data['effects_train']
+
+        #estimated effects
+
+        m = len(self.patients)
+        #get the patient features
+        features_train_factual = self.processed_data['X_train_factual'].loc[self.processed_data['X_train_factual'].index.repeat(m)].reset_index(drop=True)
+
+
+        #get the factual treatments
+        factual_treatments = self.processed_data['treatments_train_factual'].loc[self.processed_data['treatments_train_factual'].index.repeat(m)].reset_index(drop=True)
+
+        est_effects = self.T_learner.effect(X = features_train_factual, T0 = factual_treatments, T1 = self.processed_data['treatments_train_count'])
+
+        
+        return est_effects
+    
+
+    def get_pairwise_cate_test(self):
+
+        #true effects
+        effects = self.processed_data['effects_test']
+
+        #estimated effects
+
+        m = len(self.patients)
+        #get the patient features
+        features_test_factual = self.processed_data['X_test_factual'].loc[self.processed_data['X_test_factual'].index.repeat(m)].reset_index(drop=True)
+
+
+        #get the factual treatments
+        factual_treatments = self.processed_data['treatments_test_factual'].loc[self.processed_data['treatments_test_factual'].index.repeat(m)].reset_index(drop=True)
+
+        est_effects = self.T_learner.effect(X = features_test_factual, T0 = factual_treatments, T1 = self.processed_data['treatments_test_count'])
+        
+        return est_effects
+
+    def get_outcome_error_train_count(self):
+
+        """
+        Calculates the outcome error in the train set after after estimating the cate from the outcome
+        """
+
+        #get the estimated outcome of the test data
+        est_outcome = from_cate_to_outcomes_train(self.get_pairwise_cate_train())
+        
+        #get the ground truth effects
+        true_outcome = self.processed_data['y_train_noiseless_count']
+        
+        #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+                
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+                
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
+        
+        return error
+    
+    def get_outcome_error_test_count(self):
+        """
+        Calculates the outcome error in the test set after after estimating the cate from the outcome
+        """
+
+        #get the estimated outcome of the test data
+        est_outcome = from_cate_to_outcomes(self.get_pairwise_cate_test())
+        
+        #get the ground truth effects
+        true_outcome = self.processed_data['y_test_noiseless_count']
+        
+        #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+                
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+                
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
+        
+        return error
+
+    def get_outcome_error_train_factual(self):
+        """
+        Returns 0: The cate for the factual train set is 0, so it would be essentially ony using the S-Learner
+        """
+        return 0    
+    
+
+    def get_outcome_error_test_factual(self):
+        """
+        Returns 0: The cate for the factual test set is 0, so it would be essentially ony using the S-Learner
+        """
+        return 0
         
 
 
@@ -395,4 +603,13 @@ if __name__ == "__main__":
 
 
     tlearner = T_Learner()
-    print(tlearner.get_pehe())
+    # print(tlearner.get_pehe())
+
+
+
+
+    predicted_cates_train = tlearner.get_pairwise_cate_train()
+    predicted_cates_test = tlearner.get_pairwise_cate_test()
+
+    print(from_cate_to_outcomes_train(predicted_cates_train))
+    print(from_cate_to_outcomes(predicted_cates_test))
