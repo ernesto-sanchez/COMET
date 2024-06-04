@@ -80,8 +80,10 @@ class Evaluate:
         tab_value = config['synthetic_data'].get('TAB')
 
         #get the data
-        self.learner = eval(self.learner)
-        data = [[self.learner.get_outcome_error_train_factual(), self.learner.get_outcome_error_test_factual()], [self.learner.get_outcome_error_train_count(), self.learner.get_outcome_error_test_count()]]
+        self.learner_type = eval(self.learner_type)
+        
+        data = [[self.learner_type.get_outcome_error_train_factual(), self.learner_type.get_outcome_error_test_factual()],
+                 [self.learner_type.get_outcome_error_train_count(), self.learner_type.get_outcome_error_test_count()]]
 
         #create the table using pandas DataFrame
         table = pd.DataFrame(data, index=rows, columns=columns)
