@@ -41,7 +41,8 @@ class Evaluate:
         rows = ['factual', 'counterfactual']
 
         #get the TAB value
-        tab_value = config['synthetic_data'].get('TAB')
+        parameter_value = os.getenv('PARAMETER_VALUE', config['synthetic_data'].get('TAB'))
+        parameter = os.getenv('PARAMETER', 'tab')
 
 
 
@@ -66,7 +67,7 @@ class Evaluate:
 
         # Save the result to the HDF5 file
         with pd.HDFStore(results_file) as store:
-            store[f'tab_{tab_value}'] = table
+            store[f'{parameter}={parameter_value}'] = table
 
 
 

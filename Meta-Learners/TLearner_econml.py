@@ -14,16 +14,6 @@ import sys
 import configparser
 
 project_path = os.path.dirname(os.path.dirname(__file__))
-
-
-# Create a config parser
-config = configparser.ConfigParser()
-
-config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
-
-# Read the config file
-config.read(config_file)
-
 sys.path.append(os.path.join(project_path, 'Clustering'))
 sys.path.append(os.path.join(project_path, 'Meta-Learners'))
 
@@ -36,8 +26,13 @@ from SLearner import DataHandler_SLearner
 
 
 
+# Create a config parser
+config = configparser.ConfigParser()
 
+config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
 
+# Read the config file
+config.read(config_file)
 
 
 warnings.filterwarnings('ignore')

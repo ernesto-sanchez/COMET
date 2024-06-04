@@ -2,31 +2,30 @@ import pandas as pd
 import numpy as np
 import os
 import sys
-
+from sklearn.ensemble import  GradientBoostingRegressor
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import roc_auc_score, average_precision_score
 import configparser
+
+
+
+
 project_path = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(os.path.join(project_path, 'Clustering'))
+
+
+from kmeans_clustering import Clustering_kmeans
+from expert_clustering import Clustering_expert
 
 
 # Create a config parser
 config = configparser.ConfigParser()
 
-config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
+config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
 
 # Read the config file
 config.read(config_file)
-
-
-sys.path.append(os.path.join(project_path, 'Clustering'))
-
-
-from sklearn.ensemble import  GradientBoostingRegressor
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import RandomForestRegressor
-
-from kmeans_clustering import Clustering_kmeans
-from expert_clustering import Clustering_expert
-
 
 
 

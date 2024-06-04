@@ -3,21 +3,6 @@ import numpy as np
 import os
 import sys
 import configparser
-project_path = os.path.dirname(os.path.dirname(__file__))
-
-
-# Create a config parser
-config = configparser.ConfigParser()
-
-config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
-
-# Read the config file
-config.read(config_file)
-
-
-
-sys.path.append(os.path.join(project_path, 'Clustering'))
-sys.path.append(os.path.join(project_path, 'Meta-Learners'))
 
 from econml.dml import DML
 from econml.dr import DRLearner
@@ -31,13 +16,32 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
 from econml.sklearn_extensions.linear_model import StatsModelsLinearRegression
 
-from kmeans_clustering import Clustering_kmeans
-from expert_clustering import Clustering_expert
 
+
+
+project_path = os.path.dirname(os.path.dirname(__file__))
+
+sys.path.append(os.path.join(project_path, 'Clustering'))
+sys.path.append(os.path.join(project_path, 'Meta-Learners'))
 
 
 from TLearner_econml import DataHandler_TLearner
 from SLearner import DataHandler_SLearner
+from kmeans_clustering import Clustering_kmeans
+from expert_clustering import Clustering_expert
+
+
+# Create a config parser
+config = configparser.ConfigParser()
+
+config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+
+# Read the config file
+config.read(config_file)
+
+
+
+
 
 
 
@@ -156,7 +160,6 @@ class DoubleML:
         # Instantiate the DML estimator
         model_t = eval(config['evaluation']['model_t'])
         model_y = eval(config['evaluation']['model_y'])
-        model_propensity = eval(config['evaluation']['model_propensity'])
         model_regression = eval(config['evaluation']['model_regression'])
         model_final = eval(config['evaluation']['model'])
 
@@ -166,6 +169,7 @@ class DoubleML:
             self.estimator = DML(model_t  = model_t, model_y = model_y, model_final = model_final, discrete_outcome = discrete_outcome, discrete_treatment = True, categories = 'auto')
         elif config['evaluation']['learner'] == 'DRLearner()':
             self.estimator = DRLearner(model_propensity= 'auto', model_regression= model_regression, model_final = model_final, discrete_outcome = discrete_outcome, categories = 'auto')
+            
         else:
             raise ValueError('The learner is not supported')
 
