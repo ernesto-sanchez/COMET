@@ -81,7 +81,7 @@ class Evaluate:
 
         #get the data
         self.learner_type = eval(self.learner_type)
-        
+
         data = [[self.learner_type.get_outcome_error_train_factual(), self.learner_type.get_outcome_error_test_factual()],
                  [self.learner_type.get_outcome_error_train_count(), self.learner_type.get_outcome_error_test_count()]]
 
@@ -107,8 +107,10 @@ class Evaluate:
 
 if __name__ == "__main__":
     evaluate = Evaluate()
-    evaluate.make_table_cate()
-    #evaluate.make_table_outcomes()
+    if config['evaluation']['metric'] == 'CATE':
+        evaluate.make_table_cate()
+    else:
+        evaluate.make_table_outcomes()
 
     
 
