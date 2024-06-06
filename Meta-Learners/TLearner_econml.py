@@ -575,17 +575,81 @@ class T_Learner:
 
     def get_outcome_error_train_factual(self):
         """
-        Returns 0: The cate for the factual train set is 0, so it would be essentially ony using the S-Learner
+        Returns the error of the outcome prediction for the factual train set, we acces the already fitted models from the T-Learner class and 
+        use them to predict the outcomes.
         """
-        return 0    
+        X_train = self.processed_data['X_train_factual']
+        true_outcome = self.processed_data['y_train_noiseless_factual']
+        t_train = self.processed_data['treatments_train_factual']
+
+        est_outcome = X_train.apply(lambda x: self.T_learner.models[int(t_train.loc[x.name])].predict(x.to_frame().T),
+                                     axis=1)
+
+
+        #return the desired metric
+
+         #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+                
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+                
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
+        
+        return error
+
+
+
     
 
     def get_outcome_error_test_factual(self):
         """
-        Returns 0: The cate for the factual test set is 0, so it would be essentially ony using the S-Learner
+        Returns the error of the outcome prediction for the factual train set, we acces the already fitted models from the T-Learner class and 
+        use them to predict the outcomes.
         """
-        return 0
+        X_train = self.processed_data['X_test_factual']
+        true_outcome = self.processed_data['y_test_noiseless_factual']
+        t_train = self.processed_data['treatments_test_factual']
+
+        est_outcome = X_train.apply(lambda x: self.T_learner.models[int(t_train.loc[x.name])].predict(x.to_frame().T),
+                                     axis=1)
+
+
+        #return the desired metric
+
+         #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+                
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+                
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
         
+        return error
 
 
             
@@ -599,12 +663,13 @@ if __name__ == "__main__":
 
     tlearner = T_Learner()
     # print(tlearner.get_pehe())
+    print(tlearner.get_outcome_error_train_factual())
 
 
 
 
-    predicted_cates_train = tlearner.get_pairwise_cate_train()
-    predicted_cates_test = tlearner.get_pairwise_cate_test()
+    # predicted_cates_train = tlearner.get_pairwise_cate_train()
+    # predicted_cates_test = tlearner.get_pairwise_cate_test()
 
-    print(from_cate_to_outcomes_train(predicted_cates_train))
-    print(from_cate_to_outcomes(predicted_cates_test))
+    # print(from_cate_to_outcomes_train(predicted_cates_train))
+    # print(from_cate_to_outcomes(predicted_cates_test))

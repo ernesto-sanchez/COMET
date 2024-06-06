@@ -361,17 +361,76 @@ class DoubleML:
 
     def get_outcome_error_train_factual(self):
         """
-        Returns 0: The cate for the factual train set is 0, so it would be essentially ony using the S-Learner
+        Gets the error of the prediction of the outcome in the factual train set
+
         """
-        return 0    
+
+        X_train = self.processed_data['X_train_factual']
+        true_outcome = self.processed_data['y_train_noiseless_factual']
+
+
+
+        est_outcome = np.mean([self.estimator.models_y[0][i].predict(X_train) for i in range(len(self.estimator.models_y[0]))],
+                                axis = 0) #there are many model_y models fitted in a cross fitted manner. Figured we take the average of these models to get a fair prediction of the y-model
+        ##Only works with DoubleML() learner!!!!!!
+        
+        #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+                
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+                
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
+        
+        return error
+
     
 
     def get_outcome_error_test_factual(self):
         """
         Returns 0: The cate for the factual test set is 0, so it would be essentially ony using the S-Learner
         """
-        return 0
+        X_test = self.processed_data['X_test_factual']
+        true_outcome = self.processed_data['y_test_noiseless_factual']
+
+
+        est_outcome = np.mean([self.estimator.models_y[0][i].predict(X_test) for i in range(len(self.estimator.models_y[0]))],
+                                axis = 0) #there are many model_y models fitted in a cross fitted manner. Figured we take the average of these models to get a fair prediction of the y-model
         
+        #return the desired metric
+        if config['evaluation']['metric'] == 'RMSE':
+
+            error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
+
+        elif config['evaluation']['metric'] == 'AUROC':
+
+            error = roc_auc_score(true_outcome, est_outcome)
+
+        elif config['evaluation']['metric'] == 'MSE':
+                
+            error = np.mean((true_outcome - est_outcome)**2)
+
+        elif config['evaluation']['metric'] == 'AUPRC':
+                
+            error = average_precision_score(true_outcome, est_outcome)
+
+        else:
+            raise ValueError('The metric is not supported')
+        
+        return error
+
     
 
 
@@ -379,4 +438,5 @@ class DoubleML:
 
 if __name__ == '__main__':
     model = DoubleML()
-    print(model.get_pehe())
+    print(model.get_outcome_error_train_factual())
+    # print(model.get_pehe())

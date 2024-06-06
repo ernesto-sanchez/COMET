@@ -29,7 +29,7 @@ effects_path="$project_path/synthetic_data_generation/effects.csv"
 # Export stuff
 export CONFIG_FILE=$config_path
 export RESULTS_FILE="$results_file"
-export PARAMETER="n_clusters"
+export PARAMETER="model"
 
 
 # Print out the paths for debugging

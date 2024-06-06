@@ -41,8 +41,8 @@ class Evaluate:
         rows = ['factual', 'counterfactual']
 
         #get the TAB value
-        parameter_value = os.getenv('PARAMETER_VALUE', config['synthetic_data'].get('TAB'))
-        parameter = os.getenv('PARAMETER', 'tab')
+        parameter_value = config['evaluation']['parameter_value']
+        parameter = config['evaluation']['parameter']
 
 
 
@@ -62,12 +62,16 @@ class Evaluate:
 
 
 
-        results_file = os.getenv('RESULTS_FILE', os.path.join(project_path, 'Evaluation', 'results_cate'))
+        results_file = config['evaluation']['results_path']
 
 
         # Save the result to the HDF5 file
         with pd.HDFStore(results_file) as store:
             store[f'{parameter}={parameter_value}'] = table
+
+        #return the table in case we want to use it directly in another script
+
+        return table
 
 
 
@@ -77,7 +81,9 @@ class Evaluate:
         rows = ['factual', 'counterfactual']
 
         #get the TAB value
-        tab_value = config['synthetic_data'].get('TAB')
+        parameter_value = config['evaluation']['parameter_value']
+        parameter = config['evaluation']['parameter']
+
 
         #get the data
         self.learner_type = eval(self.learner_type)
@@ -91,12 +97,17 @@ class Evaluate:
 
        
 
-        results_file = os.getenv('RESULTS_FILE', os.path.join(project_path, 'Evaluation', 'results_outcome'))
+        results_file = config['evaluation']['results_path']
+
+
 
         # Save the result to the HDF5 file
         with pd.HDFStore(results_file) as store:
-            store[f'tab_{tab_value}'] = table
+            store[f'{parameter}={parameter_value}'] = table
 
+        
+        #return the table in case we want to use it directly in another script
+        return table
 
 
 
