@@ -50,7 +50,7 @@ with open(config_path, 'w') as configfile:
 # Results dictionary
 results = {}
 
-for tab in [0, 0.2, 0.4, 0.6, 0.8, 1]:
+for tab in [0,0.1, 0.2,0.3, 0.4,0.5, 0.6, 0.7, 0.8, 0.9, 1]:
 
     config['synthetic_data']['TAB'] = str(tab)
     with open(config_path, 'w') as configfile:
@@ -106,7 +106,7 @@ with open(os.path.join(script_path, 'results.pkl'), 'wb') as f:
 
 # Plot the results
 
-x_values = [0, 0.2, 0.4, 0.6, 0.8, 1]  # Define the values for the x-axis
+x_values = [0,0.1, 0.2,0.3, 0.4,0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Define the values for the x-axis
 colors = ['red', 'blue', 'green', 'orange']  # Define the colors for each line
 
 for model, color in zip(results.keys(), colors):
@@ -116,8 +116,8 @@ for model, color in zip(results.keys(), colors):
 plt.xlabel('TAB')  # Set the label for the x-axis
 plt.ylabel('CATE')  # Set the label for the y-axis
 plt.legend()  # Show the legend for the lines
+plt.savefig(os.path.join(script_path, 'results.pdf'), dpi=300)  # Save the plot as a PDF file with high resolution
 plt.show()  # Display the plot
-plt.savefig(os.path.join(script_path, 'results.png'))  # Save the plot to a file
 
 
 

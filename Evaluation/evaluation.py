@@ -65,9 +65,9 @@ class Evaluate:
         results_file = config['evaluation']['results_path']
 
 
-        # Save the result to the HDF5 file
-        with pd.HDFStore(results_file) as store:
-            store[f'{parameter}={parameter_value}'] = table
+        # # Save the result to the HDF5 file
+        # with pd.HDFStore(results_file) as store:
+        #     store[f'{parameter}={parameter_value}'] = table
 
         #return the table in case we want to use it directly in another script
 
