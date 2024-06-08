@@ -22,7 +22,7 @@ from expert_clustering import Clustering_expert
 # Create a config parser
 config = configparser.ConfigParser()
 
-config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
 
 # Read the config file
 config.read(config_file)
@@ -45,6 +45,7 @@ class DataHandler_SLearner:
         self.effects = effects
 
     def load_data(self) -> dict:
+        
 
 
         outcomes = self.outcomes[['pat_id', 'org_id', config['evaluation']['outcome']]]
@@ -238,6 +239,17 @@ class DataHandler_SLearner:
 
 class S_Learner:
     def __init__(self):
+
+
+        # Create a config parser
+        config = configparser.ConfigParser()
+
+        config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
+
+        # Read the config file
+        config.read(config_file)
+
+        
         self.split = bool(config['evaluation']['split']  == 'True')
         self.scale = bool(config['evaluation']['scale'] == 'True')
         self.trainfac = bool(config['evaluation']['trainfac'] == 'True')
@@ -252,6 +264,9 @@ class S_Learner:
         self.clustering_type = config['evaluation']['clustering_type']
         self.clustering = None
         self.n = len(self.patients)
+
+
+
 
 
 
@@ -536,6 +551,7 @@ if __name__ == "__main__":
 
 
     slearner = S_Learner()
+    print(slearner.get_pehe())
     print(slearner.get_pairwise_cate_train())
     print(slearner.get_pairwise_cate_test())
 

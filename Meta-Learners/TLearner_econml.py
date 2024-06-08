@@ -357,6 +357,16 @@ def from_cate_to_outcomes(predicted_cates):
 
 class T_Learner:
     def __init__(self):
+
+        # Create a config parser
+        config = configparser.ConfigParser()
+
+        config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
+
+        # Read the config file
+        config.read(config_file)
+
+
         self.split = bool(config['evaluation']['split'] == 'True')  
         self.scale = config['evaluation']['scale']
         self.trainfac = config['evaluation']['trainfac']

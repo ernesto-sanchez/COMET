@@ -12,7 +12,7 @@ project_path = os.path.dirname(os.path.dirname(__file__))
 # Create a config parser
 config = configparser.ConfigParser()
 
-config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config0.ini'))
 
 
 # Read the config file
