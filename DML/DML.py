@@ -31,13 +31,13 @@ from kmeans_clustering import Clustering_kmeans
 from expert_clustering import Clustering_expert
 
 
-# Create a config parser
-config = configparser.ConfigParser()
+# # Create a config parser
+# config = configparser.ConfigParser()
 
-config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+# config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
 
-# Read the config file
-config.read(config_file)
+# # Read the config file
+# config.read(config_file)
 
 
 
@@ -68,6 +68,14 @@ def from_cate_to_outcomes_train(predicted_cates):
     CAREFUL WITH: 
         - The indices fo the training and test patients in the S-Learner shoulb be the same as the ones use in the cate prediction
     """
+
+        # Create a config parser
+    config = configparser.ConfigParser()
+
+    config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+
+    # Read the config file
+    config.read(config_file)
 
     effects = pd.read_csv(config['data']['path_effects'])
     patients = pd.read_csv(config['data']['path_patients'])
@@ -108,6 +116,13 @@ def from_cate_to_outcomes(predicted_cates):
     Outputs: 
     - A dataframe with the estimated counterfactual outcomes. The dataframe should have the same indices as the DataHandler's dataframes.
     """
+    # Create a config parser
+    config = configparser.ConfigParser()
+
+    config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+
+    # Read the config file
+    config.read(config_file)
 
     effects = pd.read_csv(config['data']['path_effects'])
     patients = pd.read_csv(config['data']['path_patients'])
@@ -139,18 +154,28 @@ def from_cate_to_outcomes(predicted_cates):
 
 class DoubleML:
     def __init__(self):
-        self.split = config['evaluation']['split']  
-        self.scale = config['evaluation']['scale']
-        self.trainfac = config['evaluation']['trainfac']
-        self.evalfac = config['evaluation']['evalfac']
-        self.outcome = config['evaluation']['outcome']
-        self.effects = pd.read_csv(config['data']['path_effects'])
-        self.patients = pd.read_csv(config['data']['path_patients'])
-        self.organs = pd.read_csv(config['data']['path_organs'])
-        self.outcomes = pd.read_csv(config['data']['path_outcomes'])
-        self.outcomes_noiseless = pd.read_csv(config['data']['path_outcomes_noiseless'])
-        self.model = config['evaluation']['model']
-        self.clustering_type = config['evaluation']['clustering_type']
+
+        # Create a config parser
+        self.config = configparser.ConfigParser()
+
+        config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+
+        # Read the config file
+        self.config.read(config_file)
+
+
+        self.split = self.config['evaluation']['split']  
+        self.scale = self.config['evaluation']['scale']
+        self.trainfac = self.config['evaluation']['trainfac']
+        self.evalfac = self.config['evaluation']['evalfac']
+        self.outcome = self.config['evaluation']['outcome']
+        self.effects = pd.read_csv(self.config['data']['path_effects'])
+        self.patients = pd.read_csv(self.config['data']['path_patients'])
+        self.organs = pd.read_csv(self.config['data']['path_organs'])
+        self.outcomes = pd.read_csv(self.config['data']['path_outcomes'])
+        self.outcomes_noiseless = pd.read_csv(self.config['data']['path_outcomes_noiseless'])
+        self.model = self.config['evaluation']['model']
+        self.clustering_type = self.config['evaluation']['clustering_type']
         self.n = len(self.patients)
 
         #prepare the data for the T-learner (This data Handler class is not the same as the one of the S-learner)
@@ -158,16 +183,16 @@ class DoubleML:
         self.processed_data = self.data_handler.load_data()
 
         # Instantiate the DML estimator
-        model_t = eval(config['evaluation']['model_t'])
-        model_y = eval(config['evaluation']['model_y'])
-        model_regression = eval(config['evaluation']['model_regression'])
-        model_final = eval(config['evaluation']['model'])
+        model_t = eval(self.config['evaluation']['model_t'])
+        model_y = eval(self.config['evaluation']['model_y'])
+        model_regression = eval(self.config['evaluation']['model_regression'])
+        model_final = eval(self.config['evaluation']['model'])
 
-        discrete_outcome = False if config['evaluation']['outcome_type'] == 'continuous' else True
+        discrete_outcome = False if self.config['evaluation']['outcome_type'] == 'continuous' else True
 
-        if config['evaluation']['learner'] == 'DoubleML()':   
+        if self.config['evaluation']['learner'] == 'DoubleML()':   
             self.estimator = DML(model_t  = model_t, model_y = model_y, model_final = model_final, discrete_outcome = discrete_outcome, discrete_treatment = True, categories = 'auto')
-        elif config['evaluation']['learner'] == 'DRLearner()':
+        elif self.config['evaluation']['learner'] == 'DRLearner()':
             self.estimator = DRLearner(model_propensity= 'auto', model_regression= model_regression, model_final = model_final, discrete_outcome = discrete_outcome, categories = 'auto')
             
         else:
@@ -305,19 +330,19 @@ class DoubleML:
         true_outcome = self.processed_data['y_train_noiseless_count']
         
         #return the desired metric
-        if config['evaluation']['metric'] == 'RMSE':
+        if self.config['evaluation']['metric'] == 'RMSE':
 
             error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
 
-        elif config['evaluation']['metric'] == 'AUROC':
+        elif self.config['evaluation']['metric'] == 'AUROC':
 
             error = roc_auc_score(true_outcome, est_outcome)
 
-        elif config['evaluation']['metric'] == 'MSE':
+        elif self.config['evaluation']['metric'] == 'MSE':
                 
             error = np.mean((true_outcome - est_outcome)**2)
 
-        elif config['evaluation']['metric'] == 'AUPRC':
+        elif self.config['evaluation']['metric'] == 'AUPRC':
                 
             error = average_precision_score(true_outcome, est_outcome)
 
@@ -338,19 +363,19 @@ class DoubleML:
         true_outcome = self.processed_data['y_test_noiseless_count']
         
         #return the desired metric
-        if config['evaluation']['metric'] == 'RMSE':
+        if self.config['evaluation']['metric'] == 'RMSE':
 
             error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
 
-        elif config['evaluation']['metric'] == 'AUROC':
+        elif self.config['evaluation']['metric'] == 'AUROC':
 
             error = roc_auc_score(true_outcome, est_outcome)
 
-        elif config['evaluation']['metric'] == 'MSE':
+        elif self.config['evaluation']['metric'] == 'MSE':
                 
             error = np.mean((true_outcome - est_outcome)**2)
 
-        elif config['evaluation']['metric'] == 'AUPRC':
+        elif self.config['evaluation']['metric'] == 'AUPRC':
                 
             error = average_precision_score(true_outcome, est_outcome)
 
@@ -375,19 +400,19 @@ class DoubleML:
         ##Only works with DoubleML() learner!!!!!!
         
         #return the desired metric
-        if config['evaluation']['metric'] == 'RMSE':
+        if self.config['evaluation']['metric'] == 'RMSE':
 
             error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
 
-        elif config['evaluation']['metric'] == 'AUROC':
+        elif self.config['evaluation']['metric'] == 'AUROC':
 
             error = roc_auc_score(true_outcome, est_outcome)
 
-        elif config['evaluation']['metric'] == 'MSE':
+        elif self.config['evaluation']['metric'] == 'MSE':
                 
             error = np.mean((true_outcome - est_outcome)**2)
 
-        elif config['evaluation']['metric'] == 'AUPRC':
+        elif self.config['evaluation']['metric'] == 'AUPRC':
                 
             error = average_precision_score(true_outcome, est_outcome)
 
@@ -410,19 +435,19 @@ class DoubleML:
                                 axis = 0) #there are many model_y models fitted in a cross fitted manner. Figured we take the average of these models to get a fair prediction of the y-model
         
         #return the desired metric
-        if config['evaluation']['metric'] == 'RMSE':
+        if self.config['evaluation']['metric'] == 'RMSE':
 
             error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
 
-        elif config['evaluation']['metric'] == 'AUROC':
+        elif self.config['evaluation']['metric'] == 'AUROC':
 
             error = roc_auc_score(true_outcome, est_outcome)
 
-        elif config['evaluation']['metric'] == 'MSE':
+        elif self.config['evaluation']['metric'] == 'MSE':
                 
             error = np.mean((true_outcome - est_outcome)**2)
 
-        elif config['evaluation']['metric'] == 'AUPRC':
+        elif self.config['evaluation']['metric'] == 'AUPRC':
                 
             error = average_precision_score(true_outcome, est_outcome)
 

@@ -26,13 +26,13 @@ from SLearner import DataHandler_SLearner
 
 
 
-# Create a config parser
-config = configparser.ConfigParser()
+# # Create a config parser
+# config = configparser.ConfigParser()
 
-config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+# config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
 
-# Read the config file
-config.read(config_file)
+# # Read the config file
+# config.read(config_file)
 
 
 warnings.filterwarnings('ignore')
@@ -63,16 +63,24 @@ class DataHandler_TLearner:
         self.y_test_noiseless = None
         self.effects = effects
 
+        # Create a config parser
+        self.config = configparser.ConfigParser()
+
+        config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+
+# Read the config file
+        self.config.read(config_file)
+
     def load_data(self) -> dict:
 
 
-        outcomes = self.outcomes[['pat_id', 'org_id', config['evaluation']['outcome']]]
-        outcomes_noiseless = self.outcomes_noiseless[['pat_id', 'org_id', config['evaluation']['outcome']]]
+        outcomes = self.outcomes[['pat_id', 'org_id', self.config['evaluation']['outcome']]]
+        outcomes_noiseless = self.outcomes_noiseless[['pat_id', 'org_id', self.config['evaluation']['outcome']]]
 
         outcomes = outcomes.dropna()
         outcomes_noiseless = outcomes_noiseless.dropna()
 
-        effects = self.effects[['pat_id', 'org_id', config['evaluation']['outcome']]]
+        effects = self.effects[['pat_id', 'org_id', self.config['evaluation']['outcome']]]
         effects = effects.dropna()
 
         columns_to_dummy_patients = self.patients.columns.drop(['pat_id', 'age', 'weight'])
@@ -83,7 +91,7 @@ class DataHandler_TLearner:
 
 
 
-        if not bool(config['evaluation']['split'] == 'True'):
+        if not bool(self.config['evaluation']['split'] == 'True'):
             raise ValueError('Not using the The train test split is not supported for the T-Learner')
         
 
@@ -92,8 +100,8 @@ class DataHandler_TLearner:
         #Keep the organ and patients ids bc it gets messy due to the shuffle
 
         #Hard-coded-flag! -> change the 0.8
-        training_patients_ids = self.patients['pat_id'].sample(frac = float(config['evaluation']['split_proportion']), random_state=42)
-        training_organs_ids = self.organs['org_id'].sample(frac = float(config['evaluation']['split_proportion']), random_state=42)
+        training_patients_ids = self.patients['pat_id'].sample(frac = float(self.config['evaluation']['split_proportion']), random_state=42)
+        training_organs_ids = self.organs['org_id'].sample(frac = float(self.config['evaluation']['split_proportion']), random_state=42)
 
         test_patients_ids = self.patients['pat_id'][~self.patients['pat_id'].isin(training_patients_ids)]
         test_organs_ids = self.organs['org_id'][~self.organs['org_id'].isin(training_organs_ids)]
@@ -107,9 +115,9 @@ class DataHandler_TLearner:
         #2) Do the clustering of the organs
         
 
-        if config['evaluation']['clustering_type'] == 'kmeans':
+        if self.config['evaluation']['clustering_type'] == 'kmeans':
             #Do the clustering
-            self.clustering = Clustering_kmeans(training_organs.drop(columns=['org_id']), int(config['evaluation']['clustering_n_clusters']))
+            self.clustering = Clustering_kmeans(training_organs.drop(columns=['org_id']), int(self.config['evaluation']['clustering_n_clusters']))
             self.clustering.fit_and_encode()
         
 
@@ -119,7 +127,7 @@ class DataHandler_TLearner:
 
 
 
-        elif config['evaluation']['clustering_type'] == 'expert':
+        elif self.config['evaluation']['clustering_type'] == 'expert':
 
 
             #Do the clustering
@@ -127,13 +135,13 @@ class DataHandler_TLearner:
             self.clustering.fit_and_encode()
 
 
-        elif config['evaluation']['clustering_type'] == 'None':
+        elif self.config['evaluation']['clustering_type'] == 'None':
             raise ValueError('Clustering must be done for the T-Learner')
             
 
 
         #3) Add the organs/clusters to the training/test data. 
-        if config['evaluation']['clustering_type'] != 'None':
+        if self.config['evaluation']['clustering_type'] != 'None':
 
 
             X_train_factual = training_patients
@@ -275,6 +283,13 @@ def from_cate_to_outcomes_train(predicted_cates):
     CAREFUL WITH: 
         - The indices fo the training and test patients in the S-Learner shoulb be the same as the ones use in the cate prediction
     """
+    # Create a config parser
+    config = configparser.ConfigParser()
+
+    config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+
+    # Read the config file
+    config.read(config_file)
 
     effects = pd.read_csv(config['data']['path_effects'])
     patients = pd.read_csv(config['data']['path_patients'])
@@ -301,13 +316,6 @@ def from_cate_to_outcomes_train(predicted_cates):
 
 
 
-
-
-
-
-
-
-
 def from_cate_to_outcomes(predicted_cates):
 
     """
@@ -322,7 +330,14 @@ def from_cate_to_outcomes(predicted_cates):
     Outputs: 
     - A dataframe with the estimated counterfactual outcomes. The dataframe should have the same indices as the DataHandler's dataframes.
     """
+    # Create a config parser
+    config = configparser.ConfigParser()
 
+    config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
+
+    # Read the config file
+    config.read(config_file)
+    
     effects = pd.read_csv(config['data']['path_effects'])
     patients = pd.read_csv(config['data']['path_patients'])
     organs = pd.read_csv(config['data']['path_organs'])
@@ -349,36 +364,30 @@ def from_cate_to_outcomes(predicted_cates):
 
 
 
-
-
-
-
-
-
 class T_Learner:
     def __init__(self):
 
         # Create a config parser
-        config = configparser.ConfigParser()
+        self.config = configparser.ConfigParser()
 
         config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
 
         # Read the config file
-        config.read(config_file)
+        self.config.read(config_file)
 
 
-        self.split = bool(config['evaluation']['split'] == 'True')  
-        self.scale = config['evaluation']['scale']
-        self.trainfac = config['evaluation']['trainfac']
-        self.evalfac = config['evaluation']['evalfac']
-        self.outcome = config['evaluation']['outcome']
-        self.effects = pd.read_csv(config['data']['path_effects'])
-        self.patients = pd.read_csv(config['data']['path_patients'])
-        self.organs = pd.read_csv(config['data']['path_organs'])
-        self.outcomes = pd.read_csv(config['data']['path_outcomes'])
-        self.outcomes_noiseless = pd.read_csv(config['data']['path_outcomes_noiseless'])
-        self.model = config['evaluation']['model']
-        self.clustering_type = config['evaluation']['clustering_type']
+        self.split = bool(self.config['evaluation']['split'] == 'True')  
+        self.scale = self.config['evaluation']['scale']
+        self.trainfac = self.config['evaluation']['trainfac']
+        self.evalfac = self.config['evaluation']['evalfac']
+        self.outcome = self.config['evaluation']['outcome']
+        self.effects = pd.read_csv(self.config['data']['path_effects'])
+        self.patients = pd.read_csv(self.config['data']['path_patients'])
+        self.organs = pd.read_csv(self.config['data']['path_organs'])
+        self.outcomes = pd.read_csv(self.config['data']['path_outcomes'])
+        self.outcomes_noiseless = pd.read_csv(self.config['data']['path_outcomes_noiseless'])
+        self.model = self.config['evaluation']['model']
+        self.clustering_type = self.config['evaluation']['clustering_type']
         self.n = len(self.patients)
 
 
@@ -390,7 +399,7 @@ class T_Learner:
         self.processed_data = self.data_handler.load_data()
 
         # Instantiate T learner
-        models  = [eval(config['evaluation']['model']) for _ in range(len(np.unique(self.processed_data['treatments_train_factual'])))]
+        models  = [eval(self.config['evaluation']['model']) for _ in range(len(np.unique(self.processed_data['treatments_train_factual'])))]
         self.T_learner = TLearner(models = models)
 
 
@@ -529,19 +538,19 @@ class T_Learner:
         true_outcome = self.processed_data['y_train_noiseless_count']
         
         #return the desired metric
-        if config['evaluation']['metric'] == 'RMSE':
+        if self.config['evaluation']['metric'] == 'RMSE':
 
             error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
 
-        elif config['evaluation']['metric'] == 'AUROC':
+        elif self.config['evaluation']['metric'] == 'AUROC':
 
             error = roc_auc_score(true_outcome, est_outcome)
 
-        elif config['evaluation']['metric'] == 'MSE':
+        elif self.config['evaluation']['metric'] == 'MSE':
                 
             error = np.mean((true_outcome - est_outcome)**2)
 
-        elif config['evaluation']['metric'] == 'AUPRC':
+        elif self.config['evaluation']['metric'] == 'AUPRC':
                 
             error = average_precision_score(true_outcome, est_outcome)
 
@@ -562,19 +571,19 @@ class T_Learner:
         true_outcome = self.processed_data['y_test_noiseless_count']
         
         #return the desired metric
-        if config['evaluation']['metric'] == 'RMSE':
+        if self.config['evaluation']['metric'] == 'RMSE':
 
             error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
 
-        elif config['evaluation']['metric'] == 'AUROC':
+        elif self.config['evaluation']['metric'] == 'AUROC':
 
             error = roc_auc_score(true_outcome, est_outcome)
 
-        elif config['evaluation']['metric'] == 'MSE':
+        elif self.config['evaluation']['metric'] == 'MSE':
                 
             error = np.mean((true_outcome - est_outcome)**2)
 
-        elif config['evaluation']['metric'] == 'AUPRC':
+        elif self.config['evaluation']['metric'] == 'AUPRC':
                 
             error = average_precision_score(true_outcome, est_outcome)
 
@@ -599,19 +608,19 @@ class T_Learner:
         #return the desired metric
 
          #return the desired metric
-        if config['evaluation']['metric'] == 'RMSE':
+        if self.config['evaluation']['metric'] == 'RMSE':
 
             error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
 
-        elif config['evaluation']['metric'] == 'AUROC':
+        elif self.config['evaluation']['metric'] == 'AUROC':
 
             error = roc_auc_score(true_outcome, est_outcome)
 
-        elif config['evaluation']['metric'] == 'MSE':
+        elif self.config['evaluation']['metric'] == 'MSE':
                 
             error = np.mean((true_outcome - est_outcome)**2)
 
-        elif config['evaluation']['metric'] == 'AUPRC':
+        elif self.config['evaluation']['metric'] == 'AUPRC':
                 
             error = average_precision_score(true_outcome, est_outcome)
 
@@ -640,19 +649,19 @@ class T_Learner:
         #return the desired metric
 
          #return the desired metric
-        if config['evaluation']['metric'] == 'RMSE':
+        if self.config['evaluation']['metric'] == 'RMSE':
 
             error = np.sqrt(np.mean((true_outcome - est_outcome)**2))
 
-        elif config['evaluation']['metric'] == 'AUROC':
+        elif self.config['evaluation']['metric'] == 'AUROC':
 
             error = roc_auc_score(true_outcome, est_outcome)
 
-        elif config['evaluation']['metric'] == 'MSE':
+        elif self.config['evaluation']['metric'] == 'MSE':
                 
             error = np.mean((true_outcome - est_outcome)**2)
 
-        elif config['evaluation']['metric'] == 'AUPRC':
+        elif self.config['evaluation']['metric'] == 'AUPRC':
                 
             error = average_precision_score(true_outcome, est_outcome)
 

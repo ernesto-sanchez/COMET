@@ -5,13 +5,13 @@ import configparser
 project_path = os.path.dirname(os.path.dirname(__file__))
 
 
-# Create a config parser
-config = configparser.ConfigParser()
+# # Create a config parser
+# config = configparser.ConfigParser()
 
-config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
+# config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
 
-# Read the config file
-config.read(config_file)
+# # Read the config file
+# config.read(config_file)
 
 
 
@@ -27,6 +27,15 @@ from DML import *
 
 class Evaluate:
     def __init__(self):
+
+        # Create a config parser
+        config = configparser.ConfigParser()
+
+        config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
+
+        # Read the config file
+        config.read(config_file)
+
         self.model = config['evaluation']['model']
         self.metric = config['evaluation']['metric']
         self.learner_type = config['evaluation']['learner_type']
