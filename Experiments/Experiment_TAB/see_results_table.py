@@ -3,18 +3,18 @@ import matplotlib.pyplot as plt
 import os
 
 
-with open('/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/Experiments/Experiment_TAB/results.pkl', 'rb') as f:
+with open(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\Experiments\Experiment_TAB\results.pkl", 'rb') as f:
     results = pickle.load(f)
     
 script_path = os.path.dirname(__file__)
 x_values = [0,0.1, 0.2,0.3, 0.4,0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Define the values for the x-axis
 # colors = ['red', 'blue', 'green', 'orange']  # Define the colors for each line
-colors = ['red', 'green']  # Define the colors for each line
+colors = ['red', 'blue', 'green']  # Define the colors for each line
 
 
 # ['S_Learner()', 'DoubleML()', 'DRLearner()', 'T_Learner()']
 
-for model, color in zip(['S_Learner()', 'T_Learner()'], colors):
+for model, color in zip(['S_Learner()', 'T_Learner()', 'DoubleML()'], colors):
     y_values = [results[model][tab].loc['counterfactual','Train'] for tab in x_values]  # Get the error values for each model
     plt.plot(x_values, y_values, color=color, label=model)  # Plot the line for each model
 

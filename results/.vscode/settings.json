@@ -1,7 +1,0 @@
-{
-    "sftp.debug": true,
-    "sftp.printDebugLog": true,
-    "python.analysis.extraPaths": [
-        "./synthetic_data_generation"
-    ]
-}
