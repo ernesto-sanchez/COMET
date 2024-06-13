@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=exp_1
-#SBATCH --cpus-per-task=5
+#SBATCH --cpus-per-task=6
 #SBATCH --time=1:00:00
-#SBATCH --mem-per-cpu=20G
+#SBATCH --mem-per-cpu=30G
 #SBATCH --output=output_%J.txt
 
  

@@ -19,13 +19,13 @@ from kmeans_clustering import Clustering_kmeans
 from expert_clustering import Clustering_expert
 
 
-# Create a config parser
-config = configparser.ConfigParser()
+# # Create a config parser
+# config = configparser.ConfigParser()
 
-config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
+# config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
 
-# Read the config file
-config.read(config_file)
+# # Read the config file
+# config.read(config_file)
 
 
 

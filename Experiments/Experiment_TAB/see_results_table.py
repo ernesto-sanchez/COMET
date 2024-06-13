@@ -2,6 +2,7 @@ import pickle
 import matplotlib.pyplot as plt
 import os
 
+# with open(r"/cluster/work/medinfmk/STCS_swiss_transplant/AI_Organ_Transplant_Matching/code/code_ernesto/comet_cluster/Experiments/Experiment_TAB/results.pkl", 'rb') as f:
 
 with open(r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\Experiments\Experiment_TAB\results.pkl", 'rb') as f:
     results = pickle.load(f)
@@ -23,4 +24,4 @@ plt.ylabel('PEHE')  # Set the label for the y-axis
 plt.legend()  # Show the legend for the lines
 plt.tight_layout()  # Adjust the layout
 plt.savefig(os.path.join(script_path, 'results.pdf'), dpi=300)  # Save the plot as a PDF file with high resolution
-plt.show()
+print('hi')

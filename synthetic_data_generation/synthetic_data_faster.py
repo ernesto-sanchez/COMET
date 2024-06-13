@@ -39,7 +39,7 @@ class SyntheticDataGenerator:
         # Create a config parser
         self.config = configparser.ConfigParser()
 
-        config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config0.ini'))
+        config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
 
 
         # Read the config file
@@ -181,8 +181,13 @@ class SyntheticDataGenerator:
         hla_b_org = organs['hla_b_don'].values.reshape(1, -1)
         hla_c_org = organs['hla_c_don'].values.reshape(1, -1)
 
-        dist_matrix = np.abs(age_pat - age_org) + np.abs(weight_pat - weight_org) + 10*(blood_type_pat != blood_type_org) + 10*(rh_pat != rh_org) + 5* np.abs(hla_a_pat != hla_a_org) + 2*np.abs(hla_b_pat != hla_b_org) + np.abs(hla_c_pat != hla_c_org)
 
+        if int(self.config['synthetic_data']['complexity']) == 1:
+            dist_matrix = 0.5*age_pat + age_org + 0.1*weight_org + 0.1*weight_pat
+        elif int(self.config['synthetic_data']['complexity']) == 2:
+            dist_matrix = np.abs(age_pat - age_org) + np.abs(weight_pat - weight_org) + 10*(blood_type_pat != blood_type_org) + 10*(rh_pat != rh_org) + 5* np.abs(hla_a_pat != hla_a_org) + 2*np.abs(hla_b_pat != hla_b_org) + np.abs(hla_c_pat != hla_c_org)
+        else:
+            raise ValueError("Complexity must be either 1 or 2")
 
         ## Create indices of the best organ for each patient
 

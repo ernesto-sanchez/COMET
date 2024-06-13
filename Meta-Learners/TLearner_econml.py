@@ -68,7 +68,7 @@ class DataHandler_TLearner:
 
         config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config.ini'))
 
-# Read the config file
+        # Read the config file
         self.config.read(config_file)
 
     def load_data(self) -> dict:
