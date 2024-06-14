@@ -1,0 +1,53 @@
+{
+    "os": "Windows-10-10.0.22631-SP0",
+    "python": "3.11.7",
+    "heartbeatAt": "2024-06-14T16:03:59.116382",
+    "startedAt": "2024-06-14T16:03:56.681480",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "C:\\Users\\Ernesto\\OneDrive - ETH Zurich\\Desktop\\MT\\COMET\\DIFFPO\\run_model.py",
+    "codePathLocal": "DIFFPO\\run_model.py",
+    "codePath": "DIFFPO\\run_model.py",
+    "git": {
+        "remote": "https://github.com/ernesto-sanchez/COMET.git",
+        "commit": "14e29c45d045b51dc87343753f377e8e425d9ad1"
+    },
+    "email": "sernesto@student.ethz.ch",
+    "root": "C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET",
+    "host": "DESKTOP-IANTIDK",
+    "username": "Ernesto",
+    "executable": "c:\\Users\\Ernesto\\anaconda3\\envs\\env\\python.exe",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2208.0,
+        "min": 0.0,
+        "max": 2208.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2208.0,
+            "min": 0.0,
+            "max": 2208.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 222.11327743530273,
+            "used": 212.05611419677734
+        }
+    },
+    "gpu": "NVIDIA GeForce GTX 1050 Ti with Max-Q Design",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce GTX 1050 Ti with Max-Q Design",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 7.740535736083984
+    }
+}

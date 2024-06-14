@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from src.diff_models import diff_model
+from diff_models import diff_model
 import yaml
 
 

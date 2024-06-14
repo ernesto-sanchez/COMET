@@ -86,7 +86,12 @@ class acic_dataset(Dataset):
         # acic2018
         if dataset_name == 'acic2018':
 
-            dataset_path = "./data_acic2018/acic2018_norm_data/" + current_id + ".csv"
+            # Flag: new code
+            project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            data_path = os.path.dirname(project_path)
+
+            # dataset_path = "./data_acic2018/acic2018_norm_data/" + current_id + ".csv"
+            dataset_path = os.path.join(data_path, "ACIC2018", "scaling", current_id + ".csv")
 
             print('dataset_path', dataset_path)
 
@@ -100,10 +105,14 @@ class acic_dataset(Dataset):
             os.system('rm {}'.format(processed_data_path))
 
         if not os.path.isfile(processed_data_path):
+            # original code: missing_ratio argument not needed!
+           # self.observed_values, self.observed_masks, self.gt_masks = process_func(
+            #     dataset_path, aug_rate=aug_rate, missing_ratio=missing_ratio, train=train, dataset_name=dataset_name, current_id=current_id
+            # )
             self.observed_values, self.observed_masks, self.gt_masks = process_func(
-                dataset_path, aug_rate=aug_rate, missing_ratio=missing_ratio, train=train, dataset_name=dataset_name, current_id=current_id
+                dataset_path, aug_rate=aug_rate, train=train, dataset_name=dataset_name, current_id=current_id
             )
-
+ 
             with open(processed_data_path, "wb") as f:
                 pickle.dump(
                     [self.observed_values, self.observed_masks, self.gt_masks], f

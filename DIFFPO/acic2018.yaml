@@ -1,0 +1,11 @@
+model:
+  is_unconditional: true
+  other_field: value
+  test_missing_ratio: 0
+
+dataset:
+  data_name: acic2018
+
+
+train:
+  batch_size: 64

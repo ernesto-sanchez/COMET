@@ -4,7 +4,14 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
+        {
+            "name": "DIFFPO",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": "${command:pickArgs}"
+        },
         {
             "name": "Python: Module",
             "type": "debugpy",
@@ -13,7 +20,6 @@
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "console": "integratedTerminal"
-
         },
         {
             "name": "Python Debugger: Current File",

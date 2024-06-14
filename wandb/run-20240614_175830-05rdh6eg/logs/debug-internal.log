@@ -1,0 +1,1065 @@
+2024-06-14 17:58:30,714 INFO    StreamThr :21428 [internal.py:wandb_internal():85] W&B internal server running at pid: 21428, started at: 2024-06-14 17:58:30.712613
+2024-06-14 17:58:30,724 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status
+2024-06-14 17:58:30,731 INFO    WriterThread:21428 [datastore.py:open_for_write():87] open: c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\wandb\run-20240614_175830-05rdh6eg\run-05rdh6eg.wandb
+2024-06-14 17:58:30,733 DEBUG   SenderThread:21428 [sender.py:send():379] send: header
+2024-06-14 17:58:30,775 DEBUG   SenderThread:21428 [sender.py:send():379] send: run
+2024-06-14 17:58:31,675 INFO    SenderThread:21428 [dir_watcher.py:__init__():211] watching files in: c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\wandb\run-20240614_175830-05rdh6eg\files
+2024-06-14 17:58:31,675 INFO    SenderThread:21428 [sender.py:_start_run_threads():1188] run started: 05rdh6eg with start time 1718380710.713625
+2024-06-14 17:58:31,695 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: check_version
+2024-06-14 17:58:31,695 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: check_version
+2024-06-14 17:58:32,299 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: run_start
+2024-06-14 17:58:33,215 DEBUG   HandlerThread:21428 [system_info.py:__init__():26] System info init
+2024-06-14 17:58:33,215 DEBUG   HandlerThread:21428 [system_info.py:__init__():41] System info init done
+2024-06-14 17:58:33,215 INFO    HandlerThread:21428 [system_monitor.py:start():194] Starting system monitor
+2024-06-14 17:58:33,220 INFO    HandlerThread:21428 [system_monitor.py:probe():214] Collecting system info
+2024-06-14 17:58:33,220 INFO    SystemMonitor:21428 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-06-14 17:58:33,220 INFO    SystemMonitor:21428 [interfaces.py:start():188] Started cpu monitoring
+2024-06-14 17:58:33,225 INFO    SystemMonitor:21428 [interfaces.py:start():188] Started disk monitoring
+2024-06-14 17:58:33,225 INFO    SystemMonitor:21428 [interfaces.py:start():188] Started gpu monitoring
+2024-06-14 17:58:33,236 DEBUG   HandlerThread:21428 [system_info.py:probe():152] Probing system
+2024-06-14 17:58:33,236 INFO    SystemMonitor:21428 [interfaces.py:start():188] Started memory monitoring
+2024-06-14 17:58:33,252 INFO    SystemMonitor:21428 [interfaces.py:start():188] Started network monitoring
+2024-06-14 17:58:33,252 DEBUG   HandlerThread:21428 [system_info.py:_probe_git():137] Probing git
+2024-06-14 17:58:33,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:33,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:33,362 DEBUG   HandlerThread:21428 [system_info.py:_probe_git():145] Probing git done
+2024-06-14 17:58:33,362 DEBUG   HandlerThread:21428 [system_info.py:probe():200] Probing system done
+2024-06-14 17:58:33,362 DEBUG   HandlerThread:21428 [system_monitor.py:probe():223] {'os': 'Windows-10-10.0.22631-SP0', 'python': '3.11.7', 'heartbeatAt': '2024-06-14T15:58:33.236558', 'startedAt': '2024-06-14T15:58:30.692656', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': 'C:\\Users\\Ernesto\\OneDrive - ETH Zurich\\Desktop\\MT\\COMET\\DIFFPO\\run_model.py', 'codePathLocal': 'DIFFPO\\run_model.py', 'codePath': 'DIFFPO\\run_model.py', 'git': {'remote': 'https://github.com/ernesto-sanchez/COMET.git', 'commit': '14e29c45d045b51dc87343753f377e8e425d9ad1'}, 'email': 'sernesto@student.ethz.ch', 'root': 'C:/Users/Ernesto/OneDrive - ETH Zurich/Desktop/MT/COMET', 'host': 'DESKTOP-IANTIDK', 'username': 'Ernesto', 'executable': 'c:\\Users\\Ernesto\\anaconda3\\envs\\env\\python.exe', 'cpu_count': 6, 'cpu_count_logical': 12, 'cpu_freq': {'current': 2208.0, 'min': 0.0, 'max': 2208.0}, 'cpu_freq_per_core': [{'current': 2208.0, 'min': 0.0, 'max': 2208.0}], 'disk': {'/': {'total': 222.11327743530273, 'used': 212.05419921875}}, 'gpu': 'NVIDIA GeForce GTX 1050 Ti with Max-Q Design', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce GTX 1050 Ti with Max-Q Design', 'memory_total': 4294967296}], 'memory': {'total': 7.740535736083984}}
+2024-06-14 17:58:33,363 INFO    HandlerThread:21428 [system_monitor.py:probe():224] Finished collecting system info
+2024-06-14 17:58:33,363 INFO    HandlerThread:21428 [system_monitor.py:probe():227] Publishing system info
+2024-06-14 17:58:33,363 DEBUG   HandlerThread:21428 [system_info.py:_save_conda():209] Saving list of conda packages installed into the current environment
+2024-06-14 17:58:33,368 ERROR   HandlerThread:21428 [system_info.py:_save_conda():223] Error saving conda packages: [WinError 2] El sistema no puede encontrar el archivo especificado
+Traceback (most recent call last):
+  File "c:\Users\Ernesto\anaconda3\envs\env\Lib\site-packages\wandb\sdk\internal\system\system_info.py", line 216, in _save_conda
+    subprocess.call(
+  File "c:\Users\Ernesto\anaconda3\envs\env\Lib\subprocess.py", line 389, in call
+    with Popen(*popenargs, **kwargs) as p:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Ernesto\anaconda3\envs\env\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "c:\Users\Ernesto\anaconda3\envs\env\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Ernesto\.vscode\extensions\ms-python.debugpy-2024.6.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydev_bundle\pydev_monkey.py", line 901, in new_CreateProcess
+    return getattr(_subprocess, original_name)(app_name, cmd_line, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] El sistema no puede encontrar el archivo especificado
+2024-06-14 17:58:33,374 DEBUG   HandlerThread:21428 [system_info.py:_save_conda():224] Saving conda packages done
+2024-06-14 17:58:33,376 INFO    HandlerThread:21428 [system_monitor.py:probe():229] Finished publishing system info
+2024-06-14 17:58:33,385 DEBUG   SenderThread:21428 [sender.py:send():379] send: files
+2024-06-14 17:58:33,385 INFO    SenderThread:21428 [sender.py:_save_file():1454] saving file wandb-metadata.json with policy now
+2024-06-14 17:58:33,705 INFO    Thread-21 :21428 [dir_watcher.py:_on_file_created():271] file/dir created: c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\wandb\run-20240614_175830-05rdh6eg\files\wandb-metadata.json
+2024-06-14 17:58:33,705 INFO    Thread-21 :21428 [dir_watcher.py:_on_file_created():271] file/dir created: c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\wandb\run-20240614_175830-05rdh6eg\files\conda-environment.yaml
+2024-06-14 17:58:33,956 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: python_packages
+2024-06-14 17:58:33,956 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: python_packages
+2024-06-14 17:58:33,956 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 17:58:33,956 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 17:58:33,965 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:34,206 DEBUG   SenderThread:21428 [sender.py:send():379] send: telemetry
+2024-06-14 17:58:34,395 INFO    wandb-upload_0:21428 [upload_job.py:push():130] Uploaded file C:\Users\Ernesto\AppData\Local\Temp\tmp69mott_cwandb\f01eqbv0-wandb-metadata.json
+2024-06-14 17:58:34,709 INFO    Thread-21 :21428 [dir_watcher.py:_on_file_created():271] file/dir created: c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\wandb\run-20240614_175830-05rdh6eg\files\requirements.txt
+2024-06-14 17:58:34,971 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:35,285 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:35,285 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:35,285 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:35,285 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:35,356 DEBUG   SenderThread:21428 [sender.py:send():379] send: telemetry
+2024-06-14 17:58:35,712 INFO    Thread-21 :21428 [dir_watcher.py:_on_file_created():271] file/dir created: c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\wandb\run-20240614_175830-05rdh6eg\files\output.log
+2024-06-14 17:58:36,003 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:36,345 DEBUG   SenderThread:21428 [sender.py:send():379] send: telemetry
+2024-06-14 17:58:36,345 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:58:36,992 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:37,308 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:37,308 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:37,308 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:37,309 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:37,744 INFO    Thread-21 :21428 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\wandb\run-20240614_175830-05rdh6eg\files\output.log
+2024-06-14 17:58:37,993 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:39,005 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:39,326 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:39,326 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:39,326 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:39,326 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:40,025 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:41,036 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:41,343 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:41,343 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:41,343 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:41,344 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:42,009 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:58:42,042 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:43,042 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:43,367 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:43,367 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:43,367 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:43,367 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:44,045 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:45,060 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:45,391 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:45,391 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:45,391 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:45,391 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:46,073 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:47,075 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:47,415 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:47,415 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:47,415 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:47,415 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:48,025 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:58:48,077 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:48,965 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 17:58:48,965 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 17:58:49,080 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:49,435 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:49,435 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:49,435 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:49,438 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:50,096 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:51,104 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:51,455 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:51,456 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:51,456 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:51,456 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:52,107 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:53,122 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:53,203 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:58:53,465 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:53,472 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:53,472 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:53,472 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:54,141 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:55,157 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:55,485 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:55,485 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:55,485 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:55,485 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:56,173 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:57,188 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:57,499 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:57,499 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:57,505 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:57,505 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:58,191 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:59,013 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:58:59,206 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:58:59,520 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:59,520 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:58:59,520 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:58:59,520 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:00,220 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:01,224 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:01,540 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:01,540 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:01,540 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:01,540 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:02,227 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:03,238 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:03,957 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 17:59:03,958 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 17:59:04,140 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:04,241 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:04,373 ERROR   gpu       :21428 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-14 17:59:04,373 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:04,373 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:04,975 INFO    Thread-21 :21428 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET\wandb\run-20240614_175830-05rdh6eg\files\config.yaml
+2024-06-14 17:59:05,257 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:06,268 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:06,375 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:06,375 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:06,375 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:06,375 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:07,270 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:08,277 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:08,387 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:08,387 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:08,388 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:08,388 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:09,289 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:10,054 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:10,297 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:10,393 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:10,393 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:10,393 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:10,393 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:11,306 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:12,322 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:12,407 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:12,407 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:12,408 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:12,408 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:13,338 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:14,351 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:14,414 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:14,415 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:14,415 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:14,415 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:15,057 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:15,356 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:16,347 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:16,421 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:16,422 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:16,422 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:16,422 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:17,355 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:18,354 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:18,435 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:18,437 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:18,437 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:18,437 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:18,956 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 17:59:18,959 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 17:59:19,356 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:20,153 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:20,367 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:20,446 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:20,446 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:20,446 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:20,446 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:21,379 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:22,387 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:22,455 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:22,455 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:22,455 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:22,457 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:23,405 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:24,421 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:24,469 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:24,469 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:24,470 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:24,470 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:25,437 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:26,068 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:26,440 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:26,485 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:26,486 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:26,486 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:26,486 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:27,445 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:28,455 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:28,501 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:28,501 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:28,501 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:28,501 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:29,469 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:30,471 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:30,503 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:30,503 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:30,504 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:30,504 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:31,087 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:31,484 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:32,497 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:32,513 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:32,513 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:32,513 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:32,513 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:33,252 DEBUG   SystemMonitor:21428 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-06-14 17:59:33,255 DEBUG   SenderThread:21428 [sender.py:send():379] send: stats
+2024-06-14 17:59:33,505 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:33,975 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 17:59:33,975 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 17:59:34,526 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:35,355 ERROR   gpu       :21428 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-14 17:59:35,355 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:35,355 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:35,537 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:36,547 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:36,693 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:37,369 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:37,370 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:37,370 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:37,370 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:37,552 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:38,562 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:39,379 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:39,379 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:39,380 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:39,380 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:39,568 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:40,581 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:41,383 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:41,383 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:41,383 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:41,383 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:41,595 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:42,124 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:42,611 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:43,397 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:43,397 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:43,397 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:43,397 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:43,623 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:44,637 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:45,401 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:45,401 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:45,401 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:45,401 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:45,635 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:46,642 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:47,125 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:47,418 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:47,419 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:47,419 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:47,419 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:47,648 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:48,668 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:48,953 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 17:59:48,954 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 17:59:49,436 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:49,436 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:49,437 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:49,437 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:49,670 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:50,675 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:51,451 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:51,451 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:51,453 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:51,453 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:51,687 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:52,227 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:52,699 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:53,457 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:53,457 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:53,457 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:53,457 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:53,717 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:54,719 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:55,465 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:55,465 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:55,465 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:55,465 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:55,734 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:56,751 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:57,468 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:57,468 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:57,468 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:57,468 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:57,761 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:58,134 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 17:59:58,767 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 17:59:59,471 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:59,471 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 17:59:59,472 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:59,472 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 17:59:59,784 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:00,788 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:01,486 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:01,486 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:01,487 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:01,487 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:01,800 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:02,815 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:03,157 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:03,265 DEBUG   SenderThread:21428 [sender.py:send():379] send: stats
+2024-06-14 18:00:03,500 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:03,500 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:03,501 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:03,501 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:03,829 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:03,975 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:00:03,975 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:00:04,817 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:05,821 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:06,296 ERROR   gpu       :21428 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-14 18:00:06,296 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:06,296 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:06,825 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:07,816 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:08,263 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:08,312 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:08,312 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:08,312 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:08,312 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:08,829 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:09,837 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:10,319 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:10,319 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:10,319 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:10,320 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:10,850 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:11,855 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:12,321 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:12,321 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:12,321 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:12,321 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:12,860 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:13,885 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:14,169 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:14,334 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:14,334 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:14,335 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:14,335 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:14,884 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:15,901 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:16,338 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:16,338 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:16,338 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:16,338 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:16,896 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:17,915 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:18,346 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:18,346 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:18,346 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:18,346 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:18,925 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:18,990 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:00:18,990 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:00:19,205 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:19,938 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:20,348 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:20,348 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:20,348 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:20,348 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:20,952 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:21,966 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:22,352 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:22,352 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:22,352 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:22,352 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:22,967 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:23,979 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:24,365 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:24,366 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:24,367 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:24,367 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:24,995 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:25,205 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:25,991 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:26,377 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:26,377 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:26,377 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:26,377 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:27,005 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:28,010 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:28,380 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:28,380 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:28,380 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:28,380 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:29,015 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:30,017 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:30,210 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:30,387 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:30,387 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:30,387 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:30,387 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:31,025 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:32,033 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:32,402 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:32,402 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:32,402 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:32,405 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:33,046 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:33,270 DEBUG   SenderThread:21428 [sender.py:send():379] send: stats
+2024-06-14 18:00:33,992 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:00:33,992 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:00:34,058 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:34,412 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:34,412 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:34,412 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:34,412 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:35,068 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:35,227 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:36,076 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:37,081 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:37,235 ERROR   gpu       :21428 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-14 18:00:37,240 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:37,240 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:38,091 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:39,102 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:39,243 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:39,243 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:39,243 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:39,243 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:40,116 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:40,229 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:41,130 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:41,246 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:41,247 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:41,247 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:41,247 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:42,142 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:43,150 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:43,262 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:43,262 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:43,262 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:43,262 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:44,162 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:45,165 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:45,245 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:45,263 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:45,263 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:45,263 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:45,265 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:46,178 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:47,189 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:47,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:47,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:47,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:47,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:48,193 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:48,996 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:00:48,996 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:00:49,201 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:49,279 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:49,279 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:49,279 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:49,279 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:50,209 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:51,225 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:51,225 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:51,289 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:51,289 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:51,289 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:51,289 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:52,245 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:53,242 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:53,301 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:53,301 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:53,302 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:53,302 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:54,247 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:55,245 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:55,310 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:55,312 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:55,312 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:55,313 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:56,245 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:00:56,261 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:57,280 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:57,327 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:57,329 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:57,329 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:57,329 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:58,285 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:59,288 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:00:59,336 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:59,336 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:00:59,336 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:00:59,336 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:00,292 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:01,293 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:01,347 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:01,348 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:01,348 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:01,348 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:02,257 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:02,289 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:03,285 DEBUG   SenderThread:21428 [sender.py:send():379] send: stats
+2024-06-14 18:01:03,300 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:03,365 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:03,365 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:03,365 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:03,365 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:04,005 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:01:04,005 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:01:04,310 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:05,320 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:05,375 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:05,375 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:05,375 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:05,375 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:06,325 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:07,269 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:07,333 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:08,188 ERROR   gpu       :21428 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-14 18:01:08,188 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:08,188 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:08,347 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:09,358 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:10,193 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:10,193 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:10,193 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:10,193 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:10,363 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:11,377 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:12,195 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:12,195 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:12,195 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:12,195 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:12,278 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:12,395 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:13,410 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:14,212 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:14,212 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:14,214 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:14,214 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:14,426 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:15,441 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:16,222 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:16,223 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:16,223 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:16,223 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:16,444 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:17,457 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:18,232 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:18,232 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:18,232 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:18,232 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:18,265 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:18,461 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:19,026 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:01:19,026 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:01:19,475 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:20,240 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:20,241 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:20,241 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:20,241 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:20,490 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:21,505 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:22,259 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:22,259 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:22,260 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:22,260 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:22,521 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:23,288 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:23,537 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:24,260 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:24,260 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:24,260 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:24,260 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:24,541 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:25,559 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:26,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:26,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:26,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:26,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:26,557 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:27,559 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:28,276 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:28,276 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:28,276 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:28,276 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:28,309 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:28,559 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:29,569 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:30,290 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:30,290 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:30,290 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:30,290 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:30,577 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:31,589 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:32,305 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:32,305 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:32,305 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:32,305 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:32,593 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:33,298 DEBUG   SenderThread:21428 [sender.py:send():379] send: stats
+2024-06-14 18:01:33,600 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:34,035 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:01:34,035 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:01:34,215 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:34,307 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:34,307 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:34,307 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:34,307 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:34,607 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:35,618 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:36,310 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:36,310 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:36,310 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:36,310 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:36,624 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:37,640 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:38,655 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:39,135 ERROR   gpu       :21428 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-14 18:01:39,135 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:39,136 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:39,308 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:39,672 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:40,673 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:41,140 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:41,140 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:41,141 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:41,142 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:41,689 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:42,694 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:43,155 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:43,157 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:43,157 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:43,157 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:43,711 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:44,310 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:44,724 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:45,170 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:45,170 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:45,170 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:45,170 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:45,735 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:46,739 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:47,182 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:47,184 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:47,185 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:47,185 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:47,754 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:48,768 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:49,051 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:01:49,051 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:01:49,188 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:49,189 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:49,189 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:49,189 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:49,323 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:49,777 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:50,789 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:51,203 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:51,203 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:51,203 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:51,204 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:51,800 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:52,812 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:53,205 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:53,205 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:53,205 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:53,205 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:53,830 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:54,838 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:55,216 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:55,216 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:55,216 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:55,216 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:55,329 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:01:55,852 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:56,865 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:57,221 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:57,221 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:57,221 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:57,221 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:57,870 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:58,882 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:01:59,235 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:59,235 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:01:59,237 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:59,238 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:01:59,885 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:00,351 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:00,898 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:01,253 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:01,253 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:01,253 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:01,253 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:01,904 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:02,916 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:03,267 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:03,268 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:03,268 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:03,268 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:03,309 DEBUG   SenderThread:21428 [sender.py:send():379] send: stats
+2024-06-14 18:02:03,921 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:04,069 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:02:04,069 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:02:04,935 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:05,270 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:05,271 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:05,271 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:05,271 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:05,954 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:06,350 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:06,970 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:07,285 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:07,285 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:07,285 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:07,285 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:07,985 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:08,995 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:09,999 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:10,098 ERROR   gpu       :21428 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-14 18:02:10,098 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:10,098 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:11,006 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:11,366 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:12,021 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:12,100 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:12,101 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:12,101 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:12,102 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:13,031 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:14,050 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:14,118 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:14,118 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:14,118 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:14,118 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:15,052 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:16,067 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:16,128 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:16,128 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:16,129 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:16,129 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:16,380 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:17,081 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:18,087 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:18,137 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:18,137 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:18,138 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:18,138 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:19,068 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:02:19,068 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:02:19,104 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:20,105 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:20,143 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:20,143 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:20,143 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:20,143 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:21,118 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:22,137 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:22,145 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:22,146 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:22,146 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:22,146 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:22,370 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:23,128 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:24,137 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:24,152 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:24,153 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:24,153 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:24,153 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:25,124 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:26,130 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:26,153 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:26,154 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:26,154 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:26,154 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:27,135 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:27,376 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:28,147 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:28,163 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:28,163 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:28,164 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:28,164 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:29,151 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:30,153 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:30,168 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:30,169 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:30,169 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:30,169 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:31,169 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:32,170 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:32,171 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:32,171 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:32,171 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:32,185 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:32,385 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:33,191 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:33,319 DEBUG   SenderThread:21428 [sender.py:send():379] send: stats
+2024-06-14 18:02:34,082 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:02:34,084 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:02:34,175 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:34,175 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:34,175 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:34,175 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:34,204 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:35,216 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:36,184 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:36,184 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:36,184 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:36,184 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:36,234 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:37,245 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:38,191 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:38,191 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:38,191 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:38,191 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:38,238 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:38,400 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:39,251 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:40,268 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:40,991 ERROR   gpu       :21428 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-14 18:02:40,994 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:40,994 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:41,275 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:42,284 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:43,003 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:43,004 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:43,004 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:43,004 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:43,286 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:43,400 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:44,300 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:45,008 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:45,008 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:45,008 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:45,008 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:45,316 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:46,320 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:47,015 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:47,016 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:47,016 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:47,016 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:47,323 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:48,315 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:48,434 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:49,018 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:49,019 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:49,020 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:49,020 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:49,085 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:02:49,086 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:02:49,316 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:50,333 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:51,029 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:51,029 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:51,029 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:51,029 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:51,341 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:52,355 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:53,039 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:53,039 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:53,039 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:53,039 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:53,370 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:53,450 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:54,368 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:55,052 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:55,052 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:55,052 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:55,054 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:55,384 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:56,400 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:57,063 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:57,064 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:57,065 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:57,065 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:57,412 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:58,426 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:02:58,459 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:02:59,070 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:59,070 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:02:59,070 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:59,070 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:02:59,431 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:00,445 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:01,078 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:01,078 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:01,078 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:01,078 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:01,462 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:02,467 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:03,082 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:03,082 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:03,082 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:03,082 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:03,320 DEBUG   SenderThread:21428 [sender.py:send():379] send: stats
+2024-06-14 18:03:03,479 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:04,098 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:03:04,099 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:03:04,339 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:03:04,481 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:05,093 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:05,093 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:05,093 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:05,094 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:05,477 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:06,479 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:07,095 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:07,095 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:07,095 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:07,095 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:07,468 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:08,481 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:09,102 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:09,103 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:09,103 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:09,103 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:09,421 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:03:09,486 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:10,509 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:11,511 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:11,938 ERROR   gpu       :21428 [interfaces.py:aggregate():159] Failed to serialize metric: division by zero
+2024-06-14 18:03:11,939 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:11,939 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:12,504 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:13,519 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:13,946 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:13,947 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:13,947 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:13,947 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:14,430 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:03:14,546 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:15,529 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:15,954 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:15,954 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:15,954 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:15,955 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:16,554 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:17,555 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:17,961 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:17,961 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:17,961 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:17,961 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:18,558 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:19,125 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:03:19,125 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:03:19,437 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:03:19,548 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:19,964 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:19,964 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:19,964 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:19,964 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:20,561 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:21,563 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:21,977 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:21,977 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:21,977 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:21,977 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:22,579 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:23,580 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:23,983 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:23,984 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:23,984 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:23,984 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:24,446 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:03:24,595 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:25,597 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:25,987 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:25,987 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:25,987 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:25,987 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:26,601 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:27,612 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:28,003 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:28,003 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:28,004 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:28,004 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:28,628 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:29,450 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:03:29,632 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:30,017 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:30,017 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:30,017 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:30,017 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:30,645 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:31,664 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:32,018 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:32,022 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:32,022 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:32,022 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:32,677 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:33,324 DEBUG   SenderThread:21428 [sender.py:send():379] send: stats
+2024-06-14 18:03:33,694 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:34,032 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:34,032 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:34,034 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:34,034 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:34,146 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-14 18:03:34,146 DEBUG   SenderThread:21428 [sender.py:send_request():406] send_request: stop_status
+2024-06-14 18:03:34,467 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:03:34,712 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:35,726 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:36,050 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:36,050 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:36,050 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:36,050 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:36,744 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:37,758 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:38,065 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:38,065 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:38,065 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:38,065 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:38,775 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:39,485 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: status_report
+2024-06-14 18:03:39,775 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:40,082 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:40,082 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Unknown Error
+2024-06-14 18:03:40,083 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:40,083 ERROR   gpu       :21428 [interfaces.py:monitor():142] Failed to sample metric: Not Supported
+2024-06-14 18:03:40,764 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-14 18:03:41,779 DEBUG   HandlerThread:21428 [handler.py:handle_request():158] handle_request: internal_messages

@@ -5,14 +5,17 @@ import json
 import yaml
 import os
 
-from src.main_model import TabCSDI
-from src.utils import train, evaluate
+from main_model import DiffPO
+from utils import train, evaluate
 from load_data import get_dataloader
 
 from PropensityNet import load_data
 
+#This is new!!!!
+parser = argparse.ArgumentParser()
+
 parser.add_argument("--config", type=str, default="acic2018.yaml")
-parser.add_argument("--current_id", type=str, default="")
+parser.add_argument("--current_id", type=str, default="0a2adba672c7478faa7a47137a87a3ab")
 
 
 parser.add_argument("--device", default="cuda", help="Device")
@@ -28,7 +31,10 @@ print(args)
 
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
-path = "config/" + args.config
+
+# Put the correct path for the config file
+folder_path = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(folder_path, args.config) 
 with open(path, "r") as f:
     config = yaml.safe_load(f)
 
@@ -42,14 +48,22 @@ print(json.dumps(config, indent=4))
 
 # Create folder
 current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-foldername = "./save/acic_fold" + str(args.nfold) + "_" + current_time + "/"
-# print("model folder:", foldername)
+#original code:
+# foldername = "./save/acic_fold" + str(args.nfold) + "_" + current_time + "/"
+# # print("model folder:", foldername)
+# os.makedirs(foldername, exist_ok=True)
+# with open(foldername + "config.json", "w") as f:
+#     json.dump(config, f, indent=4)
+
+#new code:
+current_file_dir = os.path.dirname(os.path.abspath(__file__))
+foldername = os.path.join(current_file_dir, "save", "acic_fold" + str(args.nfold) + "_" + current_time)
 os.makedirs(foldername, exist_ok=True)
-with open(foldername + "config.json", "w") as f:
+with open(os.path.join(foldername, "config.json"), "w") as f:
     json.dump(config, f, indent=4)
-
-
 current_id = args.current_id
+
+
 print('Start exe_acic on current_id', current_id)
 
 # Every loader contains "observed_data", "observed_mask", "gt_mask", "timepoints"
@@ -72,7 +86,7 @@ propnet.eval()
 # ========================================================================
 
 propnet = propnet.to(args.device)
-model = TabCSDI(config, args.device).to(args.device)
+model = DiffPO(config, args.device).to(args.device)
 
 if args.modelfolder == "":
     train(

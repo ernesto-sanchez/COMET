@@ -1,0 +1,13 @@
+{
+    "model": {
+        "is_unconditional": 0,
+        "other_field": "value",
+        "test_missing_ratio": 0.2
+    },
+    "dataset": {
+        "data_name": "acic2018"
+    },
+    "train": {
+        "batch_size": 64
+    }
+}

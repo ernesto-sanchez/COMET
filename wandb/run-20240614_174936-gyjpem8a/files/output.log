@@ -1,0 +1,2 @@
+c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET
+Namespace(config='acic2018.yaml', current_id='', device='cuda', seed=1, testmissingratio=0.2, nfold=1, unconditional=0, modelfolder='', nsample=100)

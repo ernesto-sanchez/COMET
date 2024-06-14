@@ -1,0 +1,19 @@
+c:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\COMET
+Namespace(config='acic2018.yaml', current_id='0a2adba672c7478faa7a47137a87a3ab', device='cuda', seed=1, testmissingratio=0.2, nfold=1, unconditional=0, modelfolder='', nsample=100)
+Dataset is:
+acic2018
+{
+    "model": {
+        "is_unconditional": 0,
+        "other_field": "value",
+        "test_missing_ratio": 0.2
+    },
+    "dataset": {
+        "data_name": "acic2018"
+    },
+    "train": {
+        "batch_size": 64
+    }
+}
+Start exe_acic on current_id 0a2adba672c7478faa7a47137a87a3ab
+dataset_path C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\ACIC2018\scaling\0a2adba672c7478faa7a47137a87a3ab.csv
