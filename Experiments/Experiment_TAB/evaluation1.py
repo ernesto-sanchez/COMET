@@ -72,7 +72,7 @@ for tab in [0,0.1, 0.2,0.3, 0.4,0.5, 0.6, 0.7, 0.8, 0.9, 1]:
     except Exception as e:
         print(f"An error occurred while writing the data to CSV files: {e}")
 
-    for model in ['S_Learner()','T_Learner()', 'DoubleML()', 'DRLearner()']:
+    for model in ['S_Learner()','T_Learner()', 'DoubleML()', 'PLearner()']:
         config['evaluation']['parameter'] = 'tab'
         config['evaluation']['parameter_value'] = str(tab)
         config['evaluation']['learner'] = str(model) 

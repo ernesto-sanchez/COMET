@@ -20,6 +20,7 @@ sys.path.append(os.path.join(project_path, 'DML'))
 
 from SLearner import *
 from TLearner_econml import *
+from PLearner import *
 from DML import *
 
 
@@ -50,8 +51,8 @@ class Evaluate:
         rows = ['factual', 'counterfactual']
 
         #get the TAB value
-        parameter_value = config['evaluation']['parameter_value']
-        parameter = config['evaluation']['parameter']
+        # parameter_value = config['evaluation']['parameter_value']
+        # parameter = config['evaluation']['parameter']
 
 
 
@@ -71,7 +72,7 @@ class Evaluate:
 
 
 
-        results_file = config['evaluation']['results_path']
+        # results_file = config['evaluation']['results_path']
 
 
         # # Save the result to the HDF5 file
@@ -126,6 +127,13 @@ class Evaluate:
 
 
 if __name__ == "__main__":
+    # Create a config parser
+    config = configparser.ConfigParser()
+
+    config_file = os.getenv('CONFIG_FILE', os.path.join(project_path, 'config', 'config1.ini'))
+
+    # Read the config file
+    config.read(config_file)
     evaluate = Evaluate()
     if config['evaluation']['metric'] == 'CATE':
         evaluate.make_table_cate()

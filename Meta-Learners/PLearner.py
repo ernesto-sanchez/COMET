@@ -294,8 +294,18 @@ class PLearner():
 
         factual_features = self.processed_data['X_test_factual'].reindex(np.repeat(self.processed_data['X_test_factual'].index.values, m), method=None)
 
-        est_effects = [float(self.models[int(self.processed_data['patients_test_count'].iloc[i])].predict(self.processed_data['X_test_count'].iloc[[i]]) - self.models[int(factual_patients.iloc[i])].predict(factual_features.iloc[[i]]))
-                       for i in range(m**2)]
+
+
+        patients_test_count = self.processed_data['patients_test_count'].values
+        X_test_count = self.processed_data['X_test_count'].values
+        factual_patients = factual_patients.values
+        factual_features = factual_features.values
+
+        est_effects = [float(self.models[int(patients_test_count[i])].predict([X_test_count[i]]) - self.models[int(factual_patients[i])].predict([factual_features[i]]))
+               for i in range(m**2)]
+
+        
+
         
         #Make this not a loop
     
@@ -309,6 +319,31 @@ class PLearner():
         pehe = np.sqrt(np.mean((effects - est_effects)**2))
 
         return pehe
+
+    def get_pehe_train_factual(self):
+            
+        """
+        Returns 0
+        """
+
+        return 0
+
+    def get_pehe_test_factual(self):
+
+        """
+        Returns 0
+        """
+
+        return 0
+    
+    def get_pehe_train_count(self):
+
+        """
+        Returns 0
+        """
+
+        return 0
+    
 
 
 
