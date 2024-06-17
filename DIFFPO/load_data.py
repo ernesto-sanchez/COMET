@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader, Dataset
 
 def process_func(path: str, aug_rate=1, train=True, dataset_name = 'acic', current_id='0'):
     # data = pd.read_csv(path, sep = ',', decimal = ',', skiprows=[0])
+    data_directory = os.path.dirname(os.path.dirname(path)) #this line is new
     data = pd.read_csv(path, sep = ',', decimal = ',')
     data.replace("?", np.nan, inplace=True)
     data_aug = pd.concat([data] * aug_rate)
@@ -26,7 +27,7 @@ def process_func(path: str, aug_rate=1, train=True, dataset_name = 'acic', curre
     # ========================
     # acic2018
     if dataset_name == 'acic2018':
-        load_mask_path = "./data_acic2018/acic2018_mask/" + current_id + ".csv"
+        load_mask_path = os.path.join(data_directory,'masked', current_id + "_merged" "_masked" + ".csv")
         print(load_mask_path)
 
     load_mask = pd.read_csv(load_mask_path, sep = ',', decimal = ',')
@@ -91,16 +92,19 @@ class acic_dataset(Dataset):
             data_path = os.path.dirname(project_path)
 
             # dataset_path = "./data_acic2018/acic2018_norm_data/" + current_id + ".csv"
-            dataset_path = os.path.join(data_path, "ACIC2018", "scaling", current_id + ".csv")
+            dataset_path = os.path.join(data_path, "ACIC2018", "merged", current_id + "_merged" + ".csv")
 
             print('dataset_path', dataset_path)
 
-            processed_data_path = (
-                f"./data_acic2018/missing_ratio-{missing_ratio}_seed-{seed}.pk"
-            ) # modify the processed data path
-            processed_data_path_norm = (
-                f"./data_acic2018/missing_ratio-{missing_ratio}_seed-{seed}_max-min_norm.pk"
-            )
+            # processed_data_path = (
+            #     f"./data_acic2018/missing_ratio-{missing_ratio}_seed-{seed}.pk"
+            # ) # modify the processed data path
+            # processed_data_path_norm = (
+            #     f"./data_acic2018/missing_ratio-{missing_ratio}_seed-{seed}_max-min_norm.pk"
+            # )
+            processed_data_path = os.path.join(data_path, "ACIC2018","processed", f"missing_ratio-{missing_ratio}_seed-{seed}_max-min_norm.pk")
+            processed_data_path_norm = os.path.join(data_path, "ACIC2018","processed", f"missing_ratio-{missing_ratio}_seed-{seed}_max-min_norm.pk")
+
             
             os.system('rm {}'.format(processed_data_path))
 
@@ -112,6 +116,11 @@ class acic_dataset(Dataset):
             self.observed_values, self.observed_masks, self.gt_masks = process_func(
                 dataset_path, aug_rate=aug_rate, train=train, dataset_name=dataset_name, current_id=current_id
             )
+
+            #New code:
+            #Create empty pickle file in processed_data_path. Otherwise get error Exception has occurred: FileNotFoundError in the next line
+
+        
  
             with open(processed_data_path, "wb") as f:
                 pickle.dump(
@@ -186,9 +195,18 @@ def get_dataloader(seed=1, nfold=5, batch_size=16, missing_ratio=0.1, dataset_na
         train_index = remain_index[: tsi] 
         valid_index = remain_index[: int(tsi*0.1)] 
 
-        processed_data_path_norm = (
-            f"./data_acic2018/missing_ratio-{missing_ratio}_seed-{seed}_current_id-{current_id}_max-min_norm.pk"
-        )
+        # old code
+        # processed_data_path_norm = (
+        #     f"./data_acic2018/missing_ratio-{missing_ratio}_seed-{seed}_current_id-{current_id}_max-min_norm.pk"
+        # )
+
+        #new code
+        
+        project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        data_path = os.path.dirname(project_path)
+
+        processed_data_path_norm = os.path.join(data_path, "ACIC2018","processed", f"missing_ratio-{missing_ratio}_seed-{seed}_max-min_norm.pk")
+
         print(
             "------------- Perform data normalization and store the mean value of each column.--------------"
         )

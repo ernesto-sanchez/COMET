@@ -1,0 +1,29 @@
+{
+    "model": {
+        "is_unconditional": 0,
+        "other_field": "value",
+        "test_missing_ratio": 0.2,
+        "timeemb": 1,
+        "featureemb": 127,
+        "target_strategy": 1
+    },
+    "dataset": {
+        "data_name": "acic2018"
+    },
+    "train": {
+        "batch_size": 8
+    },
+    "diffusion": {
+        "side_dim": 3,
+        "schedule": "quad",
+        "num_steps": 50,
+        "bet_start": 0.0001,
+        "beta_end": 0.5,
+        "channels": 128,
+        "diffusion_embedding_dim": 128,
+        "mixed": false,
+        "token_emb_dim": 5,
+        "nheads": 4,
+        "layers": 4
+    }
+}

@@ -2,10 +2,34 @@ model:
   is_unconditional: true
   other_field: value
   test_missing_ratio: 0
+  timeemb: 1 #unsure
+  featureemb: 127 #unsure
+  is_unconditional: true #unsure
+  target_strategy: 1 #not accesed
+
+
 
 dataset:
   data_name: acic2018
 
 
 train:
-  batch_size: 64
+  batch_size: 8
+  valid_epoch_interval: 500
+  lr: 0.01 #unsure
+  epochs: 1 #unsure
+
+
+diffusion:
+  side_dim: 1 #unsure
+  schedule: quad
+  num_steps: 50
+  beta_start: 0.0001
+  beta_end: 0.5
+  channels: 128 #unsure
+  diffusion_embedding_dim: 128
+  mixed: false #unsure
+  token_emb_dim: 5 #unsure
+  side_dim: 3 #unsure
+  nheads: 4 #unsure
+  layers: 4 #unsure

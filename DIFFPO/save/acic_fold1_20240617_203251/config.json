@@ -1,0 +1,23 @@
+{
+    "model": {
+        "is_unconditional": 0,
+        "other_field": "value",
+        "test_missing_ratio": 0.2,
+        "timeemb": 1,
+        "featureemb": 127,
+        "target_strategy": 1
+    },
+    "dataset": {
+        "data_name": "acic2018"
+    },
+    "train": {
+        "batch_size": 64
+    },
+    "diffusion": {
+        "side_dim": 1,
+        "schedule": "quad",
+        "num_steps": null,
+        "bet_start": null,
+        "beta_end": null
+    }
+}

@@ -337,6 +337,10 @@ from sklearn.model_selection import train_test_split
 
 
 def load_data(dataset_name = 'acic', current_id='0'):
+    project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    data_path = os.path.dirname(project_path)
+
+
     
     # data path
     if dataset_name == 'acic2016':
@@ -344,7 +348,9 @@ def load_data(dataset_name = 'acic', current_id='0'):
             print('dataset_path', dataset_path)
 
     if dataset_name == 'acic2018':
-            dataset_path = "./data_acic2018/acic2018_norm_data/" + current_id + ".csv"
+            # dataset_path = "./data_acic2018/acic2018_norm_data/" + current_id + ".csv"
+            dataset_path = os.path.join(data_path, "ACIC2018", "merged", current_id + "_merged" + ".csv")
+
             print('dataset_path', dataset_path)
     
     # load data
@@ -357,8 +363,13 @@ def load_data(dataset_name = 'acic', current_id='0'):
     if dataset_name == 'acic2018':
         x_dim = 177
     
+
+    # Flag: new code. !st column is the id, so need to drop the first colum of table
+    # load_table = load_table[:, 1:]
+
+    #Error: 
     x = load_table[:, 5:] # 0-4 collum is not x
-    t = load_table[:, 0].reshape(-1, 1)
+    t = load_table[:, 1].reshape(-1, 1)
 
     # initialize
     pi = PropensityNet(

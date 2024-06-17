@@ -15,7 +15,7 @@ from PropensityNet import load_data
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--config", type=str, default="acic2018.yaml")
-parser.add_argument("--current_id", type=str, default="0a2adba672c7478faa7a47137a87a3ab")
+parser.add_argument("--current_id", type=str, default="3ebc51612e034ff99e8632a228dae430")
 
 
 parser.add_argument("--device", default="cuda", help="Device")
@@ -99,6 +99,9 @@ if args.modelfolder == "":
         propnet = propnet
     )
 else:
-    model.load_state_dict(torch.load("./save/" + args.modelfolder + "/model.pth"))
+    ## new code
+    parent_folder = os.path.dirname(os.path.abspath(__file__))
+
+    model.load_state_dict(torch.load(os.path.join(parent_folder, "save",args.modelfolder, "model.pth")))
 print("---------------Start testing---------------")
 evaluate(model, test_loader, nsample=args.nsample, scaler=1, foldername=foldername)

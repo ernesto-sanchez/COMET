@@ -12,14 +12,17 @@ class diff_base(nn.Module):
         self.device = device
         self.target_dim = target_dim 
 
+
         self.emb_time_dim = config["model"]["timeemb"] 
         self.emb_feature_dim = config["model"]["featureemb"] 
 
         self.is_unconditional = config["model"]["is_unconditional"] 
-        self.target_strategy = config["model"]["target_strategy"] 
+        self.target_strategy = config["model"]["target_strategy"] ##### unused!!!
 
         self.emb_total_dim = self.emb_time_dim + self.emb_feature_dim
-        if self.is_unconditional == False:
+
+        #new code: Avoid comparisons of string and boolean!!!!
+        if self.is_unconditional == 'False':
             self.emb_total_dim += 1  # for conditional mask
 
         self.embed_layer = nn.Embedding(
@@ -29,7 +32,7 @@ class diff_base(nn.Module):
         config_diff = config["diffusion"]
         config_diff["side_dim"] = self.emb_total_dim
 
-        input_dim = 1 if self.is_unconditional == True else 2
+        input_dim = 1 if self.is_unconditional == 'True' else 2
         self.diffmodel = diff_model(config_diff, input_dim)
 
         # parameters for diffusion models
@@ -89,7 +92,7 @@ class diff_base(nn.Module):
         side_info = torch.cat([time_embed, feature_embed], dim=-1) 
         side_info = side_info.permute(0, 3, 2, 1) 
 
-        if self.is_unconditional == False:
+        if self.is_unconditional == 'False':
             side_mask = cond_mask.unsqueeze(1) 
             side_info = torch.cat([side_info, side_mask], dim=1)
 
@@ -139,7 +142,7 @@ class diff_base(nn.Module):
         return loss
 
     def set_input_to_diffmodel(self, noisy_data, observed_data, cond_mask):
-        if self.is_unconditional == True:
+        if self.is_unconditional == 'True':
             total_input = noisy_data.unsqueeze(1)  
         else:
             cond_obs = (cond_mask * observed_data).unsqueeze(1) 
