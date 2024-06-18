@@ -1,35 +1,70 @@
-model:
-  is_unconditional: true
-  other_field: value
-  test_missing_ratio: 0
-  timeemb: 1 #unsure
-  featureemb: 127 #unsure
-  is_unconditional: true #unsure
-  target_strategy: 1 #not accesed
+# model:
+#   is_unconditional: true
+#   other_field: value
+#   test_missing_ratio: 0
+#   timeemb: 128 #unsure
+#   featureemb: 117 #unsure
+#   is_unconditional: true #unsure
+#   target_strategy: 1 #not accesed
 
 
 
+# dataset:
+#   data_name: acic2018
+
+
+# train:
+#   batch_size: 8
+#   valid_epoch_interval: 500
+#   lr: 0.01 #unsure
+#   epochs: 5 #unsure
+
+
+# diffusion:
+#   schedule: quad
+#   num_steps: 50
+#   beta_start: 0.0001
+#   beta_end: 0.5
+#   channels: 128 #unsure
+#   diffusion_embedding_dim: 128
+#   mixed: false #unsure
+#   token_emb_dim: 5 #unsure
+#   side_dim: 3 #unsure
+#   nheads: 4 #unsure
+#   layers: 4 #unsure
+
+
+
+
+#type: args
+# Standard setting: num_step50_lr0.00005_epochs500
 dataset:
-  data_name: acic2018
-
+  data_name: "acic2018"
 
 train:
-  batch_size: 8
-  valid_epoch_interval: 500
-  lr: 0.01 #unsure
-  epochs: 1 #unsure
-
+  epochs: 5 #500
+  batch_size: 256
+  lr: 0.001 #0.00005
+  valid_epoch_interval: 50
 
 diffusion:
-  side_dim: 1 #unsure
-  schedule: quad
-  num_steps: 50
+  layers: 4  
+  channels: 64 
+  f_dim: 180
+  cond_dim: 178 # conditional variable dimension
+  hidden_dim: 128 
+  side_dim: 33
+  nheads: 2 #4
+  diffusion_embedding_dim: 128
   beta_start: 0.0001
   beta_end: 0.5
-  channels: 128 #unsure
-  diffusion_embedding_dim: 128
-  mixed: false #unsure
-  token_emb_dim: 5 #unsure
-  side_dim: 3 #unsure
-  nheads: 4 #unsure
-  layers: 4 #unsure
+  num_steps: 100
+  schedule: "quad"
+  mixed: False
+
+model:
+  is_unconditional: 0
+  timeemb: 32
+  featureemb: 32 #16
+  target_strategy: "random"
+  mixed: False

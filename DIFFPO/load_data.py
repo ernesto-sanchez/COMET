@@ -64,7 +64,9 @@ class acic_dataset(Dataset):
         if dataset_name == 'acic2016':
             self.eval_length = 87
         if dataset_name == 'acic2018':
-            self.eval_length = 182
+            # self.eval_length = 182
+            #new code: gotta keep the sample_id_col out
+            self.eval_length = 181
 
         np.random.seed(seed)
 

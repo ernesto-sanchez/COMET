@@ -361,15 +361,15 @@ def load_data(dataset_name = 'acic', current_id='0'):
     if dataset_name == 'acic2016':
         x_dim = 82
     if dataset_name == 'acic2018':
-        x_dim = 177
+        # x_dim = 177
+        #new code: --> Need to take sapmle_id out of the network!!!
+        x_dim = 176
     
 
-    # Flag: new code. !st column is the id, so need to drop the first colum of table
-    # load_table = load_table[:, 1:]
 
-    #Error: 
+
     x = load_table[:, 5:] # 0-4 collum is not x
-    t = load_table[:, 1].reshape(-1, 1)
+    t = load_table[:, 0].reshape(-1, 1)
 
     # initialize
     pi = PropensityNet(

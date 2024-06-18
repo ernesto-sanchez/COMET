@@ -95,6 +95,10 @@ class diff_base(nn.Module):
         if self.is_unconditional == 'False':
             side_mask = cond_mask.unsqueeze(1) 
             side_info = torch.cat([side_info, side_mask], dim=1)
+        
+        #new code
+        if torch.sum(side_info.isnan()) !=0:
+            raise ValueError("side_info has NaN values")
 
         return side_info
 
@@ -125,6 +129,11 @@ class diff_base(nn.Module):
             1.0 - current_alpha
         ) ** 0.5 * noise
         total_input = self.set_input_to_diffmodel(noisy_data, observed_data, cond_mask)
+
+        #new code
+        if torch.sum(total_input.isnan()) !=0:
+            raise ValueError("total_input has NaN values")
+        
         predicted = self.diffmodel(total_input, side_info, t)  
         target_mask = gt_mask - cond_mask  # compute loss only on factual y.
         residual = (noise - predicted) * target_mask

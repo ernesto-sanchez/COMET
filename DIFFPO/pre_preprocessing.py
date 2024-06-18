@@ -1,5 +1,7 @@
 import os
 import pandas as pd
+import numpy as np
+
 
 
 ## This script has 2 parts:
@@ -32,10 +34,19 @@ def combine(covariate_file_path, factual_dir_path, counterfactual_dir_path):
 
         counterfactuals = pd.read_csv(os.path.join(counterfactual_dir_path, cf_file), index_col=INDEX_COL_NAME, header=0, sep=DELIMITER)
 
-        dataset = counterfactuals.join(covariates, how="inner") 
-        dataset = factuals.join(dataset, how="inner").drop('Unnamed: 0', axis=1)
+        treatments = factuals['z']
+        outcomes = factuals['y']
 
-        dataset.to_csv(os.path.join(data_path ,"merged", file.replace(FILENAME_EXTENSION, "_merged" + FILENAME_EXTENSION)), sep=DELIMITER)
+        
+        dataset = pd.DataFrame(outcomes).join(covariates, how="inner")
+        dataset = counterfactuals.join(dataset, how="inner")
+        dataset = pd.DataFrame(treatments).join(dataset, how="inner").drop('Unnamed: 0', axis=1)
+        dataset.reset_index(drop=True, inplace=True)
+
+        
+        # dataset.fillna(0,inplace=True)
+
+        dataset.to_csv(os.path.join(data_path ,"merged", file.replace(FILENAME_EXTENSION, "_merged" + FILENAME_EXTENSION)),index = False, sep=DELIMITER)
 
     return 0
 
@@ -44,28 +55,29 @@ def combine(covariate_file_path, factual_dir_path, counterfactual_dir_path):
 
 
 
-#2. Create a mask dataset with the following columns: [‘sample_id’, ‘z’, ‘y’, ‘y_0’, ‘y_1’, covariates]
+#2. Create a mask dataset with the following columns: [‘z’,‘y_0’, ‘y_1’, ‘y’, "sample_id", covariates]
 
 
 def get_masks(merged_path):
     for file in os.listdir(merged_path):
-        merged = pd.read_csv(os.path.join(merged_path, file), index_col=INDEX_COL_NAME, header=0, sep=DELIMITER)
-        merged.iloc[:, 4:] = 0
+        merged = pd.read_csv(os.path.join(merged_path, file), sep=DELIMITER)
+        merged.iloc[:, 4:] = 1
         treatments = merged['z']
         merged['y0'] = (1 - treatments)
         merged['y1'] = treatments 
-        merged.iloc[:,0:2] = 0
+        merged.iloc[:,0] = 1
+        merged.iloc[:,3:] = 1
 
-        merged.to_csv(os.path.join(data_path, "masked", file.replace(FILENAME_EXTENSION, "_masked" + FILENAME_EXTENSION)), sep=DELIMITER)
+        merged.to_csv(os.path.join(data_path, "masked", file.replace(FILENAME_EXTENSION, "_masked" + FILENAME_EXTENSION)), index = False, sep=DELIMITER)
     return 0
 
 
 if __name__ == "__main__":
-    covariate_path = r"C:\Users\Ernesto\OneDrive - ETH Zuriceh\Desktop\MT\ACIC2018\x.csv"
+    covariate_path = r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\ACIC2018\x.csv"
     factual_dir = r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\ACIC2018\censoring"
     counterfactual_dir = r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\ACIC2018\censoring_cf"
     merged_dir = r"C:\Users\Ernesto\OneDrive - ETH Zurich\Desktop\MT\ACIC2018\merged"
 
     # a = combine_covariates_with_observed(covariate_path, factual_dir)
-    # combine(covariate_path, factual_dir, counterfactual_dir)
+    combine(covariate_path, factual_dir, counterfactual_dir)
     get_masks(merged_dir)

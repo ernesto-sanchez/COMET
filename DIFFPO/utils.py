@@ -4,6 +4,7 @@ from torch.optim import Adam
 from tqdm import tqdm
 import pickle
 import wandb
+import os
 
 # start a new wandb run to track this script
 wandb.init(
@@ -47,7 +48,8 @@ def train(
     np.random.seed(0)
     optimizer = Adam(model.parameters(), lr=config["lr"], weight_decay=1e-6)
     if foldername != "":
-        output_path = foldername + "/model.pth"
+        #new code: os,path.join instead of +
+        output_path = os.path.join(foldername , "model.pth")
 
     p0 = int(0.25 * config["epochs"])
     p1 = int(0.5 * config["epochs"])
@@ -117,6 +119,10 @@ def train(
                     pehe = np.sqrt(pehe_val.avg)
                     print("PEHE VAL = {:0.3g}".format(pehe))
     wandb.finish()
+    # New code flag: save the model
+    if foldername != "":
+        torch.save(model.state_dict(), output_path)
+        print("Model saved at", output_path)
 
 def evaluate(model, test_loader, nsample=100, scaler=1, mean_scaler=0, foldername=""):
     # Control random seed in the current script.
@@ -152,7 +158,12 @@ def evaluate(model, test_loader, nsample=100, scaler=1, mean_scaler=0, foldernam
                 all_generated_samples.append(samples)
                 obs_data = torch.squeeze(c_target, 2) 
                 true_ite = obs_data[:, 3] - obs_data[:, 4] # (8,)
-                est_data = torch.squeeze(samples_mean.values) 
+                # get RuntimeError: values expected sparse tensor layout but got Strided
+                # est_data = torch.squeeze(samples_mean.values) 
+
+                #new code: 
+                est_data = torch.squeeze(samples_mean)
+
                 pred_y0 = est_data[:, 1]
                 pred_y1 = est_data[:, 2]
                 est_ite = pred_y0 - pred_y1
