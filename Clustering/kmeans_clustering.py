@@ -13,10 +13,14 @@ class Clustering_kmeans():
         self.clust_model = None
 
     def fit_and_encode(self):
-        #cluster the organs treatment into 10 clusters
+        #cluster the organs treatment into n clusters
+
+
 
         # Assuming 'df' is your DataFrame
         # Specify the columns of your categorical features
+        selected_columns = ['age_don', 'weight_don', 'blood_type_don', 'rh_don', 'hla_a_don', 'hla_b_don', 'hla_c_don']
+        self.data = self.data[selected_columns]
         catColumnsPos = [self.data.columns.get_loc(col) for col in list(self.data.select_dtypes('bool').columns)]
         catColumnsPos += [self.data.columns.get_loc(col) for col in list(self.data.select_dtypes('object').columns)]
 
@@ -30,8 +34,16 @@ class Clustering_kmeans():
         return clusters
     
     def encode(self, data):
+
+        selected_columns = ['age_don', 'weight_don', 'blood_type_don', 'rh_don', 'hla_a_don', 'hla_b_don', 'hla_c_don']
+        data = data[selected_columns]
+
+        
         catColumnsPos = [data.columns.get_loc(col) for col in list(data.select_dtypes('bool').columns)]
         catColumnsPos += [data.columns.get_loc(col) for col in list(data.select_dtypes('object').columns)]
+
+
+        
 
         return self.clust_model.predict(data, categorical=catColumnsPos)
 

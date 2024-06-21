@@ -7,6 +7,8 @@ from typing import Any, Optional
 
 import numpy as np
 
+import wandb
+
 # default model architectures
 DEFAULT_LAYERS_OUT = 2
 DEFAULT_LAYERS_OUT_T = 2
@@ -24,23 +26,24 @@ DEFAULT_NONLIN = "elu"
 DEFAULT_STEP_SIZE = 0.0001
 DEFAULT_STEP_SIZE_T = 0.0001
 DEFAULT_N_ITER = 10000
-DEFAULT_BATCH_SIZE = 100
-DEFAULT_PENALTY_L2 = 1e-4
+DEFAULT_BATCH_SIZE = 20
+
+DEFAULT_PENALTY_L2 = 1e-2
 DEFAULT_PENALTY_DISC = 0
 DEFAULT_PENALTY_ORTHOGONAL = 1 / 100
 DEFAULT_AVG_OBJECTIVE = True
 
 # defaults for early stopping
 DEFAULT_VAL_SPLIT = 0.3
-DEFAULT_N_ITER_MIN = 200
-DEFAULT_PATIENCE = 10
+DEFAULT_N_ITER_MIN = 100
+DEFAULT_PATIENCE = 100
 
 # Defaults for crossfitting
 DEFAULT_CF_FOLDS = 2
 
 # other defaults
 DEFAULT_SEED = 42
-DEFAULT_N_ITER_PRINT = 50
+DEFAULT_N_ITER_PRINT = 10
 LARGE_VAL = np.iinfo(np.int32).max
 
 DEFAULT_UNITS_R_BIG_S = 100
@@ -69,6 +72,8 @@ NONLIN = {
     "selu": nn.SELU,
     "sigmoid": nn.Sigmoid,
 }
+
+wandb.init(project="COMET")
 
 def make_val_split(
     X: torch.Tensor,
@@ -230,6 +235,9 @@ class PropensityNet(nn.Module):
         return compute_importance_weights(p_pred, w, self.weighting_strategy, {})
 
     def loss(self, y_pred: torch.Tensor, y_target: torch.Tensor) -> torch.Tensor:
+
+
+
         return nn.NLLLoss()(torch.log(y_pred + EPS), y_target)
 
     def fit(self, X: torch.Tensor, y: torch.Tensor) -> "PropensityNet":
@@ -250,7 +258,7 @@ class PropensityNet(nn.Module):
         n_batches = int(np.round(n / batch_size)) if batch_size < n else 1
         train_indices = np.arange(n)
 
-        # do training
+        # do train        
         val_loss_best = LARGE_VAL
         patience = 0
         for i in range(1000):
@@ -273,7 +281,19 @@ class PropensityNet(nn.Module):
 
                 batch_loss = self.loss(preds, y_next)
 
+                wandb.log({"batch_loss": torch.mean(batch_loss)})
+
                 batch_loss.backward()
+
+                #new code
+
+                # Convert predicted probabilities to class labels
+                preds_labels = torch.argmax(preds, dim=1)
+
+                # Calculate accuracy
+                accuracy = (preds_labels == y_next).float().mean()
+
+                wandb.log({"accuracy": accuracy})
 
                 torch.nn.utils.clip_grad_norm_(self.parameters(), self.clipping_value)
 
@@ -352,6 +372,10 @@ def load_data(dataset_name = 'acic', current_id='0'):
             dataset_path = os.path.join(data_path, "ACIC2018", "merged", current_id + "_merged" + ".csv")
 
             print('dataset_path', dataset_path)
+
+    if dataset_name == 'synthetic':
+        dataset_path = os.path.join(data_path, "ACIC2018", "merged", "synthetic_merged.csv")
+        print('dataset_path', dataset_path)
     
     # load data
     load_csv = pd.read_csv(dataset_path, sep = ',', decimal = ',')
@@ -364,6 +388,9 @@ def load_data(dataset_name = 'acic', current_id='0'):
         # x_dim = 177
         #new code: --> Need to take sapmle_id out of the network!!!
         x_dim = 176
+
+    if dataset_name == 'synthetic':
+        x_dim = 19
     
 
 
@@ -375,7 +402,7 @@ def load_data(dataset_name = 'acic', current_id='0'):
     pi = PropensityNet(
                 "slearner_prop_estimator",
                 x_dim,
-                2,  # number of treatments
+                10,  # number of treatments
                 "ipw",
                 n_units_out_prop=DEFAULT_UNITS_OUT,
                 n_layers_out_prop=0,
@@ -387,7 +414,7 @@ def load_data(dataset_name = 'acic', current_id='0'):
                 seed=DEFAULT_SEED,
                 nonlin=DEFAULT_NONLIN,
                 val_split_prop=DEFAULT_VAL_SPLIT,
-                batch_norm=True,
+                batch_norm=False,
                 early_stopping=True,
                 dropout=False,
                 dropout_prob=0.2,
@@ -411,3 +438,11 @@ def load_data(dataset_name = 'acic', current_id='0'):
     return pi
 
     
+
+
+
+
+#new code
+
+if __name__ == '__main__':
+    load_data(dataset_name = 'synthetic')

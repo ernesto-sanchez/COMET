@@ -30,6 +30,13 @@ def process_func(path: str, aug_rate=1, train=True, dataset_name = 'acic', curre
         load_mask_path = os.path.join(data_directory,'masked', current_id + "_merged" "_masked" + ".csv")
         print(load_mask_path)
 
+
+
+    #new code
+    if dataset_name == 'synthetic':
+        load_mask_path = os.path.join(data_directory,'masked', "synthetic_masked.csv")
+        print(load_mask_path)
+
     load_mask = pd.read_csv(load_mask_path, sep = ',', decimal = ',')
     load_mask = load_mask.values.astype("float32")
 
@@ -61,6 +68,11 @@ class acic_dataset(Dataset):
     def __init__(
         self, eval_length=100, use_index_list=None, aug_rate=1, missing_ratio=0.1, seed=0, train=True, dataset_name = 'acic', current_id='0'
     ):  
+        
+        #new code
+        if dataset_name == 'synthetic':
+            self.eval_length = 19
+
         if dataset_name == 'acic2016':
             self.eval_length = 87
         if dataset_name == 'acic2018':
@@ -109,6 +121,26 @@ class acic_dataset(Dataset):
 
             
             os.system('rm {}'.format(processed_data_path))
+
+        if dataset_name == 'synthetic':
+
+            # Flag: new code
+            project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            data_path = os.path.dirname(project_path)
+
+            # dataset_path = "./data_acic2018/acic2018_norm_data/" + current_id + ".csv"
+            dataset_path = os.path.join(data_path, "ACIC2018", "merged", "synthetic_merged.csv" )
+
+            print('dataset_path', dataset_path)
+
+            # processed_data_path = (
+            #     f"./data_acic2018/missing_ratio-{missing_ratio}_seed-{seed}.pk"
+            # ) # modify the processed data path
+            # processed_data_path_norm = (
+            #     f"./data_acic2018/missing_ratio-{missing_ratio}_seed-{seed}_max-min_norm.pk"
+            # )
+            processed_data_path = os.path.join(data_path, "ACIC2018","processed", "synthetic.pk")
+            processed_data_path_norm = os.path.join(data_path, "ACIC2018","processed", "synthetic.pk")
 
         if not os.path.isfile(processed_data_path):
             # original code: missing_ratio argument not needed!
@@ -214,6 +246,27 @@ def get_dataloader(seed=1, nfold=5, batch_size=16, missing_ratio=0.1, dataset_na
         )
         # data transformation after train-test split.
 
+
+    #new_code
+    if dataset_name == 'synthetic':
+        test_index = indlist[tsi:]
+        remain_index = np.arange(0, tsi)
+
+        np.random.shuffle(remain_index)
+        num_train = (int)(len(remain_index) * 1)
+
+        train_index = remain_index[: tsi] 
+        valid_index = remain_index[: int(tsi*0.1)] 
+
+        project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        data_path = os.path.dirname(project_path)
+
+        processed_data_path_norm = os.path.join(data_path, "ACIC2018","processed", f"missing_ratio-{missing_ratio}_seed-{seed}_max-min_norm.pk")
+
+        print(
+            "------------- Perform data normalization and store the mean value of each column.--------------"
+        )
+        # data transformation after train-test split.
 
     
     col_num = dataset.observed_values.shape[1]

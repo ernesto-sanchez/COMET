@@ -268,8 +268,8 @@ class SyntheticDataGenerator:
                 outcomes_noiseless['survival'] = np.random.binomial(1, outcomes_noiseless['survival_prob'])
 
             if self.complexity == 2:
-                outcomes['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) + np.random.normal(0, noise, self.n)
-                outcomes_noiseless['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don'])
+                outcomes['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don'])  + 10*(patients['rh']!= organs['rh_don']) + 5* np.abs(patients['hla_a'] != organs['hla_a_don']) + np.random.normal(0, noise, self.n)
+                outcomes_noiseless['eGFR'] = 100*np.ones(self.n)  - 2 * abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don'])  + 10*(patients['rh']!= organs['rh_don']) + 5* np.abs(patients['hla_a'] != organs['hla_a_don']) 
 
                 outcomes['survival_prob'] = 1/(1 + np.exp(-0.25*(20  - 2* abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) -  5* (patients['hla_a'] != organs['hla_a_don']) + np.random.normal(0, noise, self.n))))
                 outcomes_noiseless['survival_prob'] = 1/(1 + np.exp(-0.25*(20  - 2* abs(patients['age'] - organs['age_don']) - abs(patients['weight'] - organs['weight_don']) - 10*(patients['blood_type'] != organs['blood_type_don']) -  5* (patients['hla_a'] != organs['hla_a_don']) )))

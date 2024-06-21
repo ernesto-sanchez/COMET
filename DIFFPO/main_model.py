@@ -145,7 +145,8 @@ class diff_base(nn.Module):
         propnet = propnet.to(device)
 
         pi_hat = propnet.forward(x_batch.float())
-        weights = (t_batch / pi_hat[:, 1]) + ((1 - t_batch) / pi_hat[:, 0])
+        # weights = (t_batch / pi_hat[:, 1]) + ((1 - t_batch) / pi_hat[:, 0])
+        weights = (t_batch / pi_hat[:, 1])
         weights = weights.reshape(-1, 1, 1) 
         loss = (weights * (residual ** 2)).sum() / (num_eval if num_eval > 0 else 1)
         return loss

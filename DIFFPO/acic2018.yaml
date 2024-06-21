@@ -39,10 +39,10 @@
 #type: args
 # Standard setting: num_step50_lr0.00005_epochs500
 dataset:
-  data_name: "acic2018"
+  data_name: "synthetic"
 
 train:
-  epochs: 5 #500
+  epochs: 15 #500
   batch_size: 256
   lr: 0.001 #0.00005
   valid_epoch_interval: 50
