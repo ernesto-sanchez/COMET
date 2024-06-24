@@ -39,10 +39,10 @@
 #type: args
 # Standard setting: num_step50_lr0.00005_epochs500
 dataset:
-  data_name: "synthetic"
+  data_name: "acic2018"
 
 train:
-  epochs: 15 #500
+  epochs: 5 #500
   batch_size: 256
   lr: 0.001 #0.00005
   valid_epoch_interval: 50
@@ -51,9 +51,9 @@ diffusion:
   layers: 4  
   channels: 64 
   f_dim: 180
-  cond_dim: 178 # conditional variable dimension
+  cond_dim: 178 # conditional variable dimension n_features + 1
   hidden_dim: 128 
-  side_dim: 33
+  side_dim: 25 #25
   nheads: 2 #4
   diffusion_embedding_dim: 128
   beta_start: 0.0001

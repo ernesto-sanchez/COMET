@@ -12,17 +12,14 @@ class diff_base(nn.Module):
         self.device = device
         self.target_dim = target_dim 
 
-
         self.emb_time_dim = config["model"]["timeemb"] 
         self.emb_feature_dim = config["model"]["featureemb"] 
 
         self.is_unconditional = config["model"]["is_unconditional"] 
-        self.target_strategy = config["model"]["target_strategy"] ##### unused!!!
+        self.target_strategy = config["model"]["target_strategy"] 
 
         self.emb_total_dim = self.emb_time_dim + self.emb_feature_dim
-
-        #new code: Avoid comparisons of string and boolean!!!!
-        if self.is_unconditional == 'False':
+        if self.is_unconditional == False:
             self.emb_total_dim += 1  # for conditional mask
 
         self.embed_layer = nn.Embedding(
@@ -32,7 +29,7 @@ class diff_base(nn.Module):
         config_diff = config["diffusion"]
         config_diff["side_dim"] = self.emb_total_dim
 
-        input_dim = 1 if self.is_unconditional == 'True' else 2
+        input_dim = 1 if self.is_unconditional == True else 2
         self.diffmodel = diff_model(config_diff, input_dim)
 
         # parameters for diffusion models
@@ -92,13 +89,9 @@ class diff_base(nn.Module):
         side_info = torch.cat([time_embed, feature_embed], dim=-1) 
         side_info = side_info.permute(0, 3, 2, 1) 
 
-        if self.is_unconditional == 'False':
+        if self.is_unconditional == False:
             side_mask = cond_mask.unsqueeze(1) 
             side_info = torch.cat([side_info, side_mask], dim=1)
-        
-        #new code
-        if torch.sum(side_info.isnan()) !=0:
-            raise ValueError("side_info has NaN values")
 
         return side_info
 
@@ -129,11 +122,6 @@ class diff_base(nn.Module):
             1.0 - current_alpha
         ) ** 0.5 * noise
         total_input = self.set_input_to_diffmodel(noisy_data, observed_data, cond_mask)
-
-        #new code
-        if torch.sum(total_input.isnan()) !=0:
-            raise ValueError("total_input has NaN values")
-        
         predicted = self.diffmodel(total_input, side_info, t)  
         target_mask = gt_mask - cond_mask  # compute loss only on factual y.
         residual = (noise - predicted) * target_mask
@@ -145,14 +133,13 @@ class diff_base(nn.Module):
         propnet = propnet.to(device)
 
         pi_hat = propnet.forward(x_batch.float())
-        # weights = (t_batch / pi_hat[:, 1]) + ((1 - t_batch) / pi_hat[:, 0])
-        weights = (t_batch / pi_hat[:, 1])
+        weights = (t_batch / pi_hat[:, 1]) + ((1 - t_batch) / pi_hat[:, 0])
         weights = weights.reshape(-1, 1, 1) 
         loss = (weights * (residual ** 2)).sum() / (num_eval if num_eval > 0 else 1)
         return loss
 
     def set_input_to_diffmodel(self, noisy_data, observed_data, cond_mask):
-        if self.is_unconditional == 'True':
+        if self.is_unconditional == True:
             total_input = noisy_data.unsqueeze(1)  
         else:
             cond_obs = (cond_mask * observed_data).unsqueeze(1) 

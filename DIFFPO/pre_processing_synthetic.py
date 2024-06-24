@@ -165,11 +165,24 @@ class DataHandler_DiffPO:
         self.masked = self.merged.copy()
         self.masked = pd.DataFrame(np.ones(self.masked.shape), columns=self.masked.columns, index=self.masked.index)
         self.masked['y1'] = 0
-
+        self.masked['y'] = 0
+        self.masked['pat_id'] = 0
 
 
         self.merged.to_csv(os.path.join(data_path ,"merged", "synthetic_merged.csv"),index = False, sep=DELIMITER)
         self.masked.to_csv(os.path.join(data_path ,"masked", "synthetic_masked.csv"),index = False, sep=DELIMITER)
+
+
+        #4) SGet the data necessary for propnet
+
+        #concatenate featres to encoded organs only using the factual organs
+        self.propnet_data = pd.concat([pd.Series(self.clustering.encode(self.organs)),
+                                    self.patients],
+                                    axis=1)
+        
+        self.propnet_data.to_csv(os.path.join(data_path ,"propnet", "synthetic_propnet.csv"),index = False, sep=DELIMITER)
+
+
 
         
 

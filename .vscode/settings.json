@@ -4,5 +4,5 @@
     "python.analysis.extraPaths": [
         "./synthetic_data_generation",
         "./Clustering"
-    ]
+    ],
 }
