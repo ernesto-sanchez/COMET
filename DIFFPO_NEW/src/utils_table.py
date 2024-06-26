@@ -3,7 +3,9 @@ import torch
 from torch.optim import Adam
 from tqdm import tqdm
 import pickle
+import wandb
 
+wandb.init(project="DiffPO")
 
 import torch.nn.functional as F
 
@@ -66,6 +68,7 @@ def train(
                 loss.backward()
                 avg_loss += loss.item()
                 optimizer.step()
+                wandb.log({"train_loss_diffusion": loss.item()})
                 it.set_postfix(
                     ordered_dict={
                         "avg_epoch_loss": avg_loss / batch_no,
@@ -73,6 +76,8 @@ def train(
                     },
                     refresh=False,
                 )
+
+
             lr_scheduler.step()
 
 
@@ -117,6 +122,7 @@ def train(
 
                         est_ite = pred_y0 - pred_y1
                         diff_ite = np.mean((true_ite.cpu().numpy()-est_ite.cpu().numpy())**2)
+                        wandb.log({"val_pehe": np.sqrt(diff_ite)})
                         pehe_val.update(diff_ite, obs_data.size(0))    
                     
                     print('====================================')

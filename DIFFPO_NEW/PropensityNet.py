@@ -7,7 +7,7 @@ from typing import Any, Optional
 import wandb
 
 
-wandb.init(project="diffpo")
+wandb.init(project="DiffPO", reinit =1)
 
 """
 Define some constants for initialisation of hyperparamters etc
@@ -39,8 +39,8 @@ DEFAULT_AVG_OBJECTIVE = True
 
 # defaults for early stopping
 DEFAULT_VAL_SPLIT = 0.3
-DEFAULT_N_ITER_MIN = 900000
-DEFAULT_PATIENCE = 10000
+DEFAULT_N_ITER_MIN = 9
+DEFAULT_PATIENCE = 10
 
 # Defaults for crossfitting
 DEFAULT_CF_FOLDS = 2
@@ -301,7 +301,7 @@ class PropensityNet(nn.Module):
         # do training
         val_loss_best = LARGE_VAL
         patience = 0
-        for i in range(700):
+        for i in range(100):
             # shuffle data for minibatches
             np.random.shuffle(train_indices)
             train_loss = []
@@ -318,6 +318,9 @@ class PropensityNet(nn.Module):
                 y_next = y[idx_next].squeeze()
 
                 preds = self.forward(X_next.float()).squeeze()
+
+                if i == 600:
+                    pass
 
                 batch_loss = self.loss(preds, y_next)
 

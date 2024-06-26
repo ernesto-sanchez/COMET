@@ -187,6 +187,7 @@ class CSDI_base(nn.Module):
 
         indices = t_batch.long()
         weights = torch.gather(pi_hat, 1, indices.unsqueeze(1)).squeeze(1)
+        weights = 1/weights
 
         
 

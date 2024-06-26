@@ -152,6 +152,8 @@ class DataHandler_DiffPO:
             outcomes_y = outcomes_y0.copy()
             outcomes_y = outcomes_y.rename('y')
 
+
+
           
         else: 
             raise ValueError('Clustering must be done for DiffPO')
@@ -185,9 +187,13 @@ class DataHandler_DiffPO:
 
         #get the masks
 
+        factual_indices = [i*len(patients) + (i) for i in range(0, int(np.sqrt(len(organs))))]
+
         self.masked = self.merged.copy()
         self.masked = pd.DataFrame(np.ones(self.masked.shape))
-        self.masked.iloc[:,2:5] = 0 #mask y_1 mu_0, mu_1
+        self.masked.iloc[:,3:5] = 0 #mask mu_0, mu_1
+        self.masked.loc[~self.masked.index.isin(factual_indices), 2] = 0
+        self.masked.iloc[factual_indices, 1] = 0 #unmask mu_1
 
 
 
